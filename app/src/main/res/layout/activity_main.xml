@@ -38,7 +38,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:outlineAmbientShadowColor="@android:color/transparent"
-            android:outlineSpotShadowColor="@android:color/transparent" />
+            android:outlineSpotShadowColor="@android:color/transparent"
+            app:menu="@menu/bottom_menu" />
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 
@@ -47,7 +48,7 @@
         style="@style/Widget.MaterialComponents.FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/search"
+        android:contentDescription="@string/setting"
         android:src="@drawable/ic_search_24"
         app:layout_anchor="@id/bottom_appbar"
         app:layout_behavior="com.google.android.material.floatingactionbutton.FloatingActionButton$Behavior" />

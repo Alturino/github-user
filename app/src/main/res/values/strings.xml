@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Github User</string>
+    <string name="setting">Setting</string>
+    <string name="home">Home</string>
+    <string name="favorite">Favorite</string>
+    <string name="dev">Developer</string>
 </resources>

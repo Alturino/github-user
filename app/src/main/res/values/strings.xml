@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Github User</string>
+    <string name="home_text">Search User To Get Started</string>
     <string name="setting">Setting</string>
     <string name="home">Home</string>
     <string name="favorite">Favorite</string>

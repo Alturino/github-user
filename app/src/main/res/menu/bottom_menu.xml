@@ -2,24 +2,37 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/home_menu"
+        android:id="@+id/homeFragment"
         android:enabled="true"
         android:icon="@drawable/ic_home_24"
         android:orderInCategory="1"
         android:title="@string/home" />
 
     <item
-        android:id="@+id/search_menu"
-        android:enabled="false"
+        android:id="@+id/aboutFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_person_24"
         android:orderInCategory="2"
-        android:title=""
-        app:showAsAction="ifRoom" />
+        android:title="@string/about" />
 
     <item
-        android:id="@+id/favorite_menu"
+        android:id="@+id/searchFragment"
+        android:enabled="false"
+        android:orderInCategory="3"
+        android:title="" />
+
+    <item
+        android:id="@+id/favoriteFragment"
         android:enabled="true"
         android:icon="@drawable/ic_favorite_24"
-        android:orderInCategory="3"
+        android:orderInCategory="4"
         android:title="@string/favorite" />
+
+    <item
+        android:id="@+id/settingFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_settings_24"
+        android:orderInCategory="5"
+        android:title="@string/setting" />
 
 </menu>

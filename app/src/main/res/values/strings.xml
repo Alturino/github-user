@@ -6,4 +6,6 @@
     <string name="favorite">Favorite</string>
     <string name="dev">Developer</string>
     <string name="username">Username</string>
+    <string name="about">About</string>
+    <string name="search">Search</string>
 </resources>

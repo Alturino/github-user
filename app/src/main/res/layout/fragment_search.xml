@@ -60,21 +60,13 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_scrollview"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_user"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:isScrollContainer="true"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="10"
-            tools:listitem="@layout/user_item" />
-
-    </androidx.core.widget.NestedScrollView>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        tools:itemCount="10"
+        tools:listitem="@layout/user_item" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,22 +1,22 @@
-package com.onirutla.githubuser
+package com.onirutla.githubuser.ui.setting
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.onirutla.githubuser.databinding.FragmentAboutBinding
+import com.onirutla.githubuser.databinding.FragmentSettingBinding
 
-class AboutFragment : Fragment() {
+class SettingFragment : Fragment() {
 
-    private var _binding: FragmentAboutBinding? = null
+    private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAboutBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -24,5 +24,4 @@ class AboutFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
-
 }

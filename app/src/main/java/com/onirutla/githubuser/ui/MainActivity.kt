@@ -1,4 +1,4 @@
-package com.onirutla.githubuser
+package com.onirutla.githubuser.ui
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -9,9 +9,12 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
+import com.onirutla.githubuser.MainNavDirections
+import com.onirutla.githubuser.R
 import com.onirutla.githubuser.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding

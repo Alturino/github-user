@@ -1,4 +1,4 @@
-package com.onirutla.githubuser
+package com.onirutla.githubuser.ui.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

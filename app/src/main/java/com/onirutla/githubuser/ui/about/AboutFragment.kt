@@ -1,22 +1,22 @@
-package com.onirutla.githubuser
+package com.onirutla.githubuser.ui.about
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.onirutla.githubuser.databinding.FragmentFavoriteBinding
+import androidx.fragment.app.Fragment
+import com.onirutla.githubuser.databinding.FragmentAboutBinding
 
-class FavoriteFragment : Fragment() {
+class AboutFragment : Fragment() {
 
-    private var _binding: FragmentFavoriteBinding? = null
+    private var _binding: FragmentAboutBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
+        _binding = FragmentAboutBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -24,4 +24,5 @@ class FavoriteFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
+
 }

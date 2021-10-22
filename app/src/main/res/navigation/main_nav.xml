@@ -7,27 +7,27 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.onirutla.githubuser.HomeFragment"
+        android:name="com.onirutla.githubuser.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.onirutla.githubuser.SearchFragment"
+        android:name="com.onirutla.githubuser.ui.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.onirutla.githubuser.AboutFragment"
+        android:name="com.onirutla.githubuser.ui.about.AboutFragment"
         android:label="fragment_about"
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.onirutla.githubuser.SettingFragment"
+        android:name="com.onirutla.githubuser.ui.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
     <fragment
         android:id="@+id/favoriteFragment"
-        android:name="com.onirutla.githubuser.FavoriteFragment"
+        android:name="com.onirutla.githubuser.ui.favorite.FavoriteFragment"
         android:label="fragment_favorite"
         tools:layout="@layout/fragment_favorite" />
     <action

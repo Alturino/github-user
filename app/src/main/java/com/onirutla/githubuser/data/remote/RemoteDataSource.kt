@@ -5,7 +5,9 @@ import androidx.lifecycle.liveData
 import com.onirutla.githubuser.data.remote.network.NetworkService
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RemoteDataSource @Inject constructor(private val apiService: NetworkService) {
 
     fun getUserSearch(username: String) = liveData(Dispatchers.IO) {

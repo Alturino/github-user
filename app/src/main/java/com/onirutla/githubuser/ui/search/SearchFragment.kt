@@ -39,6 +39,17 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.users.observe(viewLifecycleOwner, {
+                searchAdapter.submitList(it.items)
+            })
+        }
+
+        setupUI()
+    }
+
+    private fun setupUI(){
         with(binding) {
             toolbar.setNavigationOnClickListener {
                 it.findNavController().navigateUp()
@@ -71,11 +82,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun getUserSearch(keyword: String) {
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.getUserSearch(username = keyword).observe(viewLifecycleOwner, {
-                searchAdapter.submitList(it.items)
-            })
-        }
+        viewModel.search(keyword)
     }
 
     private fun View.closeSoftKeyboard(context: Context) {

@@ -11,4 +11,7 @@
     <string name="header_follower">Follower</string>
     <string name="header_following">Following</string>
     <string name="header_repositories">Repositories</string>
+    <string name="developer_name">Ricky Alturino</string>
+    <string name="developer_email">onirutla@gmail.com</string>
+    <string name="developer_summary">I am a Computer Science Student that has an interest in Software Engineering. I had experience in developing an Android App, RESTful API, and Static Website. I tend to write code that is testable, robust, and readable.</string>
 </resources>

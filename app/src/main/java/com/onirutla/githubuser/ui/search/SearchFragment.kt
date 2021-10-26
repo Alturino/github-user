@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.onirutla.githubuser.databinding.FragmentSearchBinding
+import com.onirutla.githubuser.ui.adapter.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +25,7 @@ class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModels()
 
     private val searchAdapter by lazy {
-        SearchAdapter { view, user ->
+        UserAdapter { view, user ->
             user.username?.let {
                 view.findNavController()
                     .navigate(SearchFragmentDirections.actionSearchFragmentToDetailFragment(it))

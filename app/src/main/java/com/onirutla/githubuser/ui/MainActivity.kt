@@ -49,16 +49,19 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.searchFragment -> {
-                    setBottomAppBarForSearch()
+                    hideBottomAppbar()
+                }
+                R.id.detailFragment -> {
+                    hideBottomAppbar()
                 }
                 else -> {
-                    setBottomAppBar()
+                    showBottomAppbar()
                 }
             }
         }
     }
 
-    private fun setBottomAppBar() {
+    private fun showBottomAppbar() {
         binding.run {
             bottomAppbar.visibility = View.VISIBLE
             bottomAppbar.performShow()
@@ -66,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setBottomAppBarForSearch() {
+    private fun hideBottomAppbar() {
         binding.run {
             bottomAppbar.visibility = View.GONE
             bottomAppbar.performHide()

@@ -25,7 +25,10 @@ class SearchFragment : Fragment() {
 
     private val searchAdapter by lazy {
         SearchAdapter { view, user ->
-
+            user.username?.let {
+                view.findNavController()
+                    .navigate(SearchFragmentDirections.actionSearchFragmentToDetailFragment(it))
+            }
         }
     }
 
@@ -49,7 +52,7 @@ class SearchFragment : Fragment() {
         setupUI()
     }
 
-    private fun setupUI(){
+    private fun setupUI() {
         with(binding) {
             toolbar.setNavigationOnClickListener {
                 it.findNavController().navigateUp()

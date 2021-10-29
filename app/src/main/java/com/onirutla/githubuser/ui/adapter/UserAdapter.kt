@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.ui.search
+package com.onirutla.githubuser.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +9,8 @@ import com.onirutla.githubuser.data.remote.response.UserResponse
 import com.onirutla.githubuser.databinding.UserItemBinding
 import com.onirutla.githubuser.util.Constant.diff
 
-class SearchAdapter(private val listener: (view: View, user: UserResponse) -> Unit) :
-    ListAdapter<UserResponse, SearchAdapter.ViewHolder>(diff) {
+class UserAdapter(private val listener: (view: View, user: UserResponse) -> Unit) :
+    ListAdapter<UserResponse, UserAdapter.ViewHolder>(diff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = UserItemBinding.inflate(

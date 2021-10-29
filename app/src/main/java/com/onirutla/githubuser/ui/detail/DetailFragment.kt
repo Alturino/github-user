@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.tabs.TabLayoutMediator
 import com.onirutla.githubuser.R
 import com.onirutla.githubuser.databinding.FragmentDetailBinding
+import com.onirutla.githubuser.ui.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,6 +24,7 @@ class DetailFragment : Fragment() {
     private val args: DetailFragmentArgs by navArgs()
 
     private val viewModel: DetailViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private val pagerAdapter: ViewPagerAdapter by lazy {
         ViewPagerAdapter(requireActivity())
@@ -38,7 +41,11 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getUser(args.username)
+        val username = args.username
+
+        viewModel.getUser(username)
+        sharedViewModel.setUsername(username)
+
         binding.apply {
             viewModel = this@DetailFragment.viewModel
             lifecycleOwner = viewLifecycleOwner

@@ -24,8 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.onirutla.githubuser.API_KEY"
+            android:value="${API_KEY}" />
     </application>
 
-    <!-- Add configChanges in xml so fragment can survive configuration changes -->
 
 </manifest>

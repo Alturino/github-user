@@ -241,25 +241,16 @@
                 android:layout_height="wrap_content"
                 app:tabIndicatorColor="?attr/colorAccent"
                 app:tabSelectedTextColor="?attr/colorOnPrimary"
-                app:tabTextColor="?attr/colorOnSurface" />
+                app:tabTextColor="?attr/colorOnSurface"
+                tools:ignore="SpeakableTextPresentCheck" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nested_scroll_view"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/view_pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                app:layout_anchorGravity="bottom" />
-
-        </androidx.core.widget.NestedScrollView>
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.onirutla.githubuser.databinding.FragmentFollowingBinding
 import com.onirutla.githubuser.ui.SharedViewModel
 import com.onirutla.githubuser.ui.adapter.UserAdapter
+import com.onirutla.githubuser.ui.detail.DetailFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +25,8 @@ class FollowingFragment : Fragment() {
 
     private val followingAdapter by lazy {
         UserAdapter { view, user ->
-
+            view.findNavController()
+                .navigate(DetailFragmentDirections.actionDetailFragmentSelf(user.username!!))
         }
     }
 
@@ -39,20 +41,19 @@ class FollowingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            activityViewModel.username.observe(viewLifecycleOwner, { username ->
+        activityViewModel.username.observe(viewLifecycleOwner, { username ->
 
-                viewModel.getUser(username)
+            viewModel.getUser(username)
 
-                viewModel.user.observe(viewLifecycleOwner, { followers ->
-                    followingAdapter.submitList(followers)
-                    binding.rvUser.apply {
-                        adapter = followingAdapter
-                        setHasFixedSize(true)
-                    }
-                })
+            viewModel.user.observe(viewLifecycleOwner, { followers ->
+                followingAdapter.submitList(followers)
+                binding.rvUser.apply {
+                    adapter = followingAdapter
+                    setHasFixedSize(true)
+                }
             })
-        }
+        })
+
     }
 
     override fun onDestroy() {

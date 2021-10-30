@@ -9,8 +9,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.tabs.TabLayoutMediator
-import com.onirutla.githubuser.R
 import com.onirutla.githubuser.databinding.FragmentDetailBinding
 import com.onirutla.githubuser.ui.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +25,7 @@ class DetailFragment : Fragment() {
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private val pagerAdapter: ViewPagerAdapter by lazy {
-        ViewPagerAdapter(requireActivity())
+        ViewPagerAdapter(childFragmentManager)
     }
 
     override fun onCreateView(
@@ -49,22 +47,21 @@ class DetailFragment : Fragment() {
         binding.apply {
             viewModel = this@DetailFragment.viewModel
             lifecycleOwner = viewLifecycleOwner
-            setupTabLayout()
+        }
+
+        setupUI()
+    }
+
+    private fun setupUI() {
+        binding.apply {
+
             toolbar.setNavigationOnClickListener {
                 it.findNavController().navigateUp()
             }
-        }
-    }
 
-    private fun setupTabLayout() {
-        binding.viewPager.adapter = pagerAdapter
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            val tabs = listOf(
-                resources.getString(R.string.header_follower),
-                resources.getString(R.string.header_following)
-            )
-            tab.text = tabs[position]
-        }.attach()
+            viewPager.adapter = pagerAdapter
+            tabLayout.setupWithViewPager(viewPager)
+        }
     }
 
     override fun onDestroy() {

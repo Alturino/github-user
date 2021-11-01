@@ -16,4 +16,5 @@ object Constant {
     }
 
     const val API_KEY = BuildConfig.API_KEY
+    const val DB_NAME = "github_user_db"
 }

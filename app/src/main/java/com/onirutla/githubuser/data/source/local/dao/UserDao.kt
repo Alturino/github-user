@@ -1,8 +1,8 @@
-package com.onirutla.githubuser.data.local.dao
+package com.onirutla.githubuser.data.source.local.dao
 
 import androidx.room.*
 import androidx.room.OnConflictStrategy.REPLACE
-import com.onirutla.githubuser.data.local.entity.UserEntity
+import com.onirutla.githubuser.data.source.local.entity.UserEntity
 
 @Dao
 interface UserDao {

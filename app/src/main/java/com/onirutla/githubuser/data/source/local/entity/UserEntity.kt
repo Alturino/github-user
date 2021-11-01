@@ -1,8 +1,9 @@
-package com.onirutla.githubuser.data.local.entity
+package com.onirutla.githubuser.data.source.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.onirutla.githubuser.data.UserDTO
 
 @Entity(tableName = "user")
 data class UserEntity(
@@ -29,7 +30,10 @@ data class UserEntity(
     val publicRepos: Int,
 
     @ColumnInfo(name = "follower_url")
-    val followerUrl: String,
+    val followersUrl: String,
+
+    @ColumnInfo(name = "following_url")
+    val followingUrl: String,
 
     @ColumnInfo(name = "avatar_url")
     val avatarUrl: String,
@@ -37,3 +41,16 @@ data class UserEntity(
     @ColumnInfo(name = "is_favorite")
     var isFavorite: Boolean = false
 )
+
+fun UserEntity.toDto(): UserDTO {
+    return UserDTO(
+        id = this.id,
+        name = this.name,
+        username = this.username,
+        type = this.type,
+        followers = this.followers,
+        following = this.following,
+        publicRepos = this.publicRepos,
+        avatarUrl = this.avatarUrl
+    )
+}

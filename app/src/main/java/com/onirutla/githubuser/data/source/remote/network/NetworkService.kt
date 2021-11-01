@@ -1,7 +1,7 @@
-package com.onirutla.githubuser.data.remote.network
+package com.onirutla.githubuser.data.source.remote.network
 
-import com.onirutla.githubuser.data.remote.response.SearchResponse
-import com.onirutla.githubuser.data.remote.response.UserResponse
+import com.onirutla.githubuser.data.source.remote.response.SearchResponse
+import com.onirutla.githubuser.data.source.remote.response.UserResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

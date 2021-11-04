@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.data.remote.response
+package com.onirutla.githubuser.data.source.remote.response
 
 
 import com.squareup.moshi.Json
@@ -7,11 +7,11 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SearchResponse(
     @Json(name = "incomplete_results")
-    var incompleteResults: Boolean?,
+    var incompleteResults: Boolean? = null,
 
     @Json(name = "items")
-    var items: List<UserResponse>?,
+    var items: List<UserResponse>? = null,
 
     @Json(name = "total_count")
-    var totalCount: Int?
+    var totalCount: Int? = null
 )

@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentFollowerBinding
 import com.onirutla.githubuser.ui.SharedViewModel
 import com.onirutla.githubuser.ui.adapter.UserAdapter
@@ -45,8 +47,26 @@ class FollowerFragment : Fragment() {
 
             viewModel.getUser(username)
 
-            viewModel.user.observe(viewLifecycleOwner, { followers ->
-                followerAdapter.submitList(followers)
+            viewModel.user.observe(viewLifecycleOwner, { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        binding.apply {
+                            progressBar.visibility = View.GONE
+                            rvUser.visibility = View.VISIBLE
+                        }
+                        followerAdapter.submitList(resource.data)
+                    }
+                    is Resource.Loading -> {
+                        binding.apply {
+                            rvUser.visibility = View.GONE
+                            progressBar.visibility = View.VISIBLE
+                        }
+                    }
+                    is Resource.Error -> {
+                        Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
                 binding.rvUser.apply {
                     adapter = followerAdapter
                     setHasFixedSize(true)

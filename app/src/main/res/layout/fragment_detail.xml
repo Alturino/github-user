@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.onirutla.githubuser.ui.detail.DetailViewModel" />
+            name="user"
+            type="com.onirutla.githubuser.data.UserDTO" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -49,7 +49,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:loadImage="@{viewModel.user.avatarUrl}"
+                        app:loadImage="@{user.avatarUrl}"
                         app:shapeAppearanceOverlay="@style/CircularImageView"
                         tools:src="@drawable/ic_person_24" />
 
@@ -59,7 +59,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="@{viewModel.user.name}"
+                        android:text="@{user.name}"
                         android:textAppearance="?attr/textAppearanceHeadline5"
                         app:layout_constraintEnd_toEndOf="@+id/detail_image"
                         app:layout_constraintStart_toStartOf="@+id/detail_image"
@@ -72,7 +72,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="@{viewModel.user.username}"
+                        android:text="@{user.username}"
                         android:textAppearance="?attr/textAppearanceSubtitle1"
                         app:layout_constraintEnd_toEndOf="@+id/detail_name"
                         app:layout_constraintStart_toStartOf="@+id/detail_name"
@@ -109,7 +109,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="@{String.valueOf(viewModel.user.followers)}"
+                                android:text="@{String.valueOf(user.followers)}"
                                 app:layout_constraintEnd_toEndOf="@+id/header_follower"
                                 app:layout_constraintStart_toStartOf="@+id/header_follower"
                                 app:layout_constraintTop_toBottomOf="@+id/header_follower"
@@ -149,7 +149,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="@{String.valueOf(viewModel.user.following)}"
+                                android:text="@{String.valueOf(user.following)}"
                                 app:layout_constraintEnd_toEndOf="@+id/header_following"
                                 app:layout_constraintStart_toStartOf="@+id/header_following"
                                 app:layout_constraintTop_toBottomOf="@+id/header_following"
@@ -189,7 +189,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="@{String.valueOf(viewModel.user.publicRepos)}"
+                                android:text="@{String.valueOf(user.publicRepos)}"
                                 app:layout_constraintEnd_toEndOf="@+id/header_repositories"
                                 app:layout_constraintStart_toStartOf="@+id/header_repositories"
                                 app:layout_constraintTop_toBottomOf="@+id/header_repositories"
@@ -217,7 +217,7 @@
                         <com.google.android.material.textview.MaterialTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{viewModel.user.username}"
+                            android:text="@{user.username}"
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             android:textColor="?attr/colorOnPrimary"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -245,6 +245,12 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
         </com.google.android.material.appbar.AppBarLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"

@@ -2,8 +2,8 @@ package com.onirutla.githubuser.di
 
 import android.content.Context
 import androidx.room.Room
-import com.onirutla.githubuser.data.local.dao.UserDao
-import com.onirutla.githubuser.data.local.db.GithubUserDatabase
+import com.onirutla.githubuser.data.source.local.dao.UserDao
+import com.onirutla.githubuser.data.source.local.db.GithubUserDatabase
 import com.onirutla.githubuser.util.Constant
 import dagger.Module
 import dagger.Provides

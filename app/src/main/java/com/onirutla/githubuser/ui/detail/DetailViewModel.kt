@@ -1,8 +1,9 @@
 package com.onirutla.githubuser.ui.detail
 
 import androidx.lifecycle.*
-import com.onirutla.githubuser.data.remote.RemoteDataSource
-import com.onirutla.githubuser.data.remote.response.UserResponse
+import com.onirutla.githubuser.data.Resource
+import com.onirutla.githubuser.data.UserDTO
+import com.onirutla.githubuser.data.source.UserDataSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -10,13 +11,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val remoteDataSource: RemoteDataSource
+    private val userDataSource: UserDataSource
 ) : ViewModel() {
 
     private val _username = MutableLiveData<String>()
 
-    val user: LiveData<UserResponse> = _username.switchMap {
-        remoteDataSource.getUserDetail(it)
+    val user: LiveData<Resource<UserDTO>> = _username.switchMap {
+        userDataSource.getUserDetail(it).asLiveData()
     }
 
     fun getUser(username: String) {

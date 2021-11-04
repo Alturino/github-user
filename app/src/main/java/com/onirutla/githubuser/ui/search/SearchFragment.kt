@@ -8,14 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentSearchBinding
 import com.onirutla.githubuser.ui.adapter.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
@@ -44,11 +47,27 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.users.observe(viewLifecycleOwner, {
-                searchAdapter.submitList(it.items)
-            })
-        }
+        viewModel.users.observe(viewLifecycleOwner, {
+            when (it) {
+                is Resource.Success -> {
+                    binding.apply {
+                        progressBar.visibility = View.GONE
+                        binding.rvUser.visibility = View.VISIBLE
+                    }
+                    searchAdapter.submitList(it.data)
+                }
+                is Resource.Loading -> {
+                    binding.apply {
+                        progressBar.visibility = View.VISIBLE
+                        rvUser.visibility = View.GONE
+                    }
+                }
+                is Resource.Error -> {
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        })
 
         setupUI()
     }

@@ -1,7 +1,10 @@
 package com.onirutla.githubuser.data.source.local.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
+import androidx.room.Query
+import androidx.room.Update
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 
 @Dao
@@ -11,10 +14,13 @@ interface UserDao {
     suspend fun insertUser(userEntity: UserEntity)
 
     @Insert(onConflict = REPLACE)
-    suspend fun insertUserSearch(users: List<UserEntity>)
+    suspend fun insertUsers(users: List<UserEntity>)
 
     @Update
     suspend fun updateFavorite(userEntity: UserEntity)
+
+    @Query(value = "SELECT * FROM USER where username like '%' || :username || '%'")
+    suspend fun getUserDetail(username: String): UserEntity
 
     @Query(value = "SELECT * FROM USER where is_favorite = 1")
     suspend fun getFavorites(): List<UserEntity>

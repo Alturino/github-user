@@ -51,6 +51,9 @@ fun UserEntity.toDto(): UserDTO {
         followers = this.followers,
         following = this.following,
         publicRepos = this.publicRepos,
-        avatarUrl = this.avatarUrl
+        avatarUrl = this.avatarUrl,
+        followersUrl = this.followersUrl,
+        followingUrl = this.followingUrl,
+        isFavorite = this.isFavorite
     )
 }

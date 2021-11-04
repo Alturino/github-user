@@ -2,19 +2,17 @@ package com.onirutla.githubuser.util
 
 import androidx.recyclerview.widget.DiffUtil
 import com.onirutla.githubuser.BuildConfig
-import com.onirutla.githubuser.data.remote.response.UserResponse
+import com.onirutla.githubuser.data.UserDTO
 
 object Constant {
     const val BASE_URL = "https://api.github.com/"
 
-    val diff = object : DiffUtil.ItemCallback<UserResponse>() {
-        override fun areItemsTheSame(oldItem: UserResponse, newItem: UserResponse): Boolean =
+    val diff = object : DiffUtil.ItemCallback<UserDTO>() {
+        override fun areItemsTheSame(oldItem: UserDTO, newItem: UserDTO): Boolean =
             oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: UserResponse, newItem: UserResponse): Boolean =
+        override fun areContentsTheSame(oldItem: UserDTO, newItem: UserDTO): Boolean =
             oldItem == newItem
     }
-
-    const val API_KEY = BuildConfig.API_KEY
     const val DB_NAME = "github_user_db"
 }

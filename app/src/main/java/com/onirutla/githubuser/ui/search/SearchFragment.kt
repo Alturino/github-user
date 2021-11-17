@@ -29,10 +29,8 @@ class SearchFragment : Fragment() {
 
     private val searchAdapter by lazy {
         UserAdapter { view, user ->
-            user.username?.let {
-                view.findNavController()
-                    .navigate(SearchFragmentDirections.actionSearchFragmentToDetailFragment(it))
-            }
+            view.findNavController()
+                .navigate(SearchFragmentDirections.actionSearchFragmentToDetailFragment(user.username))
         }
     }
 
@@ -62,10 +60,7 @@ class SearchFragment : Fragment() {
                         rvUser.visibility = View.GONE
                     }
                 }
-                is Resource.Error -> {
-                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT)
-                        .show()
-                }
+                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
             }
         })
 

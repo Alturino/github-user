@@ -7,7 +7,7 @@
 
         <variable
             name="user"
-            type="com.onirutla.githubuser.data.UserDTO" />
+            type="com.onirutla.githubuser.data.source.local.entity.UserEntity" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -245,6 +245,14 @@
                 tools:ignore="SpeakableTextPresentCheck" />
 
         </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/large_component"
+            android:contentDescription="@string/favorite" />
 
         <ProgressBar
             android:id="@+id/progress_bar"

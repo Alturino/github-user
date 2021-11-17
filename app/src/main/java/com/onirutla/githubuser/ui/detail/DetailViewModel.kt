@@ -2,8 +2,8 @@ package com.onirutla.githubuser.ui.detail
 
 import androidx.lifecycle.*
 import com.onirutla.githubuser.data.Resource
-import com.onirutla.githubuser.data.UserDTO
 import com.onirutla.githubuser.data.source.UserDataSource
+import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,8 +16,14 @@ class DetailViewModel @Inject constructor(
 
     private val _username = MutableLiveData<String>()
 
-    val user: LiveData<Resource<UserDTO>> = _username.switchMap {
+    val user: LiveData<Resource<UserEntity>> = _username.switchMap {
         userDataSource.getUserDetail(it).asLiveData()
+    }
+
+    fun setFavorite(userEntity: UserEntity) {
+        viewModelScope.launch {
+            userDataSource.setUserFavorite(userEntity)
+        }
     }
 
     fun getUser(username: String) {

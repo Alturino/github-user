@@ -28,7 +28,7 @@ class FollowingFragment : Fragment() {
     private val followingAdapter by lazy {
         UserAdapter { view, user ->
             view.findNavController()
-                .navigate(DetailFragmentDirections.actionDetailFragmentSelf(user.username!!))
+                .navigate(DetailFragmentDirections.actionDetailFragmentSelf(user.username))
         }
     }
 

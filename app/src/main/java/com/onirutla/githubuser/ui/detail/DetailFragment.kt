@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.onirutla.githubuser.R
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentDetailBinding
 import com.onirutla.githubuser.ui.SharedViewModel
@@ -46,26 +47,60 @@ class DetailFragment : Fragment() {
         viewModel.getUser(username)
         sharedViewModel.setUsername(username)
 
-        viewModel.user.observe(viewLifecycleOwner, {
-            when (it) {
+        viewModel.user.observe(viewLifecycleOwner, { resource ->
+            when (resource) {
                 is Resource.Success -> {
-                    binding.apply {
-                        appbar.visibility = View.VISIBLE
-                        progressBar.visibility = View.GONE
+                    hideLoading()
+                    binding.user = resource.data
+                    var status = resource.data.isFavorite
+                    setFabState(status)
+                    binding.fabFavorite.setOnClickListener {
+                        status = !status
+                        viewModel.setFavorite(resource.data)
+                        setFabState(status)
+                        showToast(status)
                     }
-                    binding.user = it.data
                 }
-                is Resource.Loading -> {
-                    binding.apply {
-                        appbar.visibility = View.GONE
-                        progressBar.visibility = View.VISIBLE
-                    }
-                }
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                is Resource.Loading -> showLoading()
+                is Resource.Error -> showError(resource.message)
             }
         })
 
         setupUI()
+    }
+
+    private fun showError(message: String?) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT)
+            .show()
+    }
+
+    private fun showToast(status: Boolean) {
+        if (status)
+            Toast.makeText(context, "Favorite", Toast.LENGTH_SHORT).show()
+        else
+            Toast.makeText(context, "UnFavorited", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setFabState(status: Boolean) {
+        if (status) {
+            binding.fabFavorite.setImageResource(R.drawable.ic_favorite_24)
+        } else {
+            binding.fabFavorite.setImageResource(R.drawable.ic_favorite_border_24)
+        }
+    }
+
+    private fun showLoading() {
+        binding.apply {
+            appbar.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideLoading() {
+        binding.apply {
+            appbar.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
+        }
     }
 
     private fun setupUI() {
@@ -80,8 +115,8 @@ class DetailFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 }

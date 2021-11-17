@@ -1,16 +1,12 @@
 package com.onirutla.githubuser.data.repository
 
 import com.onirutla.githubuser.data.Resource
-import com.onirutla.githubuser.data.UserDTO
 import com.onirutla.githubuser.data.source.UserDataSource
 import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
-import com.onirutla.githubuser.data.source.local.entity.toDto
 import com.onirutla.githubuser.data.source.remote.NetworkState
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
-import com.onirutla.githubuser.data.source.remote.response.toDto
 import com.onirutla.githubuser.data.source.remote.response.toEntity
-import com.onirutla.githubuser.util.mapList
 import com.onirutla.githubuser.util.mapNullInputList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -25,134 +21,124 @@ class UserRepository @Inject constructor(
     private val localDataSource: LocalDataSource
 ) : UserDataSource {
 
-    override fun getUsersSearch(username: String): Flow<Resource<List<UserDTO>>> =
-        flow {
-            emit(Resource.Loading())
-
-
-            when (val networkState = remoteDataSource.getUserSearch(username)) {
-                is NetworkState.Success -> {
-                    val entities = mapNullInputList(networkState.body.items) {
-                        it.toEntity()
-                    }
-
-                    localDataSource.insertUsers(entities)
-
-                    val dbToDto = mapList(localDataSource.getUserSearch(username)) {
-                        it.toDto()
-                    }
-
-                    emit(Resource.Success(dbToDto))
-                }
-                is NetworkState.Error -> {
-
-                    val dtos = mapList(localDataSource.getUserSearch(username)) {
-                        it.toDto()
-                    }
-
-                    if (dtos.isNullOrEmpty())
-                        emit(Resource.Error(networkState.message))
-                    else
-                        emit(Resource.Success(dtos))
-                }
-            }
-        }.flowOn(Dispatchers.IO)
-
-
-    override fun getUserDetail(username: String): Flow<Resource<UserDTO>> =
-        flow {
-            emit(Resource.Loading())
-
-            when (val networkState = remoteDataSource.getUserDetail(username)) {
-                is NetworkState.Success -> {
-                    val entity = networkState.body.toEntity()
-
-                    localDataSource.insertUserDetail(entity)
-
-                    val fromDb = localDataSource.getUserDetail(username).toDto()
-
-                    emit(Resource.Success(fromDb))
-                }
-                is NetworkState.Error -> {
-
-                    val entity = localDataSource.getUserDetail(username)
-
-                    emit(Resource.Success(entity.toDto()))
-                }
-            }
-        }.flowOn(Dispatchers.IO)
-
-
-    override fun getUsersFollower(username: String): Flow<Resource<List<UserDTO>>> =
-        flow {
-            emit(Resource.Loading())
-
-            when (val networkState = remoteDataSource.getUserFollower(username)) {
-                is NetworkState.Success -> {
-                    val response = networkState.body
-
-                    // Map response to entity
-                    val entities = mapNullInputList(response) {
-                        it.toEntity()
-                    }
-
-                    // Insert to database
-                    localDataSource.insertUsers(entities)
-
-                    // Map to Dto
-                    val dtos = mapNullInputList(response) {
-                        it.toDto()
-                    }
-
-                    emit(Resource.Success(dtos))
-                }
-                is NetworkState.Error -> {
-                    emit(Resource.Error(message = networkState.message))
-                }
-            }
-        }.flowOn(Dispatchers.IO)
-
-    override fun getUsersFollowing(username: String): Flow<Resource<List<UserDTO>>> =
-        flow {
-            emit(Resource.Loading())
-
-            when (val networkState = remoteDataSource.getUserFollowing(username)) {
-                is NetworkState.Success -> {
-                    val response = networkState.body
-
-                    // Map response to entity
-                    val entities = mapNullInputList(response) {
-                        it.toEntity()
-                    }
-
-                    // Insert to database
-                    localDataSource.insertUsers(entities)
-
-                    // Map to Dto
-                    val dtos = mapNullInputList(entities) {
-                        it.toDto()
-                    }
-
-                    emit(Resource.Success(dtos))
-                }
-                is NetworkState.Error -> {
-                    emit(Resource.Error(message = networkState.message))
-                }
-            }
-        }.flowOn(Dispatchers.IO)
-
-
-    override fun getUsersFavorite(): Flow<Resource<List<UserDTO>>> = flow {
+    override fun getUsersSearch(username: String): Flow<Resource<List<UserEntity>>> = flow {
         emit(Resource.Loading())
 
-        val dtos = mapList(localDataSource.getFavorite()) {
-            it.toDto()
+        when (val networkState = remoteDataSource.getUserSearch(username)) {
+            is NetworkState.Success -> {
+                val responseToEntities = mapNullInputList(networkState.body.items) {
+                    it.toEntity()
+                }
+
+                val fromDb = localDataSource.getUserSearch(username)
+
+                localDataSource.insertUsers(responseToEntities)
+
+                //Maintain favorite state
+                for (i in responseToEntities.indices) {
+                    for (j in fromDb.indices) {
+                        if (responseToEntities[i].id == fromDb[j].id && responseToEntities[i].isFavorite != fromDb[j].isFavorite) {
+                            val temp = responseToEntities[i].copy(isFavorite = fromDb[j].isFavorite)
+                            localDataSource.insertUserDetail(temp)
+                        }
+                    }
+                }
+
+                emit(Resource.Success(localDataSource.getUserSearch(username)))
+            }
+            is NetworkState.Error -> {
+
+                val fromDb = localDataSource.getUserSearch(username)
+
+
+                if (fromDb.isNullOrEmpty())
+                    emit(Resource.Error(networkState.message))
+                else
+                    emit(Resource.Success(fromDb))
+            }
+        }
+    }.flowOn(Dispatchers.IO)
+
+
+    override fun getUserDetail(username: String): Flow<Resource<UserEntity>> = flow {
+        emit(Resource.Loading())
+
+        when (val networkState = remoteDataSource.getUserDetail(username)) {
+            is NetworkState.Success -> {
+                val fromNetwork = networkState.body.toEntity()
+
+                val fromDb = localDataSource.getUserDetail(username)
+
+                if (fromNetwork.id == fromDb.id && fromNetwork.isFavorite != fromDb.isFavorite) {
+                    val temp = fromNetwork.copy(isFavorite = fromDb.isFavorite)
+                    localDataSource.insertUserDetail(temp)
+                    emit(Resource.Success(localDataSource.getUserDetail(username)))
+                } else {
+                    localDataSource.insertUserDetail(fromNetwork)
+                    emit(Resource.Success(localDataSource.getUserDetail(username)))
+                }
+            }
+            is NetworkState.Error -> {
+                emit(Resource.Success(localDataSource.getUserDetail(username)))
+            }
         }
 
-        if (dtos.isNullOrEmpty())
+    }.flowOn(Dispatchers.IO)
+
+
+    override fun getUsersFollower(username: String): Flow<Resource<List<UserEntity>>> = flow {
+        emit(Resource.Loading())
+
+        when (val networkState = remoteDataSource.getUserFollower(username)) {
+            is NetworkState.Success -> {
+                val response = networkState.body
+
+                // Map response to entity
+                val entities = mapNullInputList(response) {
+                    it.toEntity()
+                }
+
+                emit(Resource.Success(entities))
+            }
+            is NetworkState.Error -> {
+                emit(Resource.Error(message = networkState.message))
+            }
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override fun getUsersFollowing(username: String): Flow<Resource<List<UserEntity>>> = flow {
+        emit(Resource.Loading())
+
+        when (val networkState = remoteDataSource.getUserFollowing(username)) {
+            is NetworkState.Success -> {
+                val response = networkState.body
+
+                // Map response to entity
+                val entities = mapNullInputList(response) {
+                    it.toEntity()
+                }
+
+                // Insert to database
+                localDataSource.insertUsers(entities)
+
+                emit(Resource.Success(entities))
+            }
+            is NetworkState.Error -> {
+                emit(Resource.Error(message = networkState.message))
+            }
+        }
+    }.flowOn(Dispatchers.IO)
+
+
+    override fun getUsersFavorite(): Flow<Resource<List<UserEntity>>> = flow {
+        emit(Resource.Loading())
+
+        val fromDb = localDataSource.getFavorite()
+
+        if (fromDb.isNullOrEmpty())
             emit(Resource.Error(message = "You don't have any favorite user yet"))
         else
-            emit(Resource.Success(dtos))
+            emit(Resource.Success(fromDb))
 
     }.flowOn(Dispatchers.IO)
 

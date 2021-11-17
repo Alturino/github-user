@@ -2,8 +2,8 @@ package com.onirutla.githubuser.ui.following
 
 import androidx.lifecycle.*
 import com.onirutla.githubuser.data.Resource
-import com.onirutla.githubuser.data.UserDTO
 import com.onirutla.githubuser.data.source.UserDataSource
+import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ class FollowingViewModel @Inject constructor(
 
     private val _username = MutableLiveData<String>()
 
-    val user: LiveData<Resource<List<UserDTO>>> = _username.switchMap {
+    val user: LiveData<Resource<List<UserEntity>>> = _username.switchMap {
         userDataSource.getUsersFollowing(it).asLiveData()
     }
 

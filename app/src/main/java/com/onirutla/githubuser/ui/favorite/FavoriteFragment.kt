@@ -59,6 +59,11 @@ class FavoriteFragment : Fragment() {
                     favoriteAdapter.submitList(it.data)
                 }
             }
+
+            binding.rvFavorite.apply {
+                setHasFixedSize(true)
+                adapter = favoriteAdapter
+            }
         })
     }
 

@@ -10,6 +10,7 @@ import com.onirutla.githubuser.data.source.remote.response.toEntity
 import com.onirutla.githubuser.util.mapNullInputList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
@@ -133,12 +134,12 @@ class UserRepository @Inject constructor(
     override fun getUsersFavorite(): Flow<Resource<List<UserEntity>>> = flow {
         emit(Resource.Loading())
 
-        val fromDb = localDataSource.getFavorite()
-
-        if (fromDb.isNullOrEmpty())
-            emit(Resource.Error(message = "You don't have any favorite user yet"))
-        else
-            emit(Resource.Success(fromDb))
+        localDataSource.getFavorite().collect {
+            if (it.isNotEmpty())
+                emit(Resource.Success(it))
+            if (it.isNullOrEmpty())
+                emit(Resource.Error("You don't have any favorite user yet"))
+        }
 
     }.flowOn(Dispatchers.IO)
 

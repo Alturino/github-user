@@ -36,10 +36,16 @@ class UserRepository @Inject constructor(
                 localDataSource.insertUsers(responseToEntities)
 
                 //Maintain favorite state
-                for (i in responseToEntities.indices) {
-                    for (j in fromDb.indices) {
-                        if (responseToEntities[i].id == fromDb[j].id && responseToEntities[i].isFavorite != fromDb[j].isFavorite) {
-                            val temp = responseToEntities[i].copy(isFavorite = fromDb[j].isFavorite)
+                responseToEntities.forEach { fromNetwork ->
+                    fromDb.forEach { fromDb ->
+                        if (fromNetwork.id == fromDb.id) {
+                            val temp = fromNetwork.copy(
+                                isFavorite = fromDb.isFavorite,
+                                username = fromDb.username,
+                                name = fromDb.name,
+                                following = fromDb.following,
+                                followers = fromDb.followers
+                            )
                             localDataSource.insertUserDetail(temp)
                         }
                     }
@@ -50,7 +56,6 @@ class UserRepository @Inject constructor(
             is NetworkState.Error -> {
 
                 val fromDb = localDataSource.getUserSearch(username)
-
 
                 if (fromDb.isNullOrEmpty())
                     emit(Resource.Error(networkState.message))

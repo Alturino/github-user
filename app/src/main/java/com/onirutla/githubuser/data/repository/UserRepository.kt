@@ -75,7 +75,7 @@ class UserRepository @Inject constructor(
 
                 val fromDb = localDataSource.getUserDetail(username)
 
-                if (fromNetwork.id == fromDb.id && fromNetwork.isFavorite != fromDb.isFavorite) {
+                if (fromNetwork.id == fromDb.id) {
                     val temp = fromNetwork.copy(isFavorite = fromDb.isFavorite)
                     localDataSource.insertUserDetail(temp)
                     emit(Resource.Success(localDataSource.getUserDetail(username)))

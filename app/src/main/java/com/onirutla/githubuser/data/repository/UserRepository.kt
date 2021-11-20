@@ -10,6 +10,7 @@ import com.onirutla.githubuser.data.source.remote.response.toEntity
 import com.onirutla.githubuser.util.mapNullInputList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
@@ -35,10 +36,16 @@ class UserRepository @Inject constructor(
                 localDataSource.insertUsers(responseToEntities)
 
                 //Maintain favorite state
-                for (i in responseToEntities.indices) {
-                    for (j in fromDb.indices) {
-                        if (responseToEntities[i].id == fromDb[j].id && responseToEntities[i].isFavorite != fromDb[j].isFavorite) {
-                            val temp = responseToEntities[i].copy(isFavorite = fromDb[j].isFavorite)
+                responseToEntities.forEach { fromNetwork ->
+                    fromDb.forEach { fromDb ->
+                        if (fromNetwork.id == fromDb.id) {
+                            val temp = fromNetwork.copy(
+                                isFavorite = fromDb.isFavorite,
+                                username = fromDb.username,
+                                name = fromDb.name,
+                                following = fromDb.following,
+                                followers = fromDb.followers
+                            )
                             localDataSource.insertUserDetail(temp)
                         }
                     }
@@ -49,7 +56,6 @@ class UserRepository @Inject constructor(
             is NetworkState.Error -> {
 
                 val fromDb = localDataSource.getUserSearch(username)
-
 
                 if (fromDb.isNullOrEmpty())
                     emit(Resource.Error(networkState.message))
@@ -69,7 +75,7 @@ class UserRepository @Inject constructor(
 
                 val fromDb = localDataSource.getUserDetail(username)
 
-                if (fromNetwork.id == fromDb.id && fromNetwork.isFavorite != fromDb.isFavorite) {
+                if (fromNetwork.id == fromDb.id) {
                     val temp = fromNetwork.copy(isFavorite = fromDb.isFavorite)
                     localDataSource.insertUserDetail(temp)
                     emit(Resource.Success(localDataSource.getUserDetail(username)))
@@ -133,12 +139,12 @@ class UserRepository @Inject constructor(
     override fun getUsersFavorite(): Flow<Resource<List<UserEntity>>> = flow {
         emit(Resource.Loading())
 
-        val fromDb = localDataSource.getFavorite()
-
-        if (fromDb.isNullOrEmpty())
-            emit(Resource.Error(message = "You don't have any favorite user yet"))
-        else
-            emit(Resource.Success(fromDb))
+        localDataSource.getFavorite().collect {
+            if (it.isNotEmpty())
+                emit(Resource.Success(it))
+            if (it.isNullOrEmpty())
+                emit(Resource.Error("You don't have any favorite user yet"))
+        }
 
     }.flowOn(Dispatchers.IO)
 

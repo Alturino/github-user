@@ -11,12 +11,17 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentSearchBinding
 import com.onirutla.githubuser.ui.adapter.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -45,24 +50,29 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.users.observe(viewLifecycleOwner, {
-            when (it) {
-                is Resource.Success -> {
-                    binding.apply {
-                        progressBar.visibility = View.GONE
-                        binding.rvUser.visibility = View.VISIBLE
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.users.collectLatest {
+                    when (it) {
+                        is Resource.Success -> {
+                            binding.apply {
+                                progressBar.visibility = View.GONE
+                                binding.rvUser.visibility = View.VISIBLE
+                            }
+                            searchAdapter.submitList(it.data)
+                        }
+                        is Resource.Loading -> {
+                            binding.apply {
+                                progressBar.visibility = View.VISIBLE
+                                rvUser.visibility = View.GONE
+                            }
+                        }
+                        is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_SHORT)
+                            .show()
                     }
-                    searchAdapter.submitList(it.data)
                 }
-                is Resource.Loading -> {
-                    binding.apply {
-                        progressBar.visibility = View.VISIBLE
-                        rvUser.visibility = View.GONE
-                    }
-                }
-                is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
             }
-        })
+        }
 
         setupUI()
     }
@@ -110,8 +120,8 @@ class SearchFragment : Fragment() {
         this.clearFocus()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 }

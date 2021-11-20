@@ -2,13 +2,14 @@ package com.onirutla.githubuser.data.source.local
 
 import com.onirutla.githubuser.data.source.local.dao.UserDao
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class LocalDataSource @Inject constructor(private val userDao: UserDao) {
 
-    suspend fun getFavorite(): List<UserEntity> = userDao.getFavorites()
+    fun getFavorite(): Flow<List<UserEntity>> = userDao.getFavorites()
 
     suspend fun insertUsers(users: List<UserEntity>) = userDao.insertUsers(users)
 

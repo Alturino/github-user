@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import androidx.room.Update
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
@@ -23,7 +24,7 @@ interface UserDao {
     suspend fun getUserDetail(username: String): UserEntity
 
     @Query(value = "SELECT * FROM USER where is_favorite = 1")
-    suspend fun getFavorites(): List<UserEntity>
+    fun getFavorites(): Flow<List<UserEntity>>
 
     @Query(value = "SELECT * FROM USER WHERE username like '%' || :username || '%'")
     suspend fun getUserSearch(username: String): List<UserEntity>

@@ -6,6 +6,7 @@ import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.source.UserDataSource
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ class SearchViewModel @Inject constructor(
     )
 
     fun search(username: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _username.emit(username)
         }
     }

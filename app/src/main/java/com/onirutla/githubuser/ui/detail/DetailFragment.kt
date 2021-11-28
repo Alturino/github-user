@@ -1,5 +1,6 @@
 package com.onirutla.githubuser.ui.detail
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.transition.MaterialContainerTransform
 import com.onirutla.githubuser.R
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentDetailBinding
@@ -29,6 +31,15 @@ class DetailFragment : Fragment() {
 
     private val pagerAdapter: ViewPagerAdapter by lazy {
         ViewPagerAdapter(childFragmentManager)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.nav_host_fragment
+            duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+            scrimColor = Color.TRANSPARENT
+        }
     }
 
     override fun onCreateView(

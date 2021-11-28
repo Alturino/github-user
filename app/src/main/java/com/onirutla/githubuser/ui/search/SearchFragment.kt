@@ -15,6 +15,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import com.google.android.material.transition.MaterialElevationScale
+import com.onirutla.githubuser.R
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentSearchBinding
 import com.onirutla.githubuser.ui.adapter.UserAdapter
@@ -34,8 +37,22 @@ class SearchFragment : Fragment() {
 
     private val searchAdapter by lazy {
         UserAdapter { view, user ->
+            val userDetailTransitionName = getString(R.string.list_transition_detail)
+            val extras = FragmentNavigatorExtras(view to userDetailTransitionName)
+
+            exitTransition = MaterialElevationScale(false).apply {
+                duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+            }
+
+            reenterTransition = MaterialElevationScale(true).apply {
+                duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+            }
+
             view.findNavController()
-                .navigate(SearchFragmentDirections.actionSearchFragmentToDetailFragment(user.username))
+                .navigate(
+                    SearchFragmentDirections.actionSearchFragmentToDetailFragment(user.username),
+                    extras
+                )
         }
     }
 
@@ -49,6 +66,8 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.transition.MaterialSharedAxis
 import com.onirutla.githubuser.MainNavDirections
 import com.onirutla.githubuser.R
 import com.onirutla.githubuser.databinding.ActivityMainBinding
@@ -21,28 +23,50 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
 
+    private val currentFragment: Fragment?
+        get() = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+            ?.childFragmentManager
+            ?.fragments
+            ?.first()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setupBottomNav()
-    }
-
-    private fun setupBottomNav() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
         navController = navHostFragment.findNavController()
 
-        with(binding) {
+        setupBottomNav()
+    }
+
+    private fun setupBottomNav() {
+
+        binding.apply {
             bottomNav.setupWithNavController(navController = navController)
             fab.setOnClickListener {
-                navController.navigate(MainNavDirections.actionGlobalSearchFragment())
+                navigateToSearch()
             }
         }
 
         setupDestinationListener(navController)
+    }
+
+    private fun navigateToSearch() {
+        currentFragment?.apply {
+            exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
+                duration =
+                    resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+            }
+
+            reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
+                duration =
+                    resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+            }
+        }
+        navController.navigate(MainNavDirections.actionGlobalSearchFragment())
     }
 
     private fun setupDestinationListener(navController: NavController) {

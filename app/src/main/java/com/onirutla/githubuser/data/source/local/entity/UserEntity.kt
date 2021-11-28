@@ -3,6 +3,7 @@ package com.onirutla.githubuser.data.source.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.onirutla.githubuser.data.UserDTO
 
 @Entity(tableName = "user")
 data class UserEntity(
@@ -39,4 +40,18 @@ data class UserEntity(
 
     @ColumnInfo(name = "is_favorite")
     var isFavorite: Boolean = false
+)
+
+fun UserEntity.toDto() = UserDTO(
+    id,
+    username,
+    name,
+    type,
+    followers,
+    following,
+    publicRepos,
+    followersUrl,
+    followingUrl,
+    avatarUrl,
+    isFavorite
 )

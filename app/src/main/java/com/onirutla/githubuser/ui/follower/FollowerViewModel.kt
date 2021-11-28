@@ -2,6 +2,7 @@ package com.onirutla.githubuser.ui.follower
 
 import androidx.lifecycle.*
 import com.onirutla.githubuser.data.Resource
+import com.onirutla.githubuser.data.UserDTO
 import com.onirutla.githubuser.data.source.UserDataSource
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,7 @@ class FollowerViewModel @Inject constructor(
 
     private val _username = MutableLiveData<String>()
 
-    val user: LiveData<Resource<List<UserEntity>>> = _username.switchMap {
+    val user: LiveData<Resource<List<UserDTO>>> = _username.switchMap {
         userDataSource.getUsersFollower(it).asLiveData()
     }
 

@@ -7,7 +7,7 @@
 
         <variable
             name="user"
-            type="com.onirutla.githubuser.data.source.local.entity.UserEntity" />
+            type="com.onirutla.githubuser.data.UserDTO" />
     </data>
 
     <FrameLayout

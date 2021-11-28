@@ -27,11 +27,22 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/favorite_placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/favorite_placeholder"
+        android:textAppearance="?attr/textAppearanceOverline"
+        android:textColor="?attr/colorOnSurface"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_favorite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        tools:listitem="@layout/user_item" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

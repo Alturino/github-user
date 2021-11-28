@@ -9,12 +9,17 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import com.google.android.material.transition.MaterialElevationScale
+import com.google.android.material.transition.MaterialSharedAxis
+import com.onirutla.githubuser.R
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentSearchBinding
 import com.onirutla.githubuser.ui.adapter.UserAdapter
@@ -34,8 +39,34 @@ class SearchFragment : Fragment() {
 
     private val searchAdapter by lazy {
         UserAdapter { view, user ->
+            val userDetailTransitionName = getString(R.string.list_transition_detail)
+            val extras = FragmentNavigatorExtras(view to userDetailTransitionName)
+
+            exitTransition = MaterialElevationScale(false).apply {
+                duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+            }
+
+            reenterTransition = MaterialElevationScale(true).apply {
+                duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+            }
+
             view.findNavController()
-                .navigate(SearchFragmentDirections.actionSearchFragmentToDetailFragment(user.username))
+                .navigate(
+                    SearchFragmentDirections.actionSearchFragmentToDetailFragment(user.username),
+                    extras
+                )
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
+            duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+        }
+
+        returnTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
+            duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
         }
     }
 
@@ -49,6 +80,9 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

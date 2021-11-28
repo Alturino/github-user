@@ -8,10 +8,13 @@
     <string name="username">Username</string>
     <string name="about">About</string>
     <string name="search">Search</string>
+    <string name="list_transition_name">list_transition_%1$s</string>
+    <string name="list_transition_detail">list_transition_detail</string>
     <string name="header_follower">Follower</string>
     <string name="header_following">Following</string>
     <string name="header_repositories">Repositories</string>
     <string name="developer_name">Ricky Alturino</string>
     <string name="developer_email">onirutla@gmail.com</string>
     <string name="developer_summary">I am a Computer Science Student that has an interest in Software Engineering. I had experience in developing an Android App, RESTful API, and Static Website. I tend to write code that is testable, robust, and readable.</string>
+    <string name="favorite_placeholder">Favorite user will be displayed if you have favorited user</string>
 </resources>

@@ -11,6 +11,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
+import com.google.android.material.transition.MaterialFadeThrough
+import com.onirutla.githubuser.R
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentFavoriteBinding
 import com.onirutla.githubuser.ui.adapter.UserAdapter
@@ -33,6 +35,22 @@ class FavoriteFragment : Fragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        reenterTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+        }
+
+        enterTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+        }
+
+        exitTransition = MaterialFadeThrough().apply {
+            duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,8 +67,12 @@ class FavoriteFragment : Fragment() {
                 viewModel.favorites.collectLatest {
                     when (it) {
                         is Resource.Error -> {
-                            binding.progressBar.visibility = View.GONE
+                            binding.apply {
+                                progressBar.visibility = View.GONE
+                                favoritePlaceholder.visibility = View.VISIBLE
+                            }
                             Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+
                         }
                         is Resource.Loading -> {
                             binding.apply {

@@ -1,5 +1,6 @@
 package com.onirutla.githubuser.data.source.remote.response
 
+import com.onirutla.githubuser.data.UserDTO
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -37,7 +38,20 @@ data class UserResponse(
     var type: String?,
 )
 
-fun UserResponse.toEntity(): UserEntity = UserEntity(
+fun UserResponse.toEntity() = UserEntity(
+    id = this.id ?: 0,
+    name = this.name.orEmpty(),
+    username = this.username.orEmpty(),
+    type = this.type.orEmpty(),
+    followers = this.followers ?: 0,
+    following = this.following ?: 0,
+    followingUrl = this.followingUrl.orEmpty(),
+    followersUrl = this.followersUrl.orEmpty(),
+    publicRepos = this.publicRepos ?: 0,
+    avatarUrl = this.avatarUrl.orEmpty(),
+)
+
+fun UserResponse.toDto() = UserDTO(
     id = this.id ?: 0,
     name = this.name.orEmpty(),
     username = this.username.orEmpty(),

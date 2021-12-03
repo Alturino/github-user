@@ -2,6 +2,7 @@ package com.onirutla.githubuser.data.source
 
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.UserDTO
+import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import kotlinx.coroutines.flow.Flow
 
 interface UserDataSource {
@@ -15,5 +16,5 @@ interface UserDataSource {
 
     fun getUsersFavorite(): Flow<Resource<List<UserDTO>>>
 
-    suspend fun setUserFavorite(userDto: UserDTO)
+    suspend fun setUserFavorite(userDto: UserDTO): UserEntity
 }

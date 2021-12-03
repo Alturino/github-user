@@ -20,16 +20,6 @@
             app:destination="@id/detailFragment" />
     </fragment>
     <fragment
-        android:id="@+id/aboutFragment"
-        android:name="com.onirutla.githubuser.ui.about.AboutFragment"
-        android:label="fragment_about"
-        tools:layout="@layout/fragment_about" />
-    <fragment
-        android:id="@+id/settingFragment"
-        android:name="com.onirutla.githubuser.ui.setting.SettingFragment"
-        android:label="fragment_setting"
-        tools:layout="@layout/fragment_setting" />
-    <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.onirutla.githubuser.ui.favorite.FavoriteFragment"
         android:label="fragment_favorite"

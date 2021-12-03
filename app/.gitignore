@@ -1,1 +1,4 @@
 /build
+/keystore/github_user_keystore.jks
+/keystore/github_user_keystore_base64_encoded.txt
+/keystore/private_key.pepk

@@ -8,6 +8,27 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            def tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
+            def allFilesFromDir = new File(tmpFilePath).listFiles()
+
+            if (allFilesFromDir != null) {
+                def keystoreFile = allFilesFromDir.first()
+                keystoreFile.renameTo('keystore/github_user_keystore.jks')
+            }
+
+            Properties properties = new Properties()
+            if (project.rootProject.file('local.properties').canRead()) {
+                properties.load(project.rootProject.file('local.properties').newDataInputStream())
+            }
+
+            storeFile file('keystore/github_user_keystore.jks')
+            storePassword properties.getProperty("STORE_PASSWORD")
+            keyPassword properties.getProperty("KEY_PASSWORD")
+            keyAlias properties.getProperty("KEY_ALIAS")
+        }
+    }
     compileSdk 31
 
     defaultConfig {
@@ -30,6 +51,11 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {

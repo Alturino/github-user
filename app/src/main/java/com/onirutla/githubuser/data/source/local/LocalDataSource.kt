@@ -40,14 +40,14 @@ class LocalDataSource @Inject constructor(private val userDao: UserDao) {
     suspend fun insertUserDetail(userEntity: UserEntity) = userDao.insertUser(userEntity)
 
     suspend fun favorite(userEntity: UserEntity): UserEntity {
-        userEntity.isFavorite = true
-        userDao.updateFavorite(userEntity)
-        return userEntity
+        val favorite = userEntity.copy(isFavorite = true)
+        userDao.updateFavorite(favorite)
+        return favorite
     }
 
     suspend fun unFavorite(userEntity: UserEntity): UserEntity {
-        userEntity.isFavorite = false
-        userDao.updateFavorite(userEntity)
-        return userEntity
+        val unFavorite = userEntity.copy(isFavorite = false)
+        userDao.updateFavorite(unFavorite)
+        return unFavorite
     }
 }

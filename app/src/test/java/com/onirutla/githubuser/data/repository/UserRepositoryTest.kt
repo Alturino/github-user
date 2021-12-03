@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -340,8 +339,8 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun `setUserFavorite should change userEntity isFavorite true to userEntity isFavorite false`() =
-        runBlockingTest {
+    fun `setUserFavorite should change userEntity isFavorite true to userEntity isFavorite false`(): Unit =
+        runBlocking {
             val favorite = DummyData.favorite
             `when`(localDataSource.unFavorite(favorite)).thenReturn(DummyData.unFavorite)
 
@@ -355,8 +354,8 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun `setUserFavorite should change userEntity isFavorite false to userEntity isFavorite true`() =
-        runBlockingTest {
+    fun `setUserFavorite should change userEntity isFavorite false to userEntity isFavorite true`(): Unit =
+        runBlocking {
             val unFavorite = DummyData.unFavorite
             `when`(localDataSource.favorite(unFavorite)).thenReturn(DummyData.favorite)
 

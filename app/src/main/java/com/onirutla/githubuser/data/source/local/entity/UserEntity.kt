@@ -39,7 +39,7 @@ data class UserEntity(
     val avatarUrl: String,
 
     @ColumnInfo(name = "is_favorite")
-    var isFavorite: Boolean = false
+    val isFavorite: Boolean = false
 )
 
 fun UserEntity.toDto() = UserDTO(

@@ -151,27 +151,29 @@ class LocalDataSourceTest {
     @Test
     fun `favorite should change isFavorite to true and update to database`() = runBlockingTest {
         val user = DummyData.userEntity
-        `when`(userDao.updateFavorite(user)).thenReturn(Unit)
+        val unFavorite = user.copy(isFavorite = true)
+        `when`(userDao.updateFavorite(unFavorite)).thenReturn(Unit)
 
-        val underTest = localDataSource.favorite(user)
+        val underTest = localDataSource.favorite(unFavorite)
 
         assertNotNull(underTest)
         assertTrue(underTest.isFavorite)
 
-        verify(userDao).updateFavorite(user)
+        verify(userDao).updateFavorite(unFavorite)
     }
 
     @Test
     fun `unFavorite should change isFavorite to false and update to database`() = runBlockingTest {
         val user = DummyData.favorite
-        `when`(userDao.updateFavorite(user)).thenReturn(Unit)
+        val favorite = user.copy(isFavorite = false)
+        `when`(userDao.updateFavorite(favorite)).thenReturn(Unit)
 
-        val underTest = localDataSource.unFavorite(user)
+        val underTest = localDataSource.unFavorite(favorite)
 
         assertNotNull(underTest)
         assertFalse(underTest.isFavorite)
 
-        verify(userDao).updateFavorite(user)
+        verify(userDao).updateFavorite(favorite)
     }
 }
 

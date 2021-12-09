@@ -26,7 +26,7 @@ interface UserDao {
     @Query(value = "SELECT * FROM USER where is_favorite = 1")
     fun getFavorites(): Flow<List<UserEntity>>
 
-    @Query(value = "SELECT * FROM USER WHERE username like '%' || :username || '%'")
+    @Query(value = "SELECT * FROM USER WHERE username like :username || '%'")
     fun getUserSearch(username: String): Flow<List<UserEntity>>
 
 }

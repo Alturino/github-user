@@ -14,4 +14,7 @@ object Constant {
             oldItem == newItem
     }
     const val DB_NAME = "github_user_db"
+
+    const val INTRO_DATASTORE = "intro_datastore"
+    const val KEY_INTRO_PREFERENCES = "key_intro_preferences"
 }

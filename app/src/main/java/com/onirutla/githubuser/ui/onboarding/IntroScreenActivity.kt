@@ -35,10 +35,10 @@ class IntroScreenActivity : AppCompatActivity() {
                     super.onPageSelected(position)
                     Log.d("intro screen activity", "$position")
                     if (position == introAdapter.itemCount - 1) {
-                        binding.buttonSkip.visibility = View.GONE
-                        with(binding.buttonDone) {
-                            visibility = View.VISIBLE
-                            setOnClickListener {
+                        with(binding) {
+                            buttonSkip.visibility = View.GONE
+                            buttonDone.visibility = View.VISIBLE
+                            buttonDone.setOnClickListener {
                                 viewModel.setUserPreferences()
                                 startActivity(
                                     Intent(
@@ -50,9 +50,12 @@ class IntroScreenActivity : AppCompatActivity() {
                             }
                         }
                     } else {
-                        binding.buttonSkip.visibility = View.VISIBLE
-                        binding.buttonSkip.setOnClickListener {
-                            binding.introViewpager.currentItem = introAdapter.itemCount - 1
+                        binding.buttonDone.visibility = View.GONE
+                        with(binding.buttonSkip) {
+                            visibility = View.VISIBLE
+                            setOnClickListener {
+                                binding.introViewpager.currentItem = introAdapter.itemCount - 1
+                            }
                         }
                     }
                 }

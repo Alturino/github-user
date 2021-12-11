@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GithubUser">
         <activity
-            android:name=".ui.SplashScreen"
+            android:name=".ui.splashscreen.SplashScreen"
             android:exported="true"
             android:theme="@style/Theme.GithubUser.SplashScreen">
             <intent-filter>
@@ -27,6 +27,11 @@
         </activity>
 
         <activity
+            android:name=".ui.onboarding.IntroScreenActivity"
+            android:exported="true"
+            android:theme="@style/Theme.GithubUser.SplashScreen" />
+
+        <activity
             android:name=".ui.MainActivity"
             android:exported="true" />
 
@@ -34,5 +39,6 @@
             android:name="com.onirutla.githubuser.API_KEY"
             android:value="${API_KEY}" />
     </application>
+
 
 </manifest>

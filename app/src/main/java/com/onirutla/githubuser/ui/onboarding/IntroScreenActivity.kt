@@ -33,7 +33,6 @@ class IntroScreenActivity : AppCompatActivity() {
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    Log.d("intro screen activity", "$position")
                     if (position == introAdapter.itemCount - 1) {
                         with(binding) {
                             buttonSkip.visibility = View.GONE

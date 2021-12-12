@@ -62,7 +62,6 @@ class FollowingFragment : Fragment() {
                     }
                 }
 
-
                 binding.rvUser.apply {
                     adapter = followingAdapter
                     setHasFixedSize(true)

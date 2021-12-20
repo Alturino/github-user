@@ -9,6 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialContainerTransform
@@ -17,7 +20,11 @@ import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentDetailBinding
 import com.onirutla.githubuser.ui.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
@@ -58,24 +65,29 @@ class DetailFragment : Fragment() {
         viewModel.getUser(username)
         sharedViewModel.setUsername(username)
 
-        viewModel.user.observe(viewLifecycleOwner, { resource ->
-            when (resource) {
-                is Resource.Success -> {
-                    hideLoading()
-                    binding.user = resource.data
-                    var status = resource.data.isFavorite
-                    setFabState(status)
-                    binding.fabFavorite.setOnClickListener {
-                        status = !status
-                        viewModel.setFavorite(resource.data)
-                        setFabState(status)
-                        showToast(status)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.user.collect { resource ->
+                    when (resource) {
+                        is Resource.Success -> {
+                            hideLoading()
+                            binding.user = resource.data
+                            var status = resource.data.isFavorite
+                            setFabState(status)
+                            binding.fabFavorite.setOnClickListener {
+                                status = !status
+                                viewModel.setFavorite(resource.data)
+                                setFabState(status)
+                                showToast(status)
+                            }
+                        }
+                        is Resource.Loading -> showLoading()
+                        is Resource.Error -> showError(resource.message)
                     }
+
                 }
-                is Resource.Loading -> showLoading()
-                is Resource.Error -> showError(resource.message)
             }
-        })
+        }
 
         setupUI()
     }

@@ -5,17 +5,20 @@ import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.UserDTO
 import com.onirutla.githubuser.data.source.local.FromDb
 import com.onirutla.githubuser.data.source.local.LocalDataSource
+import com.onirutla.githubuser.data.source.local.LocalDataSourceImpl
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.local.entity.toDto
 import com.onirutla.githubuser.data.source.remote.NetworkState
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
-import com.onirutla.githubuser.data.source.remote.response.SearchResponse
+import com.onirutla.githubuser.data.source.remote.RemoteDataSourceImpl
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -31,6 +34,7 @@ class UserRepositoryTest {
     // Dependency
     private lateinit var localDataSource: LocalDataSource
     private lateinit var remoteDataSource: RemoteDataSource
+    private lateinit var testDispatcher: CoroutineDispatcher
 
     private lateinit var username: String
 
@@ -39,9 +43,10 @@ class UserRepositoryTest {
 
     @Before
     fun setUp() {
-        localDataSource = mock(LocalDataSource::class.java)
-        remoteDataSource = mock(RemoteDataSource::class.java)
-        userRepository = UserRepository(remoteDataSource, localDataSource)
+        localDataSource = mock(LocalDataSourceImpl::class.java)
+        remoteDataSource = mock(RemoteDataSourceImpl::class.java)
+        testDispatcher = TestCoroutineDispatcher()
+        userRepository = UserRepository(remoteDataSource, localDataSource, testDispatcher)
         username = "a"
     }
 
@@ -53,30 +58,29 @@ class UserRepositoryTest {
     }
 
     @Test
-    fun `getUsersSearch first item should resource loading`(): Unit = runBlocking {
+    fun `getUsersSearch first item should resource loading`() = runBlockingTest {
         // Arrange
         val fromDb = flow { emit(FromDb.Success(DummyData.userEntities)) }
         `when`(localDataSource.getUserSearch(username)).thenReturn(fromDb)
 
-        val fromNetwork = NetworkState.Success(DummyData.searchResponse)
-        `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetwork)
-
         // Act
-        val underTest = userRepository.getUsersSearch(username).first()
+        val underTest = userRepository.getUsersSearch(username).toList()
 
         // Assert
         assertNotNull(underTest)
-        assertEquals(Resource.Loading<List<UserDTO>>(), underTest)
+        assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
+
+        verify(localDataSource).getUserSearch(username)
     }
 
     @Test
     fun `getUserSearch should return loading and success when data is found in database`(): Unit =
-        runBlocking {
+        runBlockingTest {
             // Arrange
             val fromDb = flow { emit(FromDb.Success(DummyData.userEntities)) }
             `when`(localDataSource.getUserSearch(username)).thenReturn(fromDb)
 
-            val fromNetwork = NetworkState.Success(DummyData.searchResponse)
+            val fromNetwork = NetworkState.Success(DummyData.userResponses)
             `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetwork)
 
             // Act
@@ -95,12 +99,12 @@ class UserRepositoryTest {
 
     @Test
     fun `getUserSearch should return loading and success when data is not found in database but found in network`(): Unit =
-        runBlocking {
+        runBlockingTest {
             // Arrange
             val fromDb = flow { emit(FromDb.Empty<List<UserEntity>>()) }
             `when`(localDataSource.getUserSearch(username)).thenReturn(fromDb)
 
-            val fromNetwork = NetworkState.Success(DummyData.searchResponse)
+            val fromNetwork = NetworkState.Success(DummyData.userResponses)
             `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetwork)
 
             // Act
@@ -119,12 +123,12 @@ class UserRepositoryTest {
 
     @Test
     fun `getUserSearch should return loading and success when data is not found in database but found in network then cache it`(): Unit =
-        runBlocking {
+        runBlockingTest {
             // Arrange
             val fromDb = flow { emit(FromDb.Empty<List<UserEntity>>()) }
             `when`(localDataSource.getUserSearch(username)).thenReturn(fromDb)
 
-            val fromNetwork = NetworkState.Success(DummyData.searchResponse)
+            val fromNetwork = NetworkState.Success(DummyData.userResponses)
             `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetwork)
 
             // Act
@@ -148,12 +152,12 @@ class UserRepositoryTest {
 
     @Test
     fun `getUserSearch should return loading and error when data is not found in database and network`(): Unit =
-        runBlocking {
+        runBlockingTest {
             // Arrange
             val fromDb = flow { emit(FromDb.Empty<List<UserEntity>>()) }
             `when`(localDataSource.getUserSearch(username)).thenReturn(fromDb)
 
-            val fromNetwork = NetworkState.Error<SearchResponse>()
+            val fromNetwork = NetworkState.Error<List<UserResponse>>()
             `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetwork)
 
             // Act
@@ -171,7 +175,7 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun `getUserDetail first item should resource loading`(): Unit = runBlocking {
+    fun `getUserDetail first item should resource loading`(): Unit = runBlockingTest {
         // Arrange
         val fromDb = flow { emit(FromDb.Success(DummyData.userEntity)) }
         `when`(localDataSource.getUserDetail(username)).thenReturn(fromDb)
@@ -189,7 +193,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getUserDetail should return loading and success when data is found in database`(): Unit =
-        runBlocking {
+        runBlockingTest {
             val fromDb = flow { emit(FromDb.Success(DummyData.userEntity)) }
             `when`(localDataSource.getUserDetail(username)).thenReturn(fromDb)
 
@@ -208,7 +212,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getUserDetail should return loading and success when data is not found in database but found in network`(): Unit =
-        runBlocking {
+        runBlockingTest {
             val fromDb = flow { emit(FromDb.Empty<UserEntity>()) }
             `when`(localDataSource.getUserDetail(username)).thenReturn(fromDb)
 
@@ -227,7 +231,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getUserDetail should return loading and error when data is not found in database and network`(): Unit =
-        runBlocking {
+        runBlockingTest {
             val fromDb = flow { emit(FromDb.Empty<UserEntity>()) }
             `when`(localDataSource.getUserDetail(username)).thenReturn(fromDb)
 
@@ -247,7 +251,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getUserFollower should return success when data is found in network`(): Unit =
-        runBlocking {
+        runBlockingTest {
             val fromNetwork = NetworkState.Success(DummyData.userResponses)
             `when`(remoteDataSource.getUserFollower(username)).thenReturn(fromNetwork)
 
@@ -262,7 +266,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getUserFollower should return error when data is not found in network`(): Unit =
-        runBlocking {
+        runBlockingTest {
             val fromNetwork = NetworkState.Error<List<UserResponse>>()
             `when`(remoteDataSource.getUserFollower(username)).thenReturn(fromNetwork)
 
@@ -277,7 +281,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getUserFollowing should return success when data is found in network`(): Unit =
-        runBlocking {
+        runBlockingTest {
             val fromNetwork = NetworkState.Success(DummyData.userResponses)
             `when`(remoteDataSource.getUserFollowing(username)).thenReturn(fromNetwork)
 
@@ -292,7 +296,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getUserFollowing should return error when data is not found in network`(): Unit =
-        runBlocking {
+        runBlockingTest {
             val fromNetwork = NetworkState.Error<List<UserResponse>>()
             `when`(remoteDataSource.getUserFollowing(username)).thenReturn(fromNetwork)
 
@@ -307,7 +311,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getUsersFavorite should return success when data is found in database`(): Unit =
-        runBlocking {
+        runBlockingTest {
             val fromDb = flow { emit(FromDb.Success(DummyData.favorites)) }
             `when`(localDataSource.getFavorite()).thenReturn(fromDb)
 
@@ -322,7 +326,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getUsersFavorite should return empty when data is not found in database`(): Unit =
-        runBlocking {
+        runBlockingTest {
             val fromDb = flow { emit(FromDb.Empty<List<UserEntity>>()) }
             `when`(localDataSource.getFavorite()).thenReturn(fromDb)
 
@@ -331,7 +335,7 @@ class UserRepositoryTest {
             assertNotNull(underTest)
             assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
             assertEquals(
-                Resource.Error<List<UserDTO>>("You don't have any favorite user yet"),
+                Resource.Error<List<UserDTO>>(null),
                 underTest.last()
             )
 
@@ -340,7 +344,7 @@ class UserRepositoryTest {
 
     @Test
     fun `setUserFavorite should change userEntity isFavorite true to userEntity isFavorite false`(): Unit =
-        runBlocking {
+        runBlockingTest {
             val favorite = DummyData.favorite
             `when`(localDataSource.unFavorite(favorite)).thenReturn(DummyData.unFavorite)
 
@@ -355,7 +359,7 @@ class UserRepositoryTest {
 
     @Test
     fun `setUserFavorite should change userEntity isFavorite false to userEntity isFavorite true`(): Unit =
-        runBlocking {
+        runBlockingTest {
             val unFavorite = DummyData.unFavorite
             `when`(localDataSource.favorite(unFavorite)).thenReturn(DummyData.favorite)
 

@@ -40,7 +40,7 @@ class UserRepositoryTest {
     private lateinit var userRepository: UserRepository
 
     // Parameter Function
-    private lateinit var username: String
+    private val username = "a"
 
     // Arrange Value
     private val fromDbSuccessUserEntities = flow { emit(FromDb.Success(DummyData.userEntities)) }
@@ -61,7 +61,6 @@ class UserRepositoryTest {
         remoteDataSource = mock(RemoteDataSourceImpl::class.java)
         testDispatcher = TestCoroutineDispatcher()
         userRepository = UserRepository(remoteDataSource, localDataSource, testDispatcher)
-        username = "a"
     }
 
     @Test
@@ -77,11 +76,11 @@ class UserRepositoryTest {
         `when`(localDataSource.getUserSearch(username)).thenReturn(fromDbSuccessUserEntities)
 
         // Act
-        val underTest = userRepository.getUsersSearch(username).toList()
+        val actual = userRepository.getUsersSearch(username).toList()
 
         // Assert
-        assertNotNull(underTest)
-        assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
+        assertNotNull(actual)
+        assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
 
         verify(localDataSource).getUserSearch(username)
     }
@@ -93,13 +92,13 @@ class UserRepositoryTest {
         `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetworkSuccessResponses)
 
         // Act
-        val underTest = userRepository.getUsersSearch(username).toList()
+        val actual = userRepository.getUsersSearch(username).toList()
 
         // Assert
-        assertNotNull(underTest)
-        assertTrue(underTest.size == 2)
-        assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
-        assertEquals(Resource.Success(DummyData.userDtos), underTest.last())
+        assertNotNull(actual)
+        assertTrue(actual.size == 2)
+        assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
+        assertEquals(Resource.Success(DummyData.userDtos), actual.last())
 
         // Verify
         verify(localDataSource).getUserSearch(username)
@@ -115,13 +114,13 @@ class UserRepositoryTest {
             `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetworkSuccessResponses)
 
             // Act
-            val underTest = userRepository.getUsersSearch(username).toList()
+            val actual = userRepository.getUsersSearch(username).toList()
 
             // Assert
-            assertNotNull(underTest)
-            assertTrue(underTest.size == 2)
-            assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
-            assertEquals(Resource.Success(DummyData.userDtos), underTest.last())
+            assertNotNull(actual)
+            assertTrue(actual.size == 2)
+            assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
+            assertEquals(Resource.Success(DummyData.userDtos), actual.last())
 
             // Verify
             verify(localDataSource).getUserSearch(username)
@@ -136,13 +135,13 @@ class UserRepositoryTest {
             `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetworkSuccessResponses)
 
             // Act
-            val underTest = userRepository.getUsersSearch(username).toList()
+            val actual = userRepository.getUsersSearch(username).toList()
 
             // Assert
-            assertNotNull(underTest)
-            assertTrue(underTest.size == 2)
-            assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
-            assertEquals(Resource.Success(DummyData.userDtos), underTest.last())
+            assertNotNull(actual)
+            assertTrue(actual.size == 2)
+            assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
+            assertEquals(Resource.Success(DummyData.userDtos), actual.last())
 
             // Verify
             verify(localDataSource).getUserSearch(username)
@@ -158,13 +157,13 @@ class UserRepositoryTest {
             `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetworkErrorResponses)
 
             // Act
-            val underTest = userRepository.getUsersSearch(username).toList()
+            val actual = userRepository.getUsersSearch(username).toList()
 
             // Assert
-            assertNotNull(underTest)
-            assertTrue(underTest.size == 2)
-            assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
-            assertEquals(Resource.Error<List<UserDTO>>(), underTest.last())
+            assertNotNull(actual)
+            assertTrue(actual.size == 2)
+            assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
+            assertEquals(Resource.Error<List<UserDTO>>(), actual.last())
 
             // Verify
             verify(localDataSource).getUserSearch(username)
@@ -178,11 +177,11 @@ class UserRepositoryTest {
         `when`(remoteDataSource.getUserDetail(username)).thenReturn(fromNetworkSuccessResponse)
 
         // Act
-        val underTest = userRepository.getUserDetail(username).first()
+        val actual = userRepository.getUserDetail(username).first()
 
         // Assert
-        assertNotNull(underTest)
-        assertEquals(Resource.Loading<UserDTO>(), underTest)
+        assertNotNull(actual)
+        assertEquals(Resource.Loading<UserDTO>(), actual)
     }
 
     @Test
@@ -191,11 +190,11 @@ class UserRepositoryTest {
             `when`(localDataSource.getUserDetail(username)).thenReturn(fromDbSuccessUserEntity)
             `when`(remoteDataSource.getUserDetail(username)).thenReturn(fromNetworkSuccessResponse)
 
-            val underTest = userRepository.getUserDetail(username).toList()
+            val actual = userRepository.getUserDetail(username).toList()
 
-            assertNotNull(underTest)
-            assertEquals(Resource.Loading<UserDTO>(), underTest.first())
-            assertEquals(Resource.Success(DummyData.dto), underTest.last())
+            assertNotNull(actual)
+            assertEquals(Resource.Loading<UserDTO>(), actual.first())
+            assertEquals(Resource.Success(DummyData.dto), actual.last())
 
             verify(localDataSource).getUserDetail(username)
             verify(remoteDataSource, times(0)).getUserDetail(username)
@@ -207,11 +206,11 @@ class UserRepositoryTest {
             `when`(localDataSource.getUserDetail(username)).thenReturn(fromDbEmptyUserEntity)
             `when`(remoteDataSource.getUserDetail(username)).thenReturn(fromNetworkSuccessResponse)
 
-            val underTest = userRepository.getUserDetail(username).toList()
+            val actual = userRepository.getUserDetail(username).toList()
 
-            assertNotNull(underTest)
-            assertEquals(Resource.Loading<UserEntity>(), underTest.first())
-            assertEquals(Resource.Success(DummyData.dto), underTest.last())
+            assertNotNull(actual)
+            assertEquals(Resource.Loading<UserEntity>(), actual.first())
+            assertEquals(Resource.Success(DummyData.dto), actual.last())
 
             verify(localDataSource).getUserDetail(username)
             verify(remoteDataSource).getUserDetail(username)
@@ -223,11 +222,11 @@ class UserRepositoryTest {
             `when`(localDataSource.getUserDetail(username)).thenReturn(fromDbEmptyUserEntity)
             `when`(remoteDataSource.getUserDetail(username)).thenReturn(fromNetworkErrorResponse)
 
-            val underTest = userRepository.getUserDetail(username).toList()
+            val actual = userRepository.getUserDetail(username).toList()
 
-            assertNotNull(underTest)
-            assertEquals(Resource.Loading<UserEntity>(), underTest.first())
-            assertEquals(Resource.Error<UserDTO>(null), underTest.last())
+            assertNotNull(actual)
+            assertEquals(Resource.Loading<UserEntity>(), actual.first())
+            assertEquals(Resource.Error<UserDTO>(null), actual.last())
 
             verify(localDataSource).getUserDetail(username)
             verify(remoteDataSource).getUserDetail(username)
@@ -238,11 +237,11 @@ class UserRepositoryTest {
     fun `getUserFollower should return success when data is found in network`() = runBlockingTest {
         `when`(remoteDataSource.getUserFollower(username)).thenReturn(fromNetworkSuccessResponses)
 
-        val underTest = userRepository.getUsersFollower(username).toList()
+        val actual = userRepository.getUsersFollower(username).toList()
 
-        assertNotNull(underTest)
-        assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
-        assertEquals(Resource.Success(DummyData.userDtos), underTest.last())
+        assertNotNull(actual)
+        assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
+        assertEquals(Resource.Success(DummyData.userDtos), actual.last())
 
         verify(remoteDataSource).getUserFollower(username)
     }
@@ -252,11 +251,11 @@ class UserRepositoryTest {
         runBlockingTest {
             `when`(remoteDataSource.getUserFollower(username)).thenReturn(fromNetworkErrorResponses)
 
-            val underTest = userRepository.getUsersFollower(username).toList()
+            val actual = userRepository.getUsersFollower(username).toList()
 
-            assertNotNull(underTest)
-            assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
-            assertEquals(Resource.Error<List<UserDTO>>(null), underTest.last())
+            assertNotNull(actual)
+            assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
+            assertEquals(Resource.Error<List<UserDTO>>(null), actual.last())
 
             verify(remoteDataSource).getUserFollower(username)
         }
@@ -265,11 +264,11 @@ class UserRepositoryTest {
     fun `getUserFollowing should return success when data is found in network`() = runBlockingTest {
         `when`(remoteDataSource.getUserFollowing(username)).thenReturn(fromNetworkSuccessResponses)
 
-        val underTest = userRepository.getUsersFollowing(username).toList()
+        val actual = userRepository.getUsersFollowing(username).toList()
 
-        assertNotNull(underTest)
-        assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
-        assertEquals(Resource.Success(DummyData.userDtos), underTest.last())
+        assertNotNull(actual)
+        assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
+        assertEquals(Resource.Success(DummyData.userDtos), actual.last())
 
         verify(remoteDataSource).getUserFollowing(username)
     }
@@ -279,11 +278,11 @@ class UserRepositoryTest {
         runBlockingTest {
             `when`(remoteDataSource.getUserFollowing(username)).thenReturn(fromNetworkErrorResponses)
 
-            val underTest = userRepository.getUsersFollowing(username).toList()
+            val actual = userRepository.getUsersFollowing(username).toList()
 
-            assertNotNull(underTest)
-            assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
-            assertEquals(Resource.Error<List<UserDTO>>(null), underTest.last())
+            assertNotNull(actual)
+            assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
+            assertEquals(Resource.Error<List<UserDTO>>(null), actual.last())
 
             verify(remoteDataSource).getUserFollowing(username)
         }
@@ -293,11 +292,11 @@ class UserRepositoryTest {
         runBlockingTest {
             `when`(localDataSource.getFavorite()).thenReturn(favorites)
 
-            val underTest = userRepository.getUsersFavorite().toList()
+            val actual = userRepository.getUsersFavorite().toList()
 
-            assertNotNull(underTest)
-            assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
-            assertEquals(Resource.Success(DummyData.favoriteDtos), underTest.last())
+            assertNotNull(actual)
+            assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
+            assertEquals(Resource.Success(DummyData.favoriteDtos), actual.last())
 
             verify(localDataSource).getFavorite()
         }
@@ -307,11 +306,11 @@ class UserRepositoryTest {
         runBlockingTest {
             `when`(localDataSource.getFavorite()).thenReturn(fromDbEmptyUserEntities)
 
-            val underTest = userRepository.getUsersFavorite().toList()
+            val actual = userRepository.getUsersFavorite().toList()
 
-            assertNotNull(underTest)
-            assertEquals(Resource.Loading<List<UserDTO>>(), underTest.first())
-            assertEquals(Resource.Error<List<UserDTO>>(), underTest.last())
+            assertNotNull(actual)
+            assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
+            assertEquals(Resource.Error<List<UserDTO>>(), actual.last())
 
             verify(localDataSource).getFavorite()
         }
@@ -322,10 +321,10 @@ class UserRepositoryTest {
             val favorite = DummyData.favorite
             `when`(localDataSource.unFavorite(favorite)).thenReturn(DummyData.unFavorite)
 
-            val underTest = userRepository.setUserFavorite(favorite.toDto())
+            val actual = userRepository.setUserFavorite(favorite.toDto())
 
-            assertNotNull(underTest)
-            assertFalse(underTest.isFavorite)
+            assertNotNull(actual)
+            assertFalse(actual.isFavorite)
 
             verify(localDataSource).unFavorite(favorite)
             verify(localDataSource, times(0)).favorite(favorite)
@@ -337,9 +336,9 @@ class UserRepositoryTest {
             val unFavorite = DummyData.unFavorite
             `when`(localDataSource.favorite(unFavorite)).thenReturn(DummyData.favorite)
 
-            val underTest = userRepository.setUserFavorite(unFavorite.toDto())
-            assertNotNull(underTest)
-            assertTrue(underTest.isFavorite)
+            val actual = userRepository.setUserFavorite(unFavorite.toDto())
+            assertNotNull(actual)
+            assertTrue(actual.isFavorite)
 
             verify(localDataSource).favorite(unFavorite)
             verify(localDataSource, times(0)).unFavorite(unFavorite)

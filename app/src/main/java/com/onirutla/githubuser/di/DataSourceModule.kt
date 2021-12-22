@@ -2,6 +2,10 @@ package com.onirutla.githubuser.di
 
 import com.onirutla.githubuser.data.repository.UserRepository
 import com.onirutla.githubuser.data.source.UserDataSource
+import com.onirutla.githubuser.data.source.local.LocalDataSource
+import com.onirutla.githubuser.data.source.local.LocalDataSourceImpl
+import com.onirutla.githubuser.data.source.remote.RemoteDataSource
+import com.onirutla.githubuser.data.source.remote.RemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,4 +17,10 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun bindDataSource(repository: UserRepository): UserDataSource
+
+    @Binds
+    abstract fun bindLocalDataSource(localDataSourceImpl: LocalDataSourceImpl): LocalDataSource
+
+    @Binds
+    abstract fun bindRemoteDataSource(remoteDataSourceImpl: RemoteDataSourceImpl): RemoteDataSource
 }

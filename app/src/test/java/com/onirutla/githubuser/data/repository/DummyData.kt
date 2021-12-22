@@ -100,7 +100,6 @@ object DummyData {
         avatarUrl = "a",
     )
 
-
     val searchResponse = SearchResponse(items = userResponses)
 
     val userEntities: List<UserEntity> = listOf(

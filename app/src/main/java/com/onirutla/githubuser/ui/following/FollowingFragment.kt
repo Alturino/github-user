@@ -8,6 +8,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentFollowingBinding
@@ -15,6 +18,8 @@ import com.onirutla.githubuser.ui.SharedViewModel
 import com.onirutla.githubuser.ui.adapter.UserAdapter
 import com.onirutla.githubuser.ui.detail.DetailFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FollowingFragment : Fragment() {
@@ -47,26 +52,29 @@ class FollowingFragment : Fragment() {
 
             viewModel.getUser(username)
 
-            viewModel.user.observe(viewLifecycleOwner, { resource ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.user.collect {
+                        when (it) {
+                            is Resource.Success -> {
+                                binding.progressBar.visibility = View.GONE
+                                followingAdapter.submitList(it.data)
+                            }
+                            is Resource.Loading -> {
+                                binding.progressBar.visibility = View.VISIBLE
+                            }
+                            is Resource.Error -> {
+                                Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+                            }
+                        }
 
-                when (resource) {
-                    is Resource.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        followingAdapter.submitList(resource.data)
-                    }
-                    is Resource.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
-                    is Resource.Error -> {
-                        Toast.makeText(context, "", Toast.LENGTH_SHORT).show()
+                        binding.rvUser.apply {
+                            adapter = followingAdapter
+                            setHasFixedSize(true)
+                        }
                     }
                 }
-
-                binding.rvUser.apply {
-                    adapter = followingAdapter
-                    setHasFixedSize(true)
-                }
-            })
+            }
         })
 
     }

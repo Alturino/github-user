@@ -24,14 +24,22 @@ class LocalDataSourceImplTest {
     // Class under test
     private lateinit var localDataSourceImpl: LocalDataSourceImpl
 
-    private lateinit var username: String
+    // Parameter Function
+    private val username = "a"
+
+    // Arrange Value
+    private val entitiesSuccess = flow { emit(DummyData.userEntities) }
+    private val entitiesEmpty = flow<List<UserEntity>> { emit(listOf()) }
+    private val entitySuccess = flow { emit(DummyData.userEntity) }
+    private val entityEmpty = flow { emit(null) }
+
+    private val entitiesFavoriteSuccess = flow { emit(DummyData.favorites) }
 
     @Before
     fun setUp() {
         userDao = mock(UserDao::class.java)
         testDispatcher = TestCoroutineDispatcher()
         localDataSourceImpl = LocalDataSourceImpl(userDao, testDispatcher)
-        username = "a"
     }
 
     @Test
@@ -42,18 +50,13 @@ class LocalDataSourceImplTest {
 
     @Test
     fun `getUserSearch should return success when data is found`() = runBlockingTest {
-        val fromDao = flow { emit(DummyData.userEntities) }
-        `when`(userDao.getUserSearch(username)).thenReturn(fromDao)
+        `when`(userDao.getUserSearch(username)).thenReturn(entitiesSuccess)
 
-        val underTest = localDataSourceImpl.getUserSearch(username).first()
+        val actual = localDataSourceImpl.getUserSearch(username).first()
 
-        assertNotNull(underTest)
-        assertEquals(underTest, FromDb.Success(DummyData.userEntities))
-        assertEquals(
-            "size should be the same",
-            (underTest as FromDb.Success).data.size,
-            fromDao.first().size
-        )
+        assertNotNull(actual)
+        assertEquals(FromDb.Success(DummyData.userEntities), actual)
+        assertEquals(entitiesSuccess.first().size, (actual as FromDb.Success).data.size)
 
         verify(userDao).getUserSearch(username)
     }
@@ -61,16 +64,14 @@ class LocalDataSourceImplTest {
     @Test
     fun `getUserSearch should return empty when data is null or empty`() =
         runBlockingTest {
-            val fromDao = flow { emit(listOf<UserEntity>()) }
-            `when`(userDao.getUserSearch(username)).thenReturn(fromDao)
+            `when`(userDao.getUserSearch(username)).thenReturn(entitiesEmpty)
 
-            val underTest = localDataSourceImpl.getUserSearch(username).first()
+            val actual = localDataSourceImpl.getUserSearch(username).first()
 
-            assertNotNull(underTest)
+            assertNotNull(actual)
             assertEquals(
-                "underTest should be FromDb.Empty(You don't have any favorite yet)",
-                underTest,
-                FromDb.Empty<List<UserEntity>>("You don't have any favorite yet")
+                FromDb.Empty<List<UserEntity>>("You don't have any favorite yet"),
+                actual
             )
 
             verify(userDao).getUserSearch(username)
@@ -78,52 +79,49 @@ class LocalDataSourceImplTest {
 
     @Test
     fun `getFavorite should return success when data is found`() = runBlockingTest {
-        val fromDao = flow { emit(DummyData.favorites) }
-        `when`(userDao.getFavorites()).thenReturn(fromDao)
+        `when`(userDao.getFavorites()).thenReturn(entitiesFavoriteSuccess)
 
-        val underTest = localDataSourceImpl.getFavorite().first()
+        val actual = localDataSourceImpl.getFavorite().first()
 
-        assertNotNull(underTest)
-        assertEquals(underTest, FromDb.Success(DummyData.favorites))
+        assertNotNull(actual)
+        assertEquals(FromDb.Success(DummyData.favorites), actual)
+        assertEquals(DummyData.favorites, (actual as FromDb.Success).data)
 
         verify(userDao).getFavorites()
     }
 
     @Test
     fun `getFavorite should return empty when data is not found`() = runBlockingTest {
-        val fromDao = flow { emit(listOf<UserEntity>()) }
-        `when`(userDao.getFavorites()).thenReturn(fromDao)
+        `when`(userDao.getFavorites()).thenReturn(entitiesEmpty)
 
-        val underTest = localDataSourceImpl.getFavorite().first()
+        val actual = localDataSourceImpl.getFavorite().first()
 
-        assertNotNull(underTest)
-        assertEquals(underTest, FromDb.Empty<List<UserEntity>>("You don't have any favorite yet"))
+        assertNotNull(actual)
+        assertEquals(FromDb.Empty<List<UserEntity>>("You don't have any favorite yet"), actual)
 
         verify(userDao).getFavorites()
     }
 
     @Test
     fun `getUserDetail should return success when data is found`() = runBlockingTest {
-        val fromDao = flow { emit(DummyData.userEntity) }
-        `when`(userDao.getUserDetail(username)).thenReturn(fromDao)
+        `when`(userDao.getUserDetail(username)).thenReturn(entitySuccess)
 
-        val underTest = localDataSourceImpl.getUserDetail(username).first()
+        val actual = localDataSourceImpl.getUserDetail(username).first()
 
-        assertNotNull(underTest)
-        assertEquals(underTest, FromDb.Success(DummyData.userEntity))
+        assertNotNull(actual)
+        assertEquals(FromDb.Success(DummyData.userEntity), actual)
 
         verify(userDao).getUserDetail(username)
     }
 
     @Test
     fun `getUserDetail should return empty when data is not found`() = runBlockingTest {
-        val fromDao = flow { emit(null) }
-        `when`(userDao.getUserDetail(username)).thenReturn(fromDao)
+        `when`(userDao.getUserDetail(username)).thenReturn(entityEmpty)
 
-        val underTest = localDataSourceImpl.getUserDetail(username).first()
+        val actual = localDataSourceImpl.getUserDetail(username).first()
 
-        assertNotNull(underTest)
-        assertEquals(underTest, FromDb.Empty<UserEntity>("User not found in database"))
+        assertNotNull(actual)
+        assertEquals(FromDb.Empty<UserEntity>("User not found in database"), actual)
 
         verify(userDao).getUserDetail(username)
     }
@@ -133,9 +131,9 @@ class LocalDataSourceImplTest {
         val userEntities = DummyData.userEntities
         `when`(userDao.insertUsers(listOf())).thenReturn(Unit)
 
-        val underTest = localDataSourceImpl.insertUsers(userEntities)
+        val actual = localDataSourceImpl.insertUsers(userEntities)
 
-        assertNotNull(underTest)
+        assertNotNull(actual)
         verify(userDao).insertUsers(userEntities)
     }
 
@@ -145,9 +143,9 @@ class LocalDataSourceImplTest {
             val user = DummyData.userEntity
             `when`(userDao.insertUser(user)).thenReturn(Unit)
 
-            val underTest = localDataSourceImpl.insertUserDetail(user)
+            val actual = localDataSourceImpl.insertUserDetail(user)
 
-            assertNotNull(underTest)
+            assertNotNull(actual)
             verify(userDao).insertUser(user)
         }
 
@@ -157,10 +155,10 @@ class LocalDataSourceImplTest {
         val unFavorite = user.copy(isFavorite = true)
         `when`(userDao.updateFavorite(unFavorite)).thenReturn(Unit)
 
-        val underTest = localDataSourceImpl.favorite(unFavorite)
+        val actual = localDataSourceImpl.favorite(unFavorite)
 
-        assertNotNull(underTest)
-        assertTrue(underTest.isFavorite)
+        assertNotNull(actual)
+        assertTrue(actual.isFavorite)
 
         verify(userDao).updateFavorite(unFavorite)
     }
@@ -171,10 +169,10 @@ class LocalDataSourceImplTest {
         val favorite = user.copy(isFavorite = false)
         `when`(userDao.updateFavorite(favorite)).thenReturn(Unit)
 
-        val underTest = localDataSourceImpl.unFavorite(favorite)
+        val actual = localDataSourceImpl.unFavorite(favorite)
 
-        assertNotNull(underTest)
-        assertFalse(underTest.isFavorite)
+        assertNotNull(actual)
+        assertFalse(actual.isFavorite)
 
         verify(userDao).updateFavorite(favorite)
     }

@@ -20,7 +20,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialSharedAxis
 import com.onirutla.githubuser.R
-import com.onirutla.githubuser.data.Resource
+import com.onirutla.githubuser.data.repository.Resource
 import com.onirutla.githubuser.databinding.FragmentSearchBinding
 import com.onirutla.githubuser.ui.adapter.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint

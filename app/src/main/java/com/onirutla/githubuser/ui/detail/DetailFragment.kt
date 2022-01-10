@@ -16,7 +16,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialContainerTransform
 import com.onirutla.githubuser.R
-import com.onirutla.githubuser.data.Resource
+import com.onirutla.githubuser.data.repository.Resource
 import com.onirutla.githubuser.databinding.FragmentDetailBinding
 import com.onirutla.githubuser.ui.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint

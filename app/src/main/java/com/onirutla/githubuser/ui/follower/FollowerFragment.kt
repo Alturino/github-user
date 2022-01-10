@@ -12,7 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
-import com.onirutla.githubuser.data.Resource
+import com.onirutla.githubuser.data.repository.Resource
 import com.onirutla.githubuser.databinding.FragmentFollowerBinding
 import com.onirutla.githubuser.ui.SharedViewModel
 import com.onirutla.githubuser.ui.adapter.UserAdapter

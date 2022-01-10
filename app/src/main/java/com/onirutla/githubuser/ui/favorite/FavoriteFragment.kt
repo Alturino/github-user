@@ -13,7 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.google.android.material.transition.MaterialFadeThrough
 import com.onirutla.githubuser.R
-import com.onirutla.githubuser.data.Resource
+import com.onirutla.githubuser.data.repository.Resource
 import com.onirutla.githubuser.databinding.FragmentFavoriteBinding
 import com.onirutla.githubuser.ui.adapter.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint

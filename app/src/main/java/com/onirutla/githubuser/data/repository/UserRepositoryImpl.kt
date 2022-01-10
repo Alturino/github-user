@@ -2,7 +2,6 @@ package com.onirutla.githubuser.data.repository
 
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.UserDTO
-import com.onirutla.githubuser.data.source.UserRepository
 import com.onirutla.githubuser.data.source.local.FromDb
 import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.entity.UserEntity

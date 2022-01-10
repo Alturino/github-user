@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.UserDTO
-import com.onirutla.githubuser.data.source.UserRepository
+import com.onirutla.githubuser.data.repository.UserRepository
 import com.onirutla.githubuser.util.MainDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

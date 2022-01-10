@@ -7,7 +7,7 @@ import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.LocalDataSourceImpl
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.local.entity.toDto
-import com.onirutla.githubuser.data.source.remote.NetworkState
+import com.onirutla.githubuser.data.source.remote.FromNetwork
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
 import com.onirutla.githubuser.data.source.remote.RemoteDataSourceImpl
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
@@ -49,10 +49,10 @@ class UserRepositoryImplTest {
 
     private val favorites = flow { emit(FromDb.Success(DummyData.favorites)) }
 
-    private val fromNetworkSuccessResponses = NetworkState.Success(DummyData.userResponses)
-    private val fromNetworkSuccessResponse = NetworkState.Success(DummyData.userResponse)
-    private val fromNetworkErrorResponses = NetworkState.Error<List<UserResponse>>()
-    private val fromNetworkErrorResponse = NetworkState.Error<UserResponse>()
+    private val fromNetworkSuccessResponses = FromNetwork.Success(DummyData.userResponses)
+    private val fromNetworkSuccessResponse = FromNetwork.Success(DummyData.userResponse)
+    private val fromNetworkErrorResponses = FromNetwork.Error<List<UserResponse>>()
+    private val fromNetworkErrorResponse = FromNetwork.Error<UserResponse>()
 
     @Before
     fun setUp() {

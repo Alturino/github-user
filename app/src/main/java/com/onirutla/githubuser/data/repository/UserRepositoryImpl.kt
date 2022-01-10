@@ -5,7 +5,7 @@ import com.onirutla.githubuser.data.source.local.FromDb
 import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.local.entity.toDto
-import com.onirutla.githubuser.data.source.remote.NetworkState
+import com.onirutla.githubuser.data.source.remote.FromNetwork
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
 import com.onirutla.githubuser.data.source.remote.response.toDto
 import com.onirutla.githubuser.data.source.remote.response.toEntity
@@ -38,7 +38,7 @@ class UserRepositoryImpl @Inject constructor(
                 }
                 is FromDb.Empty -> {
                     when (val networkState = remoteDataSource.getUserSearch(username)) {
-                        is NetworkState.Success -> {
+                        is FromNetwork.Success -> {
                             val fromNetwork = networkState.body
 
                             val cache = mapNullInputList(fromNetwork) { it.toEntity() }
@@ -49,7 +49,7 @@ class UserRepositoryImpl @Inject constructor(
 
                             emit(Resource.Success(dto))
                         }
-                        is NetworkState.Error -> {
+                        is FromNetwork.Error -> {
                             emit(Resource.Error(networkState.message))
                         }
                     }
@@ -66,10 +66,10 @@ class UserRepositoryImpl @Inject constructor(
             when (fromDb) {
                 is FromDb.Empty -> {
                     when (val networkState = remoteDataSource.getUserDetail(username)) {
-                        is NetworkState.Error -> {
+                        is FromNetwork.Error -> {
                             emit(Resource.Error(message = networkState.message))
                         }
-                        is NetworkState.Success -> {
+                        is FromNetwork.Success -> {
                             val fromNetwork = networkState.body.toEntity()
 
                             localDataSource.insertUserDetail(fromNetwork)
@@ -88,14 +88,14 @@ class UserRepositoryImpl @Inject constructor(
         emit(Resource.Loading())
 
         when (val networkState = remoteDataSource.getUserFollower(username)) {
-            is NetworkState.Success -> {
+            is FromNetwork.Success -> {
                 val fromNetwork = networkState.body
 
                 val dto = mapNullInputList(fromNetwork) { it.toDto() }
 
                 emit(Resource.Success(dto))
             }
-            is NetworkState.Error -> emit(Resource.Error(message = networkState.message))
+            is FromNetwork.Error -> emit(Resource.Error(message = networkState.message))
         }
 
     }.flowOn(ioDispatcher)
@@ -104,14 +104,14 @@ class UserRepositoryImpl @Inject constructor(
         emit(Resource.Loading())
 
         when (val networkState = remoteDataSource.getUserFollowing(username)) {
-            is NetworkState.Success -> {
+            is FromNetwork.Success -> {
                 val fromNetwork = networkState.body
 
                 val dto = mapNullInputList(fromNetwork) { it.toDto() }
 
                 emit(Resource.Success(dto))
             }
-            is NetworkState.Error -> {
+            is FromNetwork.Error -> {
                 emit(Resource.Error(message = networkState.message))
             }
         }

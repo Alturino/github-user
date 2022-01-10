@@ -1,7 +1,7 @@
 package com.onirutla.githubuser.di
 
 import android.content.Context
-import com.onirutla.githubuser.util.DataStoreManager
+import com.onirutla.githubuser.data.repository.DataStoreManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -2,7 +2,7 @@ package com.onirutla.githubuser.ui.splashscreen
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
-import com.onirutla.githubuser.util.DataStoreManager
+import com.onirutla.githubuser.data.repository.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

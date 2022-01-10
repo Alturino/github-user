@@ -2,7 +2,7 @@ package com.onirutla.githubuser.ui.onboarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.onirutla.githubuser.util.DataStoreManager
+import com.onirutla.githubuser.data.repository.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

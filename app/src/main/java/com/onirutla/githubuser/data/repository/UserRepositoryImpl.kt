@@ -2,7 +2,7 @@ package com.onirutla.githubuser.data.repository
 
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.UserDTO
-import com.onirutla.githubuser.data.source.UserDataSource
+import com.onirutla.githubuser.data.source.UserRepository
 import com.onirutla.githubuser.data.source.local.FromDb
 import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
@@ -27,7 +27,7 @@ class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : UserDataSource {
+) : UserRepository {
 
     override fun getUsersSearch(username: String) = flow<Resource<List<UserDTO>>> {
         emit(Resource.Loading())

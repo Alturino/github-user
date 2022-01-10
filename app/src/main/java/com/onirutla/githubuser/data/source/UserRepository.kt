@@ -5,7 +5,7 @@ import com.onirutla.githubuser.data.UserDTO
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import kotlinx.coroutines.flow.Flow
 
-interface UserDataSource {
+interface UserRepository {
     fun getUsersSearch(username: String): Flow<Resource<List<UserDTO>>>
 
     fun getUserDetail(username: String): Flow<Resource<UserDTO>>

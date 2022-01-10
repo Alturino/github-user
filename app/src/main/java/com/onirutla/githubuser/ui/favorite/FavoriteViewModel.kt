@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.UserDTO
-import com.onirutla.githubuser.data.source.UserDataSource
+import com.onirutla.githubuser.data.source.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
@@ -13,11 +13,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
-    userDataSource: UserDataSource
+    userRepository: UserRepository
 ) : ViewModel() {
 
     val favorites: StateFlow<Resource<List<UserDTO>>> =
-        userDataSource.getUsersFavorite().stateIn(
+        userRepository.getUsersFavorite().stateIn(
             initialValue = Resource.Loading(),
             scope = viewModelScope,
             started = WhileSubscribed(5000)

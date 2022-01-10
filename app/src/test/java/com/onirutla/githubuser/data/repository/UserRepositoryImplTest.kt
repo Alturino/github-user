@@ -1,16 +1,15 @@
 package com.onirutla.githubuser.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.onirutla.githubuser.data.UserDTO
 import com.onirutla.githubuser.data.source.local.FromDb
 import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.LocalDataSourceImpl
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
-import com.onirutla.githubuser.data.source.local.entity.toDto
 import com.onirutla.githubuser.data.source.remote.FromNetwork
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
 import com.onirutla.githubuser.data.source.remote.RemoteDataSourceImpl
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
+import com.onirutla.githubuser.util.Mapper.toDto
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -40,8 +39,6 @@ class UserRepositoryImplTest {
 
     // Parameter Function
     private val username = "a"
-
-    // Arrange Value
     private val fromDbSuccessUserEntities = flow { emit(FromDb.Success(DummyData.userEntities)) }
     private val fromDbSuccessUserEntity = flow { emit(FromDb.Success(DummyData.userEntity)) }
     private val fromDbEmptyUserEntities = flow<FromDb<List<UserEntity>>> { emit(FromDb.Empty()) }

@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.onirutla.githubuser.data.UserDTO
+import com.onirutla.githubuser.data.repository.UserDTO
 import com.onirutla.githubuser.databinding.UserItemBinding
 import com.onirutla.githubuser.util.Constant.diff
 

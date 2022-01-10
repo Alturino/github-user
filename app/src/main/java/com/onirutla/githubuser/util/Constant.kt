@@ -1,7 +1,7 @@
 package com.onirutla.githubuser.util
 
 import androidx.recyclerview.widget.DiffUtil
-import com.onirutla.githubuser.data.UserDTO
+import com.onirutla.githubuser.data.repository.UserDTO
 
 object Constant {
     const val BASE_URL = "https://api.github.com/"

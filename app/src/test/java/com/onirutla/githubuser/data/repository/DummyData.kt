@@ -1,6 +1,5 @@
 package com.onirutla.githubuser.data.repository
 
-import com.onirutla.githubuser.data.UserDTO
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.remote.response.SearchResponse
 import com.onirutla.githubuser.data.source.remote.response.UserResponse

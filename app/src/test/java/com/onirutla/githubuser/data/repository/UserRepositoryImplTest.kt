@@ -26,7 +26,7 @@ import org.junit.Test
 import org.mockito.Mockito.*
 
 @ExperimentalCoroutinesApi
-class UserRepositoryTest {
+class UserRepositoryImplTest {
 
     @get:Rule
     var instantTaskExecutor = InstantTaskExecutorRule()
@@ -37,7 +37,7 @@ class UserRepositoryTest {
     private lateinit var testDispatcher: CoroutineDispatcher
 
     // Class Under Test
-    private lateinit var userRepository: UserRepository
+    private lateinit var userRepositoryImpl: UserRepositoryImpl
 
     // Parameter Function
     private val username = "a"
@@ -60,12 +60,12 @@ class UserRepositoryTest {
         localDataSource = mock(LocalDataSourceImpl::class.java)
         remoteDataSource = mock(RemoteDataSourceImpl::class.java)
         testDispatcher = TestCoroutineDispatcher()
-        userRepository = UserRepository(remoteDataSource, localDataSource, testDispatcher)
+        userRepositoryImpl = UserRepositoryImpl(remoteDataSource, localDataSource, testDispatcher)
     }
 
     @Test
     fun `user repository shouldn't be null`() {
-        assertNotNull(userRepository)
+        assertNotNull(userRepositoryImpl)
         assertNotNull(localDataSource)
         assertNotNull(remoteDataSource)
     }
@@ -76,7 +76,7 @@ class UserRepositoryTest {
         `when`(localDataSource.getUserSearch(username)).thenReturn(fromDbSuccessUserEntities)
 
         // Act
-        val actual = userRepository.getUsersSearch(username).toList()
+        val actual = userRepositoryImpl.getUsersSearch(username).toList()
 
         // Assert
         assertNotNull(actual)
@@ -92,7 +92,7 @@ class UserRepositoryTest {
         `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetworkSuccessResponses)
 
         // Act
-        val actual = userRepository.getUsersSearch(username).toList()
+        val actual = userRepositoryImpl.getUsersSearch(username).toList()
 
         // Assert
         assertNotNull(actual)
@@ -114,7 +114,7 @@ class UserRepositoryTest {
             `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetworkSuccessResponses)
 
             // Act
-            val actual = userRepository.getUsersSearch(username).toList()
+            val actual = userRepositoryImpl.getUsersSearch(username).toList()
 
             // Assert
             assertNotNull(actual)
@@ -135,7 +135,7 @@ class UserRepositoryTest {
             `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetworkSuccessResponses)
 
             // Act
-            val actual = userRepository.getUsersSearch(username).toList()
+            val actual = userRepositoryImpl.getUsersSearch(username).toList()
 
             // Assert
             assertNotNull(actual)
@@ -157,7 +157,7 @@ class UserRepositoryTest {
             `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetworkErrorResponses)
 
             // Act
-            val actual = userRepository.getUsersSearch(username).toList()
+            val actual = userRepositoryImpl.getUsersSearch(username).toList()
 
             // Assert
             assertNotNull(actual)
@@ -177,7 +177,7 @@ class UserRepositoryTest {
         `when`(remoteDataSource.getUserDetail(username)).thenReturn(fromNetworkSuccessResponse)
 
         // Act
-        val actual = userRepository.getUserDetail(username).first()
+        val actual = userRepositoryImpl.getUserDetail(username).first()
 
         // Assert
         assertNotNull(actual)
@@ -190,7 +190,7 @@ class UserRepositoryTest {
             `when`(localDataSource.getUserDetail(username)).thenReturn(fromDbSuccessUserEntity)
             `when`(remoteDataSource.getUserDetail(username)).thenReturn(fromNetworkSuccessResponse)
 
-            val actual = userRepository.getUserDetail(username).toList()
+            val actual = userRepositoryImpl.getUserDetail(username).toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<UserDTO>(), actual.first())
@@ -206,7 +206,7 @@ class UserRepositoryTest {
             `when`(localDataSource.getUserDetail(username)).thenReturn(fromDbEmptyUserEntity)
             `when`(remoteDataSource.getUserDetail(username)).thenReturn(fromNetworkSuccessResponse)
 
-            val actual = userRepository.getUserDetail(username).toList()
+            val actual = userRepositoryImpl.getUserDetail(username).toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<UserEntity>(), actual.first())
@@ -222,7 +222,7 @@ class UserRepositoryTest {
             `when`(localDataSource.getUserDetail(username)).thenReturn(fromDbEmptyUserEntity)
             `when`(remoteDataSource.getUserDetail(username)).thenReturn(fromNetworkErrorResponse)
 
-            val actual = userRepository.getUserDetail(username).toList()
+            val actual = userRepositoryImpl.getUserDetail(username).toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<UserEntity>(), actual.first())
@@ -237,7 +237,7 @@ class UserRepositoryTest {
     fun `getUserFollower should return success when data is found in network`() = runBlockingTest {
         `when`(remoteDataSource.getUserFollower(username)).thenReturn(fromNetworkSuccessResponses)
 
-        val actual = userRepository.getUsersFollower(username).toList()
+        val actual = userRepositoryImpl.getUsersFollower(username).toList()
 
         assertNotNull(actual)
         assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
@@ -251,7 +251,7 @@ class UserRepositoryTest {
         runBlockingTest {
             `when`(remoteDataSource.getUserFollower(username)).thenReturn(fromNetworkErrorResponses)
 
-            val actual = userRepository.getUsersFollower(username).toList()
+            val actual = userRepositoryImpl.getUsersFollower(username).toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
@@ -264,7 +264,7 @@ class UserRepositoryTest {
     fun `getUserFollowing should return success when data is found in network`() = runBlockingTest {
         `when`(remoteDataSource.getUserFollowing(username)).thenReturn(fromNetworkSuccessResponses)
 
-        val actual = userRepository.getUsersFollowing(username).toList()
+        val actual = userRepositoryImpl.getUsersFollowing(username).toList()
 
         assertNotNull(actual)
         assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
@@ -278,7 +278,7 @@ class UserRepositoryTest {
         runBlockingTest {
             `when`(remoteDataSource.getUserFollowing(username)).thenReturn(fromNetworkErrorResponses)
 
-            val actual = userRepository.getUsersFollowing(username).toList()
+            val actual = userRepositoryImpl.getUsersFollowing(username).toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
@@ -292,7 +292,7 @@ class UserRepositoryTest {
         runBlockingTest {
             `when`(localDataSource.getFavorite()).thenReturn(favorites)
 
-            val actual = userRepository.getUsersFavorite().toList()
+            val actual = userRepositoryImpl.getUsersFavorite().toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
@@ -306,7 +306,7 @@ class UserRepositoryTest {
         runBlockingTest {
             `when`(localDataSource.getFavorite()).thenReturn(fromDbEmptyUserEntities)
 
-            val actual = userRepository.getUsersFavorite().toList()
+            val actual = userRepositoryImpl.getUsersFavorite().toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<List<UserDTO>>(), actual.first())
@@ -321,7 +321,7 @@ class UserRepositoryTest {
             val favorite = DummyData.favorite
             `when`(localDataSource.unFavorite(favorite)).thenReturn(DummyData.unFavorite)
 
-            val actual = userRepository.setUserFavorite(favorite.toDto())
+            val actual = userRepositoryImpl.setUserFavorite(favorite.toDto())
 
             assertNotNull(actual)
             assertFalse(actual.isFavorite)
@@ -336,7 +336,7 @@ class UserRepositoryTest {
             val unFavorite = DummyData.unFavorite
             `when`(localDataSource.favorite(unFavorite)).thenReturn(DummyData.favorite)
 
-            val actual = userRepository.setUserFavorite(unFavorite.toDto())
+            val actual = userRepositoryImpl.setUserFavorite(unFavorite.toDto())
             assertNotNull(actual)
             assertTrue(actual.isFavorite)
 

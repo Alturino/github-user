@@ -1,6 +1,6 @@
 package com.onirutla.githubuser.di
 
-import com.onirutla.githubuser.data.repository.UserRepository
+import com.onirutla.githubuser.data.repository.UserRepositoryImpl
 import com.onirutla.githubuser.data.source.UserDataSource
 import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.LocalDataSourceImpl
@@ -16,7 +16,7 @@ import dagger.hilt.components.SingletonComponent
 abstract class DataSourceModule {
 
     @Binds
-    abstract fun bindDataSource(repository: UserRepository): UserDataSource
+    abstract fun bindDataSource(repositoryImpl: UserRepositoryImpl): UserDataSource
 
     @Binds
     abstract fun bindLocalDataSource(localDataSourceImpl: LocalDataSourceImpl): LocalDataSource

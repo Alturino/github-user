@@ -12,6 +12,6 @@ class HomeViewModel : ViewModel() {
     val userItems: LiveData<List<UserItem>> get() = _userItems
 
     fun getUser(context: Context, fileName: String) {
-        _userItems.value = JsonParser.readJson(context, fileName = fileName)
+        _userItems.value = JsonParser.readJson(context, fileName = fileName)?.users
     }
 }

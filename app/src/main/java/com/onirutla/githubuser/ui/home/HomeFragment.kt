@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.onirutla.githubuser.databinding.FragmentHomeBinding
 
@@ -15,7 +16,14 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: HomeViewModel by viewModels()
-    private val userAdapter by lazy { UserAdapter() }
+    private val userAdapter by lazy {
+        UserAdapter { userItem, view ->
+            view.findNavController()
+                .navigate(
+                    HomeFragmentDirections.actionHomeFragmentToDetailFragment(userItem)
+                )
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

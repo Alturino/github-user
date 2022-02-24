@@ -1,6 +1,7 @@
 package com.onirutla.githubuser.ui.home
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +10,9 @@ import com.onirutla.githubuser.databinding.UserItemBinding
 import com.onirutla.githubuser.util.GlideApp
 import com.onirutla.githubuser.util.UserDiff
 
-class UserAdapter : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+class UserAdapter(
+    private val listener: (userItem: UserItem, view: View) -> Unit
+) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
     private val list = mutableListOf<UserItem>()
 
@@ -37,6 +40,7 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
         fun bind(userItem: UserItem) {
             binding.apply {
                 user = userItem
+                root.setOnClickListener { listener(userItem, it) }
                 val context = userAvatar.context
                 GlideApp.with(userAvatar).load(
                     context.resources.getIdentifier(

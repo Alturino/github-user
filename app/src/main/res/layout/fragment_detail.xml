@@ -51,9 +51,9 @@
             android:id="@+id/user_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="@{user.username}"
-            android:textAppearance="?attr/textAppearanceHeadline4"
+            android:textAppearance="?attr/textAppearanceHeadline5"
             android:textColor="?attr/colorOnSurface"
             app:layout_constraintEnd_toEndOf="@+id/user_avatar"
             app:layout_constraintStart_toStartOf="@+id/user_avatar"
@@ -64,23 +64,70 @@
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="@{user.name}"
-            android:textAppearance="?attr/textAppearanceHeadline5"
+            android:textAppearance="?attr/textAppearanceHeadline6"
             android:textColor="?attr/colorOnSurface"
             app:layout_constraintEnd_toEndOf="@+id/user_username"
             app:layout_constraintStart_toStartOf="@+id/user_username"
             app:layout_constraintTop_toBottomOf="@+id/user_username"
             tools:text="Jake Wharton" />
 
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ic_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:src="@drawable/ic_company_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_name"
+            app:tint="?attr/colorOnSurface" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/company_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@{user.company}"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintBottom_toBottomOf="@+id/ic_company"
+            app:layout_constraintStart_toEndOf="@+id/ic_company"
+            app:layout_constraintTop_toTopOf="@+id/ic_company"
+            tools:text="Google, Inc." />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ic_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_location_24"
+            app:layout_constraintEnd_toEndOf="@+id/ic_company"
+            app:layout_constraintStart_toStartOf="@+id/ic_company"
+            app:layout_constraintTop_toBottomOf="@+id/ic_company"
+            app:tint="?attr/colorOnSurface" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/location_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@{user.location}"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintBottom_toBottomOf="@+id/ic_location"
+            app:layout_constraintStart_toEndOf="@+id/ic_location"
+            app:layout_constraintTop_toTopOf="@+id/ic_location"
+            tools:text="Pittsburgh, PA, USA" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container_follower"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toStartOf="@+id/container_repositories"
             app:layout_constraintStart_toEndOf="@+id/container_following"
-            app:layout_constraintTop_toBottomOf="@+id/user_name">
+            app:layout_constraintTop_toTopOf="@+id/container_following">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/follower_header"
@@ -112,11 +159,10 @@
             android:id="@+id/container_following"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toStartOf="@+id/container_follower"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_name">
+            app:layout_constraintTop_toBottomOf="@+id/location_description">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/following_header"
@@ -148,11 +194,9 @@
             android:id="@+id/container_repositories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/container_follower"
-            app:layout_constraintTop_toBottomOf="@+id/user_name">
+            app:layout_constraintTop_toTopOf="@+id/container_following">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/repositories_header"

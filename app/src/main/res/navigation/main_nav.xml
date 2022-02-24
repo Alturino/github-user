@@ -20,7 +20,7 @@
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail">
         <argument
-            android:name="response"
-            app:argType="com.onirutla.githubuser.data.Response" />
+            android:name="user"
+            app:argType="com.onirutla.githubuser.data.UserItem" />
     </fragment>
 </navigation>

@@ -40,13 +40,15 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.userList.apply {
+            adapter = userAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+        }
+
         viewModel.userItems.observe(viewLifecycleOwner, {
             userAdapter.submitList(it)
-            binding.userList.apply {
-                adapter = userAdapter
-                layoutManager = LinearLayoutManager(requireContext())
-                setHasFixedSize(true)
-            }
         })
     }
 

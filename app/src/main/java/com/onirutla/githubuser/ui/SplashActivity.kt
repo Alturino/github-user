@@ -1,4 +1,4 @@
-package com.onirutla.githubuser
+package com.onirutla.githubuser.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent

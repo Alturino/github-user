@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.onirutla.githubuser.databinding.ActivitySplashBinding
+import com.onirutla.githubuser.util.Constant
 import kotlinx.coroutines.delay
 
 @SuppressLint("CustomSplashScreen")
@@ -19,7 +20,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         lifecycleScope.launchWhenStarted {
-            delay(2000)
+            delay(Constant.DELAY_TO_MAIN_ACTIVITY)
             startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             finish()
         }

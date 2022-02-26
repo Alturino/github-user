@@ -37,10 +37,14 @@ class UserAdapter(
     inner class ViewHolder(
         private val binding: UserItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener { listener(list[adapterPosition], it) }
+        }
+
         fun bind(userItem: UserItem) {
             binding.apply {
                 user = userItem
-                root.setOnClickListener { listener(userItem, it) }
                 val context = userAvatar.context
                 GlideApp.with(userAvatar).load(
                     context.resources.getIdentifier(

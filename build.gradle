@@ -6,6 +6,8 @@ buildscript {
         moshi_version = "1.13.0"
         dagger_version = "2.41"
         lifecycle_version = "2.4.1"
+        retrofit_version = "2.9.0"
+        okhttp_version = "4.9.3"
     }
 
     repositories {

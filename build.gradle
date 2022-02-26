@@ -5,6 +5,7 @@ buildscript {
         nav_version = "2.4.1"
         moshi_version = "1.13.0"
         dagger_version = "2.41"
+        lifecycle_version = "2.4.1"
     }
 
     repositories {

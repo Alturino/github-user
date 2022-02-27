@@ -1,17 +1,37 @@
 package com.onirutla.githubuser.ui.home
 
-import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.onirutla.githubuser.data.UserItem
-import com.onirutla.githubuser.util.JsonParser
+import android.util.Log
+import androidx.lifecycle.*
+import com.onirutla.githubuser.data.FromNetwork
+import com.onirutla.githubuser.data.Resource
+import com.onirutla.githubuser.data.repository.Repository
+import com.onirutla.githubuser.data.response.UserResponse
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
-    private val _userItems = MutableLiveData<List<UserItem>>()
-    val userItems: LiveData<List<UserItem>> get() = _userItems
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
-    fun getUser(context: Context, fileName: String) {
-        _userItems.value = JsonParser.readJson(context, fileName = fileName)?.users
+    private val _username = MutableLiveData<String>()
+
+    val user: LiveData<Resource<List<UserResponse>>> = _username.switchMap { username ->
+        liveData {
+            repository.findUsersByUsername(username).collect { fromNetwork ->
+                when (fromNetwork) {
+                    is FromNetwork.Error -> emit(Resource.Error(message = fromNetwork.message))
+                    is FromNetwork.Loading -> emit(Resource.Loading())
+                    is FromNetwork.Success -> emit(Resource.Success(fromNetwork.body))
+                }
+            }
+        }
     }
+
+    fun findUser(username: String) {
+        Log.d("viewmodel", "invoke")
+        _username.value = username
+    }
+
 }

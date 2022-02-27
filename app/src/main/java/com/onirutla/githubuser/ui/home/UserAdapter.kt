@@ -5,18 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.onirutla.githubuser.data.UserItem
+import com.onirutla.githubuser.data.response.UserResponse
 import com.onirutla.githubuser.databinding.UserItemBinding
-import com.onirutla.githubuser.util.GlideApp
 import com.onirutla.githubuser.util.UserDiff
 
 class UserAdapter(
-    private val listener: (userItem: UserItem, view: View) -> Unit
+    private val listener: (user: UserResponse, view: View) -> Unit
 ) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
-    private val list = mutableListOf<UserItem>()
+    private val list = mutableListOf<UserResponse>()
 
-    fun submitList(list: List<UserItem>) {
+    fun submitList(list: List<UserResponse>) {
         val diffUser = DiffUtil.calculateDiff(UserDiff(this.list, list))
         this.list.clear()
         this.list.addAll(list)
@@ -42,18 +41,8 @@ class UserAdapter(
             binding.root.setOnClickListener { listener(list[adapterPosition], it) }
         }
 
-        fun bind(userItem: UserItem) {
-            binding.apply {
-                user = userItem
-                val context = userAvatar.context
-                GlideApp.with(userAvatar).load(
-                    context.resources.getIdentifier(
-                        userItem.avatar,
-                        "drawable",
-                        context.packageName
-                    )
-                ).into(userAvatar)
-            }
+        fun bind(user: UserResponse) {
+            binding.user = user
         }
     }
 }

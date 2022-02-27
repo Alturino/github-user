@@ -7,7 +7,7 @@
 
         <variable
             name="user"
-            type="com.onirutla.githubuser.data.UserItem" />
+            type="com.onirutla.githubuser.data.response.UserResponse" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,7 +44,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appbar"
-            app:loadImage="@{user.avatar}"
+            app:loadImage="@{user.avatarUrl}"
             app:shapeAppearanceOverlay="@style/CircularImageView" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -145,7 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@{String.valueOf(user.follower)}"
+                android:text="@{String.valueOf(user.followers)}"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?attr/colorOnSurface"
                 app:layout_constraintEnd_toEndOf="@+id/follower_header"
@@ -214,7 +214,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@{String.valueOf(user.repository)}"
+                android:text="@{String.valueOf(user.publicRepos)}"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?attr/colorOnSurface"
                 app:layout_constraintEnd_toEndOf="@+id/repositories_header"

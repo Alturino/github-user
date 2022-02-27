@@ -1,9 +1,9 @@
 package com.onirutla.githubuser.util
 
 import androidx.recyclerview.widget.DiffUtil
-import com.onirutla.githubuser.data.UserItem
+import com.onirutla.githubuser.data.response.UserResponse
 
-class UserDiff(private val oldList: List<UserItem>, private val newList: List<UserItem>) :
+class UserDiff(private val oldList: List<UserResponse>, private val newList: List<UserResponse>) :
     DiffUtil.Callback() {
 
     override fun getOldListSize(): Int = oldList.size

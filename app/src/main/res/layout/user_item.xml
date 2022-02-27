@@ -7,7 +7,7 @@
 
         <variable
             name="user"
-            type="com.onirutla.githubuser.data.UserItem" />
+            type="com.onirutla.githubuser.data.response.UserResponse" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -31,7 +31,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:loadImage="@{user.avatar}"
+                app:loadImage="@{user.avatarUrl}"
                 app:shapeAppearanceOverlay="@style/CircularImageView"
                 tools:src="@drawable/ic_launcher_background" />
 

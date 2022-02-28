@@ -23,14 +23,13 @@ class HomeViewModel @Inject constructor(
                 when (fromNetwork) {
                     is FromNetwork.Error -> emit(Resource.Error(message = fromNetwork.message))
                     is FromNetwork.Loading -> emit(Resource.Loading())
-                    is FromNetwork.Success -> emit(Resource.Success(fromNetwork.body))
+                    is FromNetwork.Success -> emit(Resource.Success(fromNetwork.data))
                 }
             }
         }
     }
 
     fun findUser(username: String) {
-        Log.d("viewmodel", "invoke")
         _username.value = username
     }
 

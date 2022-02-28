@@ -44,22 +44,22 @@
                 android:textAppearance="?attr/textAppearanceListItem"
                 app:layout_constraintBottom_toBottomOf="@+id/user_avatar"
                 app:layout_constraintStart_toEndOf="@+id/user_avatar"
-                    app:layout_constraintTop_toTopOf="@+id/user_avatar"
-                    app:layout_constraintVertical_bias="0.0"
-                    tools:text="JakeWharton" />
+                app:layout_constraintTop_toTopOf="@+id/user_avatar"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="JakeWharton" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@{user.name}"
-                    android:textAppearance="?attr/textAppearanceListItemSecondary"
-                    app:layout_constraintEnd_toEndOf="@+id/username"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/username"
-                    app:layout_constraintTop_toBottomOf="@+id/username"
-                    tools:text="Jake Wharton" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{user.name}"
+                android:textAppearance="?attr/textAppearanceListItemSecondary"
+                app:layout_constraintEnd_toEndOf="@+id/username"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/username"
+                app:layout_constraintTop_toBottomOf="@+id/username"
+                tools:text="Jake Wharton" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -10,7 +10,7 @@
             type="com.onirutla.githubuser.data.response.UserResponse" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.detail.DetailFragment">
@@ -18,212 +18,258 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
             style="@style/Widget.MaterialComponents.AppBarLayout.Primary"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:background="?attr/colorSurface"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$Behavior">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentScrim="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+                app:titleEnabled="false"
+                app:toolbarId="@id/toolbar">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="?attr/actionBarSize">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/user_avatar"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:loadImage="@{user.avatarUrl}"
+                        app:shapeAppearanceOverlay="@style/CircularImageView" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/user_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@{user.username}"
+                        android:textAppearance="?attr/textAppearanceHeadline5"
+                        android:textColor="?attr/colorOnSurface"
+                        app:layout_constraintEnd_toEndOf="@+id/user_avatar"
+                        app:layout_constraintStart_toStartOf="@+id/user_avatar"
+                        app:layout_constraintTop_toBottomOf="@+id/user_avatar"
+                        tools:text="Jake Wharton" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@{user.name}"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        android:textColor="?attr/colorOnSurface"
+                        app:layout_constraintEnd_toEndOf="@+id/user_username"
+                        app:layout_constraintStart_toStartOf="@+id/user_username"
+                        app:layout_constraintTop_toBottomOf="@+id/user_username"
+                        tools:text="Jake Wharton" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/ic_company"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:src="@drawable/ic_company_24"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/user_name"
+                        app:tint="?attr/colorOnSurface" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/company_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="@{user.company}"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?attr/colorOnSurface"
+                        app:layout_constraintBottom_toBottomOf="@+id/ic_company"
+                        app:layout_constraintStart_toEndOf="@+id/ic_company"
+                        app:layout_constraintTop_toTopOf="@+id/ic_company"
+                        tools:text="Google, Inc." />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/ic_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/ic_location_24"
+                        app:layout_constraintEnd_toEndOf="@+id/ic_company"
+                        app:layout_constraintStart_toStartOf="@+id/ic_company"
+                        app:layout_constraintTop_toBottomOf="@+id/ic_company"
+                        app:tint="?attr/colorOnSurface" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/location_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="@{user.location}"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?attr/colorOnSurface"
+                        app:layout_constraintBottom_toBottomOf="@+id/ic_location"
+                        app:layout_constraintStart_toEndOf="@+id/ic_location"
+                        app:layout_constraintTop_toTopOf="@+id/ic_location"
+                        tools:text="Pittsburgh, PA, USA" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/container_follower"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@+id/container_following"
+                        app:layout_constraintEnd_toStartOf="@+id/container_repositories"
+                        app:layout_constraintStart_toEndOf="@+id/container_following"
+                        app:layout_constraintTop_toTopOf="@+id/container_following">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/follower_header"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/follower"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/follower_description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@{String.valueOf(user.followers)}"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintEnd_toEndOf="@+id/follower_header"
+                            app:layout_constraintStart_toStartOf="@+id/follower_header"
+                            app:layout_constraintTop_toBottomOf="@+id/follower_header"
+                            tools:text="2" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/container_following"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/container_follower"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/location_description">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/following_header"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/following"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/following_description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@{String.valueOf(user.following)}"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintEnd_toEndOf="@+id/following_header"
+                            app:layout_constraintStart_toStartOf="@+id/following_header"
+                            app:layout_constraintTop_toBottomOf="@+id/following_header"
+                            tools:text="3" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/container_repositories"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="@+id/container_following"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/container_follower"
+                        app:layout_constraintTop_toTopOf="@+id/container_following">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/repositories_header"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/repositories"
+                            android:textAppearance="?attr/textAppearanceSubtitle2"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/repositories_description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@{String.valueOf(user.publicRepos)}"
+                            android:textAppearance="?attr/textAppearanceBody2"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintEnd_toEndOf="@+id/repositories_header"
+                            app:layout_constraintStart_toStartOf="@+id/repositories_header"
+                            app:layout_constraintTop_toBottomOf="@+id/repositories_header"
+                            tools:text="1" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:contentInsetStartWithNavigation="0dp"
+                    app:layout_collapseMode="pin"
+                    app:navigationIcon="@drawable/ic_arrow_back_24"
+                    app:navigationIconTint="?attr/colorOnPrimary"
+                    app:title="@{user.username}" />
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
                 style="@style/Widget.MaterialComponents.Toolbar.Primary"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:contentInsetStartWithNavigation="0dp"
-                app:navigationIcon="@drawable/ic_arrow_back_24"
-                app:navigationIconTint="?attr/colorOnPrimary"
-                app:title="@{user.username}" />
+                android:layout_height="wrap_content"
+                app:tabIndicatorColor="?attr/colorAccent"
+                app:tabSelectedTextColor="?attr/colorOnPrimary"
+                app:tabTextColor="?attr/colorOnSurface"
+                tools:ignore="SpeakableTextPresentCheck" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/user_avatar"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appbar"
-            app:loadImage="@{user.avatarUrl}"
-            app:shapeAppearanceOverlay="@style/CircularImageView" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/user_username"
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@{user.username}"
-            android:textAppearance="?attr/textAppearanceHeadline5"
-            android:textColor="?attr/colorOnSurface"
-            app:layout_constraintEnd_toEndOf="@+id/user_avatar"
-            app:layout_constraintStart_toStartOf="@+id/user_avatar"
-            app:layout_constraintTop_toBottomOf="@+id/user_avatar"
-            tools:text="Jake Wharton" />
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@{user.name}"
-            android:textAppearance="?attr/textAppearanceHeadline6"
-            android:textColor="?attr/colorOnSurface"
-            app:layout_constraintEnd_toEndOf="@+id/user_username"
-            app:layout_constraintStart_toStartOf="@+id/user_username"
-            app:layout_constraintTop_toBottomOf="@+id/user_username"
-            tools:text="Jake Wharton" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ic_company"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:src="@drawable/ic_company_24"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_name"
-            app:tint="?attr/colorOnSurface" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/company_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@{user.company}"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorOnSurface"
-            app:layout_constraintBottom_toBottomOf="@+id/ic_company"
-            app:layout_constraintStart_toEndOf="@+id/ic_company"
-            app:layout_constraintTop_toTopOf="@+id/ic_company"
-            tools:text="Google, Inc." />
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ic_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_location_24"
-            app:layout_constraintEnd_toEndOf="@+id/ic_company"
-            app:layout_constraintStart_toStartOf="@+id/ic_company"
-            app:layout_constraintTop_toBottomOf="@+id/ic_company"
-            app:tint="?attr/colorOnSurface" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/location_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@{user.location}"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorOnSurface"
-            app:layout_constraintBottom_toBottomOf="@+id/ic_location"
-            app:layout_constraintStart_toEndOf="@+id/ic_location"
-            app:layout_constraintTop_toTopOf="@+id/ic_location"
-            tools:text="Pittsburgh, PA, USA" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/container_follower"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/container_repositories"
-            app:layout_constraintStart_toEndOf="@+id/container_following"
-            app:layout_constraintTop_toTopOf="@+id/container_following">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/follower_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/follower"
-                android:textAppearance="?attr/textAppearanceSubtitle2"
-                android:textColor="?attr/colorOnSurface"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/follower_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@{String.valueOf(user.followers)}"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?attr/colorOnSurface"
-                app:layout_constraintEnd_toEndOf="@+id/follower_header"
-                app:layout_constraintStart_toStartOf="@+id/follower_header"
-                app:layout_constraintTop_toBottomOf="@+id/follower_header"
-                tools:text="2" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/container_following"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            app:layout_constraintEnd_toStartOf="@+id/container_follower"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/location_description">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/following_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/following"
-                android:textAppearance="?attr/textAppearanceSubtitle2"
-                android:textColor="?attr/colorOnSurface"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/following_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@{String.valueOf(user.following)}"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?attr/colorOnSurface"
-                app:layout_constraintEnd_toEndOf="@+id/following_header"
-                app:layout_constraintStart_toStartOf="@+id/following_header"
-                app:layout_constraintTop_toBottomOf="@+id/following_header"
-                tools:text="3" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/container_repositories"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/container_follower"
-            app:layout_constraintTop_toTopOf="@+id/container_following">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/repositories_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/repositories"
-                android:textAppearance="?attr/textAppearanceSubtitle2"
-                android:textColor="?attr/colorOnSurface"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/repositories_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@{String.valueOf(user.publicRepos)}"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textColor="?attr/colorOnSurface"
-                app:layout_constraintEnd_toEndOf="@+id/repositories_header"
-                app:layout_constraintStart_toStartOf="@+id/repositories_header"
-                app:layout_constraintTop_toBottomOf="@+id/repositories_header"
-                tools:text="1" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

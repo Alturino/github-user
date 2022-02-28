@@ -1,6 +1,5 @@
 package com.onirutla.githubuser.data.repository
 
-import android.util.Log
 import com.onirutla.githubuser.data.FromNetwork
 import com.onirutla.githubuser.data.api.ApiInterface
 import com.onirutla.githubuser.data.response.UserResponse
@@ -16,14 +15,13 @@ class RepositoryImpl @Inject constructor(
 
     override fun findUsersByUsername(username: String): Flow<FromNetwork<List<UserResponse>>> =
         flow {
-            Log.d("findUserByName", "invoke")
             emit(FromNetwork.Loading())
             try {
                 val response = apiInterface.findUsersByUsername(username)
                 if (response.isSuccessful)
                     emit(
                         FromNetwork.Success(
-                            body = response.body()?.items!!,
+                            data = response.body()?.items!!,
                             message = response.message()
                         )
                     )
@@ -39,11 +37,11 @@ class RepositoryImpl @Inject constructor(
         try {
             val response = apiInterface.getUserDetail(username)
             if (response.isSuccessful)
-                FromNetwork.Success(body = response.body()!!, message = response.message())
+                emit(FromNetwork.Success(data = response.body()!!, message = response.message()))
             else
-                FromNetwork.Error(message = response.message())
+                emit(FromNetwork.Error(message = response.message()))
         } catch (t: Throwable) {
-            FromNetwork.Error(message = t.message)
+            emit(FromNetwork.Error(message = t.message))
         }
     }
 
@@ -55,7 +53,7 @@ class RepositoryImpl @Inject constructor(
                 if (response.isSuccessful)
                     emit(
                         FromNetwork.Success(
-                            body = response.body()!!,
+                            data = response.body()!!,
                             message = response.message()
                         )
                     )
@@ -74,7 +72,7 @@ class RepositoryImpl @Inject constructor(
                 if (response.isSuccessful)
                     emit(
                         FromNetwork.Success(
-                            body = response.body()!!,
+                            data = response.body()!!,
                             message = response.message()
                         )
                     )

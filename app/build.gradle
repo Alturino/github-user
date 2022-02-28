@@ -84,6 +84,8 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp-bom:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+
 
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.3"

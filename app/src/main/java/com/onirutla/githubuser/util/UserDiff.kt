@@ -1,7 +1,7 @@
 package com.onirutla.githubuser.util
 
 import androidx.recyclerview.widget.DiffUtil
-import com.onirutla.githubuser.data.response.UserResponse
+import com.onirutla.githubuser.data.remote.response.UserResponse
 
 class UserDiff(private val oldList: List<UserResponse>, private val newList: List<UserResponse>) :
     DiffUtil.Callback() {

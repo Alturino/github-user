@@ -1,8 +1,7 @@
 package com.onirutla.githubuser.data.repository
 
-import com.onirutla.githubuser.data.FromNetwork
-import com.onirutla.githubuser.data.response.SearchResponse
-import com.onirutla.githubuser.data.response.UserResponse
+import com.onirutla.githubuser.data.remote.FromNetwork
+import com.onirutla.githubuser.data.remote.response.UserResponse
 import kotlinx.coroutines.flow.Flow
 
 interface Repository {

@@ -2,7 +2,7 @@ package com.onirutla.githubuser.di
 
 import com.onirutla.githubuser.BuildConfig
 import com.onirutla.githubuser.BuildConfig.BASE_URL
-import com.onirutla.githubuser.data.api.ApiInterface
+import com.onirutla.githubuser.data.remote.api.ApiInterface
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module

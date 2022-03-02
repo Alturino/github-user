@@ -1,10 +1,10 @@
 package com.onirutla.githubuser.ui.detail.following
 
 import androidx.lifecycle.*
-import com.onirutla.githubuser.data.FromNetwork
+import com.onirutla.githubuser.data.remote.FromNetwork
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.repository.Repository
-import com.onirutla.githubuser.data.response.UserResponse
+import com.onirutla.githubuser.data.remote.response.UserResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject

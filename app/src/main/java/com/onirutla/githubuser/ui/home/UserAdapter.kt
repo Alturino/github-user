@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.onirutla.githubuser.data.response.UserResponse
+import com.onirutla.githubuser.data.remote.response.UserResponse
 import com.onirutla.githubuser.databinding.UserItemBinding
 import com.onirutla.githubuser.util.UserDiff
 

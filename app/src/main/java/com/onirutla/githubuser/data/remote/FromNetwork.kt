@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.data
+package com.onirutla.githubuser.data.remote
 
 sealed class FromNetwork<T> {
     data class Success<T>(val data: T, val message: String? = null) : FromNetwork<T>()

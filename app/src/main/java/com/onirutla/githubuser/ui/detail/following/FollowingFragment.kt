@@ -44,7 +44,7 @@ class FollowingFragment : Fragment() {
 
         viewModel.followings.observe(viewLifecycleOwner, {
             when (it) {
-                is Resource.Error -> {
+                is Resource.Empty -> {
                     binding.apply {
                         progressBar.hide()
                         progressBar.visibility = View.GONE

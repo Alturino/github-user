@@ -58,7 +58,7 @@ class HomeFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.user.observe(viewLifecycleOwner, {
             when (it) {
-                is Resource.Error -> {
+                is Resource.Empty -> {
                     binding.apply {
                         progressBar.hide()
                         progressBar.visibility = View.GONE

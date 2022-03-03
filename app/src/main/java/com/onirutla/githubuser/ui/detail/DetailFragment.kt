@@ -46,7 +46,7 @@ class DetailFragment : Fragment() {
 
         viewModel.user.observe(viewLifecycleOwner, {
             when (it) {
-                is Resource.Error -> {
+                is Resource.Empty -> {
                     binding.apply {
                         progressBar.hide()
                         progressBar.visibility = View.GONE
@@ -61,7 +61,6 @@ class DetailFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     binding.apply {
-                        Log.d("detail success", "${it.data}")
                         user = it.data
                         progressBar.hide()
                         progressBar.visibility = View.GONE

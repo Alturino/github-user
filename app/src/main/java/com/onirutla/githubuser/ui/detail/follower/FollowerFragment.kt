@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentFollowerBinding
 import com.onirutla.githubuser.ui.SharedViewModel
-import com.onirutla.githubuser.ui.detail.DetailViewModel
 import com.onirutla.githubuser.ui.home.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -44,7 +43,7 @@ class FollowerFragment : Fragment() {
 
         viewModel.followers.observe(viewLifecycleOwner, {
             when (it) {
-                is Resource.Error -> {
+                is Resource.Empty -> {
                     binding.apply {
                         progressBar.hide()
                         progressBar.visibility = View.GONE

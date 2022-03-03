@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.data.local
+package com.onirutla.githubuser.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -27,6 +27,12 @@ data class UserEntity(
 
     @ColumnInfo(name = "public_repos")
     val publicRepos: Int,
+
+    @ColumnInfo
+    val location: String,
+
+    @ColumnInfo
+    val company: String,
 
     @ColumnInfo(name = "follower_url")
     val followersUrl: String,

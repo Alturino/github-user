@@ -1,5 +1,6 @@
 package com.onirutla.githubuser.data.remote.response
 
+import com.onirutla.githubuser.data.local.entity.UserEntity
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -8,12 +9,6 @@ data class UserResponse(
 
     @Json(name = "following_url")
     val followingUrl: String? = null,
-
-    @Json(name = "bio")
-    val bio: String? = null,
-
-    @Json(name = "created_at")
-    val createdAt: String? = null,
 
     @Json(name = "login")
     val username: String? = null,
@@ -53,5 +48,20 @@ data class UserResponse(
 
     @Json(name = "location")
     val location: String? = null,
+)
 
+fun UserResponse.toEntity() = UserEntity(
+    id = id ?: 0,
+    username = username.orEmpty(),
+    name = name.orEmpty(),
+    type = type.orEmpty(),
+    followers = followers ?: 0,
+    following = following ?: 0,
+    publicRepos = publicRepos ?: 0,
+    followersUrl = followersUrl.orEmpty(),
+    followingUrl = followingUrl.orEmpty(),
+    avatarUrl = avatarUrl.orEmpty(),
+    isFavorite = false,
+    company = company.orEmpty(),
+    location = location.orEmpty()
 )

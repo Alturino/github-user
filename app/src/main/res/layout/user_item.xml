@@ -7,7 +7,7 @@
 
         <variable
             name="user"
-            type="com.onirutla.githubuser.data.remote.response.UserResponse" />
+            type="com.onirutla.githubuser.data.local.entity.UserEntity" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@{user.name}"
+                android:text="@{user.type}"
                 android:textAppearance="?attr/textAppearanceListItemSecondary"
                 app:layout_constraintEnd_toEndOf="@+id/username"
                 app:layout_constraintHorizontal_bias="0.0"

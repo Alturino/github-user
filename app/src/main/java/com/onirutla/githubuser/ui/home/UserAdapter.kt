@@ -5,17 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.onirutla.githubuser.data.remote.response.UserResponse
+import com.onirutla.githubuser.data.local.entity.UserEntity
 import com.onirutla.githubuser.databinding.UserItemBinding
 import com.onirutla.githubuser.util.UserDiff
 
 class UserAdapter(
-    private val listener: (user: UserResponse, view: View) -> Unit
+    private val listener: (user: UserEntity, view: View) -> Unit
 ) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
-    private val list = mutableListOf<UserResponse>()
+    private val list = mutableListOf<UserEntity>()
 
-    fun submitList(list: List<UserResponse>) {
+    fun submitList(list: List<UserEntity>) {
         val diffUser = DiffUtil.calculateDiff(UserDiff(this.list, list))
         this.list.clear()
         this.list.addAll(list)
@@ -41,7 +41,7 @@ class UserAdapter(
             binding.root.setOnClickListener { listener(list[adapterPosition], it) }
         }
 
-        fun bind(user: UserResponse) {
+        fun bind(user: UserEntity) {
             binding.user = user
         }
     }

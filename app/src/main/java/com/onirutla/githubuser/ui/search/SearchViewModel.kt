@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.ui.home
+package com.onirutla.githubuser.ui.search
 
 import androidx.lifecycle.*
 import com.onirutla.githubuser.data.Resource
@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class SearchViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 

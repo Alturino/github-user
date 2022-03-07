@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentFavoriteBinding
 import com.onirutla.githubuser.ui.adapter.UserAdapter
@@ -64,6 +65,12 @@ class FavoriteFragment : Fragment() {
                 }
             }
         })
+
+        binding.favoriteList.apply {
+            adapter = userAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+        }
     }
 
     override fun onDestroyView() {

@@ -7,4 +7,9 @@
     <string name="location">Location</string>
     <string name="search">Search User</string>
     <string name="favorite">Favorite</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="settings">Settings</string>
+    <string name="home_illustration">Home Illustration</string>
+    <string name="username">Username</string>
+    <string name="dark_mode_default_value">MODE_NIGHT_FOLLOW_SYSTEM</string>
 </resources>

@@ -101,18 +101,9 @@ class UserRepositoryImpl @Inject constructor(
         }.flowOn(dispatcher)
 
     override fun getFavoriteUsers(): Flow<Resource<List<UserEntity>>> =
-        localDataSource.getFavoriteUsers().map {
-            if (it.isNullOrEmpty())
-                Resource.Empty("You don't have any favorite user yet")
-            else
-                Resource.Success(it)
-        }.onStart {
-            emit(Resource.Loading())
-        }.onEmpty {
-            emit(Resource.Empty("You don't have any favorite user yet"))
-        }.catch {
-            Log.d("repo ", "$it")
-        }.flowOn(dispatcher)
+        localDataSource.getFavoriteUsers().mapNotNull {
+            Resource.Success(it)
+        }
 
     override suspend fun setFavorite(user: UserEntity): UserEntity = when (user.isFavorite) {
         true -> localDataSource.unFavorite(user)

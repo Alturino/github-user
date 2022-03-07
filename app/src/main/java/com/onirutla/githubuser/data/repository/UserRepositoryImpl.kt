@@ -23,7 +23,7 @@ class UserRepositoryImpl @Inject constructor(
         localDataSource.findUserByUsername(username).collect { local ->
             if (local.isNullOrEmpty()) {
                 remoteDataSource.findUsersByUsername(username).collect { remote ->
-                    if (remote.isNullOrEmpty()) emit(Resource.Empty("data is not found"))
+                    if (remote.isNullOrEmpty()) emit(Resource.Empty("Data is not found"))
 
                     if (remote.isNotEmpty()) {
                         val caches = remote.map { it.toEntity() }
@@ -40,7 +40,7 @@ class UserRepositoryImpl @Inject constructor(
     }.onStart {
         emit(Resource.Loading())
     }.onEmpty {
-        emit(Resource.Empty("data is not found"))
+        emit(Resource.Empty("Data is not found"))
     }.catch {
         Log.d("repo findUser", "$it")
     }.flowOn(dispatcher)
@@ -50,7 +50,7 @@ class UserRepositoryImpl @Inject constructor(
             if (local == null || local.name == "") {
                 remoteDataSource.getUserDetail(username).collect { remote ->
                     if (remote == null) {
-                        emit(Resource.Empty("data is not found"))
+                        emit(Resource.Empty("Data is not found"))
                     }
 
                     if (remote != null) {
@@ -66,7 +66,7 @@ class UserRepositoryImpl @Inject constructor(
     }.onStart {
         emit(Resource.Loading())
     }.onEmpty {
-        emit(Resource.Empty("data is not found"))
+        emit(Resource.Empty("Data is not found"))
     }.catch {
         Log.d("repo userDetail", "$it")
     }.flowOn(dispatcher)
@@ -77,11 +77,11 @@ class UserRepositoryImpl @Inject constructor(
                 val caches = remote.map { it.toEntity() }
                 Resource.Success(caches)
             } else
-                Resource.Empty("data is not found")
+                Resource.Empty("Data is not found")
         }.onStart {
             emit(Resource.Loading())
         }.onEmpty {
-            emit(Resource.Empty("data is not found"))
+            emit(Resource.Empty("Data is not found"))
         }.catch {
             Log.d("repo followers", "$it")
         }.flowOn(dispatcher)
@@ -91,11 +91,11 @@ class UserRepositoryImpl @Inject constructor(
             if (remote.isNotEmpty()) {
                 val caches = remote.map { it.toEntity() }
                 Resource.Success(caches)
-            } else Resource.Empty("data is not found")
+            } else Resource.Empty("Data is not found")
         }.onStart {
             emit(Resource.Loading())
         }.onEmpty {
-            emit(Resource.Empty("data is not found"))
+            emit(Resource.Empty("Data is not found"))
         }.catch {
             Log.d("repo followings", "$it")
         }.flowOn(dispatcher)
@@ -103,13 +103,13 @@ class UserRepositoryImpl @Inject constructor(
     override fun getFavoriteUsers(): Flow<Resource<List<UserEntity>>> =
         localDataSource.getFavoriteUsers().map {
             if (it.isNullOrEmpty())
-                Resource.Empty("data is not found")
+                Resource.Empty("You don't have any favorite user yet")
             else
                 Resource.Success(it)
         }.onStart {
             emit(Resource.Loading())
         }.onEmpty {
-            emit(Resource.Empty("data is not found"))
+            emit(Resource.Empty("You don't have any favorite user yet"))
         }.catch {
             Log.d("repo ", "$it")
         }.flowOn(dispatcher)

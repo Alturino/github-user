@@ -11,7 +11,9 @@ import androidx.navigation.findNavController
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentFavoriteBinding
 import com.onirutla.githubuser.ui.adapter.UserAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoriteFragment : Fragment() {
 
     private var _binding: FragmentFavoriteBinding? = null

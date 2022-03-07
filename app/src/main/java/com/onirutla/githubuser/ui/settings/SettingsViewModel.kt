@@ -13,7 +13,7 @@ class SettingsViewModel @Inject constructor(
     private val userDataStore: UserDataStore
 ) : ViewModel() {
 
-    val isDarkTheme = userDataStore.isDarkTheme.asLiveData()
+    val isDarkTheme = userDataStore.isDarkTheme.asLiveData(viewModelScope.coroutineContext)
 
     fun setIsDarkTheme(isDarkTheme: Boolean) {
         viewModelScope.launch {

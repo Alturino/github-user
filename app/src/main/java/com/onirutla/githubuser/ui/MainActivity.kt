@@ -3,7 +3,9 @@ package com.onirutla.githubuser.ui
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -20,6 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
 
+    private val viewModel: SharedViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -34,6 +38,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupDestinationListener(navController)
+
+        viewModel.isDarkTheme.observe(this, {
+            if (it) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        })
     }
 
     private fun setupDestinationListener(navController: NavController) {

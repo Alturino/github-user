@@ -1,44 +1,51 @@
 package com.onirutla.githubuser.ui.settings
 
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
-import com.onirutla.githubuser.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.onirutla.githubuser.databinding.FragmentSettingsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class SettingsFragment : PreferenceFragmentCompat(),
-    SharedPreferences.OnSharedPreferenceChangeListener {
+@AndroidEntryPoint
+class SettingsFragment : Fragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        PreferenceManager.getDefaultSharedPreferences(requireContext())
-            .registerOnSharedPreferenceChangeListener(this)
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel: SettingsViewModel by viewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.root_preferences, rootKey)
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        val darkModeString = getString(R.string.dark_mode)
-        key?.let { it ->
-            if (it == darkModeString) sharedPreferences?.let { preferences ->
-                val darkModeValues = resources.getStringArray(R.array.dark_mode_values)
-                when (preferences.getString(darkModeString, darkModeValues[3])) {
-                    darkModeValues[0] -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    darkModeValues[1] -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    darkModeValues[2] -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                    darkModeValues[3] -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY)
-                }
+        viewModel.isDarkTheme.observe(viewLifecycleOwner, {
+            if (it) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                binding.switchWidget.isChecked = true
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                binding.switchWidget.isChecked = false
             }
+        })
+
+        binding.switchWidget.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setIsDarkTheme(isChecked)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        PreferenceManager.getDefaultSharedPreferences(requireContext())
-            .unregisterOnSharedPreferenceChangeListener(this)
+        _binding = null
     }
-
 }

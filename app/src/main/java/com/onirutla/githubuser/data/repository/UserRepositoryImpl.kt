@@ -113,4 +113,9 @@ class UserRepositoryImpl @Inject constructor(
         }.catch {
             Log.d("repo ", "$it")
         }.flowOn(dispatcher)
+
+    override suspend fun setFavorite(user: UserEntity): UserEntity = when (user.isFavorite) {
+        true -> localDataSource.unFavorite(user)
+        false -> localDataSource.favorite(user)
+    }
 }

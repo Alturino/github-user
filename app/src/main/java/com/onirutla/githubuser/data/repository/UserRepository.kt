@@ -11,5 +11,6 @@ interface UserRepository {
     fun getUserFollowers(username: String): Flow<Resource<List<UserEntity>>>
     fun getUserFollowings(username: String): Flow<Resource<List<UserEntity>>>
     fun getFavoriteUsers(): Flow<Resource<List<UserEntity>>>
+    suspend fun setFavorite(user: UserEntity): UserEntity
 
 }

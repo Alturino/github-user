@@ -1,10 +1,14 @@
 package com.onirutla.githubuser.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.onirutla.githubuser.data.preference.UserDataStore
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SharedViewModel : ViewModel() {
+@HiltViewModel
+class SharedViewModel @Inject constructor(
+    private val userDataStore: UserDataStore
+) : ViewModel() {
 
     private val _username = MutableLiveData<String>()
     val username: LiveData<String> get() = _username
@@ -12,5 +16,7 @@ class SharedViewModel : ViewModel() {
     fun setUsername(username: String) {
         _username.value = username
     }
+
+    val isDarkTheme = userDataStore.isDarkTheme.asLiveData(viewModelScope.coroutineContext)
 
 }

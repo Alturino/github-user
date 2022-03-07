@@ -256,6 +256,15 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/favorite"
+            android:src="@drawable/ic_favorite_border_24" />
+
         <androidx.core.widget.ContentLoadingProgressBar
             android:id="@+id/progress_bar"
             style="@style/Widget.AppCompat.ProgressBar"

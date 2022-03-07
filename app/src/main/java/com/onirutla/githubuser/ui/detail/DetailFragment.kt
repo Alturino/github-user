@@ -1,7 +1,6 @@
 package com.onirutla.githubuser.ui.detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,14 +43,14 @@ class DetailFragment : Fragment() {
             sharedViewModel.setUsername(it)
         }
 
-        viewModel.user.observe(viewLifecycleOwner, {
-            when (it) {
+        viewModel.user.observe(viewLifecycleOwner, { resource ->
+            when (resource) {
                 is Resource.Empty -> {
                     binding.apply {
                         progressBar.hide()
                         progressBar.visibility = View.GONE
                     }
-                    Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
                 }
                 is Resource.Loading -> {
                     binding.apply {
@@ -61,10 +60,19 @@ class DetailFragment : Fragment() {
                 }
                 is Resource.Success -> {
                     binding.apply {
-                        user = it.data
+                        val userEntity = resource.data
+                        user = userEntity
                         progressBar.hide()
                         progressBar.visibility = View.GONE
+                        var status = userEntity.isFavorite
+                        setFabState(status)
+                        fabFavorite.setOnClickListener {
+                            viewModel.setFavorite(userEntity)
+                            status = !status
+                            setFabState(status)
+                        }
                     }
+
                 }
             }
         })
@@ -81,6 +89,14 @@ class DetailFragment : Fragment() {
                 )
                 tab.text = titles[position]
             }.attach()
+        }
+    }
+
+    private fun setFabState(status: Boolean) {
+        if (status) {
+            binding.fabFavorite.setImageResource(R.drawable.ic_favorite_24)
+        } else {
+            binding.fabFavorite.setImageResource(R.drawable.ic_favorite_border_24)
         }
     }
 

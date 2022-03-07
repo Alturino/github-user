@@ -1,5 +1,4 @@
 <resources>
-    <!-- Reply Preference -->
     <string-array name="dark_mode_entries">
         <item>On</item>
         <item>Off</item>

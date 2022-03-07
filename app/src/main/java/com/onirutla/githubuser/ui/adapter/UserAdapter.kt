@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.ui.home
+package com.onirutla.githubuser.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View

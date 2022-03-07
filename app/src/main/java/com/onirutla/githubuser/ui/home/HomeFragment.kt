@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.onirutla.githubuser.R
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentHomeBinding
+import com.onirutla.githubuser.ui.adapter.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

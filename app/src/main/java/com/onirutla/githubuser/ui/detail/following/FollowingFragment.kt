@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentFollowingBinding
 import com.onirutla.githubuser.ui.SharedViewModel
-import com.onirutla.githubuser.ui.home.UserAdapter
+import com.onirutla.githubuser.ui.adapter.UserAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -14,4 +14,29 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/main_nav" />
 
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottom_appbar"
+        style="@style/Widget.MaterialComponents.BottomAppBar.PrimarySurface"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:contentInsetEnd="0dp"
+        app:contentInsetEndWithActions="0dp"
+        app:contentInsetStart="0dp"
+        app:contentInsetStartWithNavigation="0dp"
+        app:hideOnScroll="true"
+        app:layout_behavior="com.google.android.material.bottomappbar.BottomAppBar$Behavior">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
+            style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:outlineAmbientShadowColor="@android:color/transparent"
+            android:outlineSpotShadowColor="@android:color/transparent"
+            app:menu="@menu/main_menu" />
+
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

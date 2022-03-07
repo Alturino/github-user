@@ -6,4 +6,5 @@
     <string name="company">Company</string>
     <string name="location">Location</string>
     <string name="search">Search User</string>
+    <string name="favorite">Favorite</string>
 </resources>

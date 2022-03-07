@@ -89,6 +89,11 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
+    // DataStore
+    implementation "androidx.datastore:datastore:$datastore_version"
+    implementation "androidx.datastore:datastore-core:$datastore_version"
+    implementation "androidx.datastore:datastore-preferences:$datastore_version"
+
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 
 

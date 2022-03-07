@@ -9,6 +9,7 @@ buildscript {
         retrofit_version = "2.9.0"
         okhttp_version = "4.9.3"
         room_version = "2.4.2"
+        datastore_version = "1.0.0"
     }
 
     repositories {

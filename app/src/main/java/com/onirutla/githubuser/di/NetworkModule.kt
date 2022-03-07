@@ -1,8 +1,9 @@
 package com.onirutla.githubuser.di
 
 import com.onirutla.githubuser.BuildConfig
-import com.onirutla.githubuser.BuildConfig.BASE_URL
 import com.onirutla.githubuser.data.remote.api.ApiInterface
+import com.onirutla.githubuser.util.API_KEY
+import com.onirutla.githubuser.util.BASE_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -32,7 +33,7 @@ object NetworkModule {
             val request =
                 it.request()
                     .newBuilder()
-                    .addHeader("Authorization", "Bearer ${BuildConfig.API_KEY}")
+                    .addHeader("Authorization", "Bearer $API_KEY")
                     .build()
             it.proceed(request = request)
         }

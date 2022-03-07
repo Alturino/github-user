@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.onirutla.githubuser.data.local.dao.UserDao
 import com.onirutla.githubuser.data.local.db.AppDatabase
-import com.onirutla.githubuser.util.Constant
+import com.onirutla.githubuser.util.DB_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +21,7 @@ object DatabaseModule {
         Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            Constant.DB_NAME
+            DB_NAME
         ).fallbackToDestructiveMigration()
                 .build()
 

@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface RemoteDataSource {
 
-     fun findUsersByUsername(username: String): Flow<List<UserResponse>>
-     fun getUserDetail(username: String): Flow<UserResponse>
-     fun getUserFollowers(username: String): Flow<List<UserResponse>>
-     fun getUserFollowings(username: String): Flow<List<UserResponse>>
+     suspend fun findUsersByUsername(username: String): List<UserResponse>
+     suspend fun getUserDetail(username: String): UserResponse
+     suspend fun getUserFollowers(username: String): List<UserResponse>
+     suspend fun getUserFollowings(username: String): List<UserResponse>
 
 }

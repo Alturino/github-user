@@ -18,7 +18,7 @@ class LocalDataSourceImpl @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : LocalDataSource {
 
-    override fun findUserByUsername(username: String): Flow<List<UserEntity>> =
+    override fun findUsersByUsername(username: String): Flow<List<UserEntity>> =
         userDao.findUserByUsername(username)
             .catch {
                 Log.d("findUser localsource", "$it")
@@ -30,7 +30,7 @@ class LocalDataSourceImpl @Inject constructor(
             Log.d("favorite localsource", "$it")
         }.flowOn(dispatcher)
 
-    override fun getUserDetail(username: String): Flow<UserEntity?> =
+    override fun getUserDetail(username: String): Flow<UserEntity> =
         userDao.getUserDetail(username).filterNotNull()
             .catch { Log.d("userDetail localsource", "$it") }.flowOn(dispatcher)
 

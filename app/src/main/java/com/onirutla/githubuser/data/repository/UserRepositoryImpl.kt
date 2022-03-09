@@ -19,24 +19,53 @@ class UserRepositoryImpl @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : UserRepository {
 
-    override fun findUserByUsername(username: String): Flow<Resource<List<UserEntity>>> = flow {
-        localDataSource.findUserByUsername(username).collect { local ->
-            if (local.isNullOrEmpty()) {
-                remoteDataSource.findUsersByUsername(username).collect { remote ->
-                    if (remote.isNullOrEmpty()) emit(Resource.Empty("Data is not found"))
-
-                    if (remote.isNotEmpty()) {
-                        val caches = remote.map { it.toEntity() }
-                        localDataSource.insertUsers(caches)
-
-                        localDataSource.findUserByUsername(username).collect {
-                            emit(Resource.Success(it))
-                        }
-                    }
+    override fun findUserByUsername(username: String): Flow<Resource<List<UserEntity>>> =
+        localDataSource.findUsersByUsername(username).mapNotNull { fromDb ->
+            if (fromDb.isNullOrEmpty()) {
+                val fromNetwork =
+                    remoteDataSource.findUsersByUsername(username).map { it.toEntity() }
+                if (fromNetwork.isNullOrEmpty())
+                    Resource.Empty()
+                else {
+                    localDataSource.insertUsers(fromNetwork)
+                    Resource.Success(fromDb)
                 }
-            }
-            emit(Resource.Success(local))
-        }
+            } else
+                Resource.Success(fromDb)
+        }.onStart {
+            emit(Resource.Loading())
+        }.onEmpty {
+            emit(Resource.Empty("Data is not found"))
+        }.catch {
+            Log.d("repo findUser", "$it")
+        }.flowOn(dispatcher)
+
+    override fun getUserDetail(username: String): Flow<Resource<UserEntity>> =
+        localDataSource.getUserDetail(username).mapNotNull { fromDb ->
+            if (fromDb == null || fromDb.name == "") {
+                val fromNetwork = remoteDataSource.getUserDetail(username).toEntity()
+                if (fromNetwork == null)
+                    Resource.Empty("Data is not found")
+                else {
+                    localDataSource.insertUser(fromNetwork)
+                    Resource.Success(fromDb)
+                }
+            } else
+                Resource.Success(fromDb)
+        }.onStart {
+            emit(Resource.Loading())
+        }.onEmpty {
+            emit(Resource.Empty("Data is not found"))
+        }.catch {
+            Log.d("repo findUser", "$it")
+        }.flowOn(dispatcher)
+
+    override fun getUserFollowers(username: String): Flow<Resource<List<UserEntity>>> = flow {
+        val fromNetwork = remoteDataSource.getUserFollowers(username).map { it.toEntity() }
+        if (fromNetwork.isEmpty())
+            emit(Resource.Empty("Data is not found"))
+        else
+            emit(Resource.Success(fromNetwork))
     }.onStart {
         emit(Resource.Loading())
     }.onEmpty {
@@ -45,64 +74,28 @@ class UserRepositoryImpl @Inject constructor(
         Log.d("repo findUser", "$it")
     }.flowOn(dispatcher)
 
-    override fun getUserDetail(username: String): Flow<Resource<UserEntity>> = flow {
-        localDataSource.getUserDetail(username).collect { local ->
-            if (local == null || local.name == "") {
-                remoteDataSource.getUserDetail(username).collect { remote ->
-                    if (remote == null) {
-                        emit(Resource.Empty("Data is not found"))
-                    }
-
-                    if (remote != null) {
-                        val cache = remote.toEntity()
-                        localDataSource.insertUser(cache)
-                        localDataSource.getUserDetail(username).collect {
-                            emit(Resource.Success(it!!))
-                        }
-                    }
-                }
-            } else emit(Resource.Success(local))
-        }
+    override fun getUserFollowings(username: String): Flow<Resource<List<UserEntity>>> = flow {
+        val fromNetwork = remoteDataSource.getUserFollowings(username).map { it.toEntity() }
+        if (fromNetwork.isEmpty())
+            emit(Resource.Empty())
+        else
+            emit(Resource.Success(fromNetwork))
     }.onStart {
         emit(Resource.Loading())
     }.onEmpty {
         emit(Resource.Empty("Data is not found"))
     }.catch {
-        Log.d("repo userDetail", "$it")
+        Log.d("repo findUser", "$it")
     }.flowOn(dispatcher)
-
-    override fun getUserFollowers(username: String): Flow<Resource<List<UserEntity>>> =
-        remoteDataSource.getUserFollowers(username).map { remote ->
-            if (remote.isNotEmpty()) {
-                val caches = remote.map { it.toEntity() }
-                Resource.Success(caches)
-            } else
-                Resource.Empty("Data is not found")
-        }.onStart {
-            emit(Resource.Loading())
-        }.onEmpty {
-            emit(Resource.Empty("Data is not found"))
-        }.catch {
-            Log.d("repo followers", "$it")
-        }.flowOn(dispatcher)
-
-    override fun getUserFollowings(username: String): Flow<Resource<List<UserEntity>>> =
-        remoteDataSource.getUserFollowings(username).map { remote ->
-            if (remote.isNotEmpty()) {
-                val caches = remote.map { it.toEntity() }
-                Resource.Success(caches)
-            } else Resource.Empty("Data is not found")
-        }.onStart {
-            emit(Resource.Loading())
-        }.onEmpty {
-            emit(Resource.Empty("Data is not found"))
-        }.catch {
-            Log.d("repo followings", "$it")
-        }.flowOn(dispatcher)
 
     override fun getFavoriteUsers(): Flow<Resource<List<UserEntity>>> =
         localDataSource.getFavoriteUsers().mapNotNull {
-            Resource.Success(it)
+            if (it.isEmpty())
+                Resource.Empty("Data is not found")
+            else
+                Resource.Success(it)
+        }.onStart {
+            emit(Resource.Loading())
         }
 
     override suspend fun setFavorite(user: UserEntity): UserEntity = when (user.isFavorite) {

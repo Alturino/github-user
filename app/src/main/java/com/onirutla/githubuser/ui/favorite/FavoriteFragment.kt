@@ -47,6 +47,7 @@ class FavoriteFragment : Fragment() {
                     binding.apply {
                         progressBar.hide()
                         progressBar.visibility = View.GONE
+                        userAdapter.submitList(emptyList())
                     }
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()
                 }

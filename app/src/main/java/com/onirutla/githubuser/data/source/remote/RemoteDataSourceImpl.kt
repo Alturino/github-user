@@ -1,7 +1,14 @@
 package com.onirutla.githubuser.data.source.remote
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.onirutla.githubuser.data.source.FollowPagingSource
+import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.remote.network.GithubApiService
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
+import com.onirutla.githubuser.util.Constant.GITHUB_PAGE_SIZE
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -10,52 +17,64 @@ class RemoteDataSourceImpl @Inject constructor(
     private val apiService: GithubApiService
 ) : RemoteDataSource {
 
-    override suspend fun searchBy(username: String): NetworkState<List<UserResponse>> = try {
+    override suspend fun searchBy(username: String): Response<List<UserResponse>> = try {
         if (username.isEmpty())
             throw IllegalArgumentException("username shouldn't be empty")
         val response = apiService.searchBy(username)
         if (response.isSuccessful)
-            NetworkState.Success(body = response.body()?.items!!, message = response.message())
+            Response.Success(body = response.body()?.items!!, message = response.message())
         else
-            NetworkState.Error(message = response.message())
+            Response.Error(message = response.message())
     } catch (t: Throwable) {
-        NetworkState.Error(message = t.message)
+        Response.Error(message = t.message)
     }
 
-    override suspend fun getDetailBy(username: String): NetworkState<UserResponse> = try {
+    override suspend fun getDetailBy(username: String): Response<UserResponse> = try {
         if (username.isEmpty())
             throw IllegalArgumentException("username shouldn't be empty")
         val response = apiService.getDetailBy(username)
         if (response.isSuccessful)
-            NetworkState.Success(body = response.body()!!, message = response.message())
+            Response.Success(body = response.body()!!, message = response.message())
         else
-            NetworkState.Error(message = response.message())
+            Response.Error(message = response.message())
     } catch (t: Throwable) {
-        NetworkState.Error(message = t.message)
+        Response.Error(message = t.message)
     }
 
-    override suspend fun getFollowerBy(username: String): NetworkState<List<UserResponse>> = try {
+    override suspend fun getFollowerBy(
+        username: String,
+    ): Response<List<UserResponse>> = try {
         if (username.isEmpty())
             throw IllegalArgumentException("username shouldn't be empty")
         val response = apiService.getFollowerBy(username)
         if (response.isSuccessful)
-            NetworkState.Success(body = response.body()!!, message = response.message())
+            Response.Success(body = response.body()!!, message = response.message())
         else
-            NetworkState.Error(message = response.message())
+            Response.Error(message = response.message())
 
     } catch (t: Throwable) {
-        NetworkState.Error(message = t.message)
+        Response.Error(message = t.message)
     }
 
-    override suspend fun getFollowingBy(username: String): NetworkState<List<UserResponse>> = try {
+    override fun getFollowerPaging(username: String): Flow<PagingData<UserEntity>> =
+        Pager(config = PagingConfig(pageSize = GITHUB_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = {
+                FollowPagingSource { position ->
+                    apiService.getFollowerBy(username, position)
+                }
+            }
+        ).flow
+
+
+    override suspend fun getFollowingBy(username: String): Response<List<UserResponse>> = try {
         if (username.isEmpty())
             throw IllegalArgumentException("username shouldn't be empty")
         val response = apiService.getFollowingBy(username)
         if (response.isSuccessful)
-            NetworkState.Success(body = response.body()!!, message = response.message())
+            Response.Success(body = response.body()!!, message = response.message())
         else
-            NetworkState.Error(message = response.message())
+            Response.Error(message = response.message())
     } catch (t: Throwable) {
-        NetworkState.Error(message = t.message)
+        Response.Error(message = t.message)
     }
 }

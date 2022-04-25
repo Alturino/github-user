@@ -4,31 +4,10 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
     id 'dagger.hilt.android.plugin'
-    id 'com.google.secrets_gradle_plugin' version '0.4'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
-    signingConfigs {
-        release {
-            def tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
-            def allFilesFromDir = new File(tmpFilePath).listFiles()
-
-            if (allFilesFromDir != null) {
-                def keystoreFile = allFilesFromDir.first()
-                keystoreFile.renameTo('keystore/github_user_keystore.jks')
-            }
-
-            Properties properties = new Properties()
-            if (project.rootProject.file('local.properties').canRead()) {
-                properties.load(project.rootProject.file('local.properties').newDataInputStream())
-            }
-
-            storeFile file('keystore/github_user_keystore.jks')
-            storePassword properties.getProperty("STORE_PASSWORD")
-            keyPassword properties.getProperty("KEY_PASSWORD")
-            keyAlias properties.getProperty("KEY_ALIAS")
-        }
-    }
     compileSdk 31
 
     defaultConfig {
@@ -51,11 +30,6 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-        }
-
-        debug {
-            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -71,24 +45,21 @@ android {
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation "androidx.fragment:fragment-ktx:1.4.0"
-
-    // Activity
-    def activity_version = "1.4.0"
-    implementation "androidx.appcompat:appcompat:$activity_version"
-    implementation "androidx.activity:activity-ktx:$activity_version"
+    implementation "androidx.fragment:fragment-ktx:1.4.1"
+    implementation "androidx.appcompat:appcompat:1.4.1"
+    implementation "androidx.activity:activity-ktx:1.4.0"
 
     // Lifecycle
-    def lifecycle_version = "2.4.0"
+    def lifecycle_version = "2.4.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
     // Room
-    def room_version = "2.3.0"
+    def room_version = "2.4.2"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
@@ -113,12 +84,12 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
 
     // Okhttp
-    def okhttp_version = "4.9.2"
+    def okhttp_version = "4.9.3"
     implementation "com.squareup.okhttp3:okhttp-bom:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
     // Moshi
-    def moshi_version = '1.12.0'
+    def moshi_version = '1.13.0'
     implementation "com.squareup.moshi:moshi:$moshi_version"
     implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"
@@ -129,14 +100,14 @@ dependencies {
     implementation "androidx.datastore:datastore-preferences:$datastore_version"
 
     // Glide
-    def glide_version = "4.12.0"
+    def glide_version = "4.13.1"
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
 
     testImplementation 'junit:junit:4.13.2'
 
     // Mockito
-    def mockito_version = "4.1.0"
+    def mockito_version = "4.4.0"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "org.mockito:mockito-inline:$mockito_version"
 

@@ -1,7 +1,7 @@
 package com.onirutla.githubuser.di
 
 import com.onirutla.githubuser.BuildConfig
-import com.onirutla.githubuser.data.source.remote.network.NetworkService
+import com.onirutla.githubuser.data.source.remote.network.GithubApiService
 import com.onirutla.githubuser.util.Constant.BASE_URL
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -64,6 +64,6 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideApiService(retrofit: Retrofit): NetworkService =
-        retrofit.create(NetworkService::class.java)
+    fun provideApiService(retrofit: Retrofit): GithubApiService =
+        retrofit.create(GithubApiService::class.java)
 }

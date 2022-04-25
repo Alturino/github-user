@@ -1,19 +1,19 @@
 package com.onirutla.githubuser.data.source.remote
 
-import com.onirutla.githubuser.data.source.remote.network.NetworkService
+import com.onirutla.githubuser.data.source.remote.network.GithubApiService
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class RemoteDataSourceImpl @Inject constructor(
-    private val apiService: NetworkService
+    private val apiService: GithubApiService
 ) : RemoteDataSource {
 
     override suspend fun searchBy(username: String): NetworkState<List<UserResponse>> = try {
         if (username.isEmpty())
             throw IllegalArgumentException("username shouldn't be empty")
-        val response = apiService.getUsersSearch(username)
+        val response = apiService.searchBy(username)
         if (response.isSuccessful)
             NetworkState.Success(body = response.body()?.items!!, message = response.message())
         else
@@ -25,7 +25,7 @@ class RemoteDataSourceImpl @Inject constructor(
     override suspend fun getDetailBy(username: String): NetworkState<UserResponse> = try {
         if (username.isEmpty())
             throw IllegalArgumentException("username shouldn't be empty")
-        val response = apiService.getUserDetail(username)
+        val response = apiService.getDetailBy(username)
         if (response.isSuccessful)
             NetworkState.Success(body = response.body()!!, message = response.message())
         else
@@ -37,7 +37,7 @@ class RemoteDataSourceImpl @Inject constructor(
     override suspend fun getFollowerBy(username: String): NetworkState<List<UserResponse>> = try {
         if (username.isEmpty())
             throw IllegalArgumentException("username shouldn't be empty")
-        val response = apiService.getUserFollower(username)
+        val response = apiService.getFollowerBy(username)
         if (response.isSuccessful)
             NetworkState.Success(body = response.body()!!, message = response.message())
         else
@@ -50,7 +50,7 @@ class RemoteDataSourceImpl @Inject constructor(
     override suspend fun getFollowingBy(username: String): NetworkState<List<UserResponse>> = try {
         if (username.isEmpty())
             throw IllegalArgumentException("username shouldn't be empty")
-        val response = apiService.getUserFollowing(username)
+        val response = apiService.getFollowingBy(username)
         if (response.isSuccessful)
             NetworkState.Success(body = response.body()!!, message = response.message())
         else

@@ -6,4 +6,5 @@ object Constant {
 
     const val INTRO_DATASTORE = "intro_datastore"
     const val KEY_INTRO_PREFERENCES = "key_intro_preferences"
+    const val GITHUB_PAGE_SIZE = 30
 }

@@ -3,8 +3,8 @@ package com.onirutla.githubuser.ui.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.onirutla.githubuser.data.Resource
-import com.onirutla.githubuser.data.UserDTO
 import com.onirutla.githubuser.data.source.UserDataSource
+import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.util.MainDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,7 +22,7 @@ class SearchViewModel @Inject constructor(
 
     private val _username = MutableSharedFlow<String>()
 
-    val users: StateFlow<Resource<List<UserDTO>>> = _username.flatMapLatest {
+    val users: StateFlow<Resource<List<UserEntity>>> = _username.flatMapLatest {
         userDataSource.getUsersSearch(it)
     }.stateIn(
         scope = viewModelScope,

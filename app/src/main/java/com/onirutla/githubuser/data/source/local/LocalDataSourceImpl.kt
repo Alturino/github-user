@@ -6,7 +6,7 @@ import com.onirutla.githubuser.util.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,30 +16,21 @@ class LocalDataSourceImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : LocalDataSource {
 
-    override fun getUserSearch(username: String): Flow<FromDb<List<UserEntity>>> =
-        userDao.getUserSearch(username).map {
-            if (it.isNullOrEmpty())
-                FromDb.Empty("You don't have any favorite yet")
-            else
-                FromDb.Success(it)
-        }.flowOn(ioDispatcher)
+    override fun getUserSearch(username: String): Flow<List<UserEntity>> =
+        userDao.getUserSearch(username)
+            .mapNotNull { it }
+            .flowOn(ioDispatcher)
 
-    override fun getFavorite(): Flow<FromDb<List<UserEntity>>> = userDao.getFavorites().map {
-        if (it.isNullOrEmpty())
-            FromDb.Empty("You don't have any favorite yet")
-        else
-            FromDb.Success(it)
-    }.flowOn(ioDispatcher)
+    override fun getFavorite(): Flow<List<UserEntity>> =
+        userDao.getFavorites()
+            .mapNotNull { it }
+            .flowOn(ioDispatcher)
 
 
-    override fun getUserDetail(username: String): Flow<FromDb<UserEntity>> =
-        userDao.getUserDetail(username).map {
-            return@map if (it == null) {
-                FromDb.Empty("User not found in database")
-            } else {
-                FromDb.Success(it)
-            }
-        }.flowOn(ioDispatcher)
+    override fun getUserDetail(username: String): Flow<UserEntity> =
+        userDao.getUserDetail(username)
+            .mapNotNull { it }
+            .flowOn(ioDispatcher)
 
     override suspend fun insertUsers(users: List<UserEntity>) = userDao.insertUsers(users)
 

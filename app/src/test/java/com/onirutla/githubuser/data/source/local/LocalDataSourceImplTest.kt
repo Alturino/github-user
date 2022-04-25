@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.*
@@ -55,8 +56,8 @@ class LocalDataSourceImplTest {
         val actual = localDataSourceImpl.getUserSearch(username).first()
 
         assertNotNull(actual)
-        assertEquals(FromDb.Success(DummyData.userEntities), actual)
-        assertEquals(entitiesSuccess.first().size, (actual as FromDb.Success).data.size)
+        assertEquals(DummyData.userEntities, actual)
+        assertEquals(entitiesSuccess.first().size, actual.size)
 
         verify(userDao).getUserSearch(username)
     }
@@ -69,10 +70,7 @@ class LocalDataSourceImplTest {
             val actual = localDataSourceImpl.getUserSearch(username).first()
 
             assertNotNull(actual)
-            assertEquals(
-                FromDb.Empty<List<UserEntity>>("You don't have any favorite yet"),
-                actual
-            )
+
 
             verify(userDao).getUserSearch(username)
         }
@@ -84,8 +82,8 @@ class LocalDataSourceImplTest {
         val actual = localDataSourceImpl.getFavorite().first()
 
         assertNotNull(actual)
-        assertEquals(FromDb.Success(DummyData.favorites), actual)
-        assertEquals(DummyData.favorites, (actual as FromDb.Success).data)
+        assertEquals(DummyData.favorites, actual)
+        assertEquals(DummyData.favorites.size, actual.size)
 
         verify(userDao).getFavorites()
     }
@@ -97,7 +95,6 @@ class LocalDataSourceImplTest {
         val actual = localDataSourceImpl.getFavorite().first()
 
         assertNotNull(actual)
-        assertEquals(FromDb.Empty<List<UserEntity>>("You don't have any favorite yet"), actual)
 
         verify(userDao).getFavorites()
     }
@@ -109,7 +106,7 @@ class LocalDataSourceImplTest {
         val actual = localDataSourceImpl.getUserDetail(username).first()
 
         assertNotNull(actual)
-        assertEquals(FromDb.Success(DummyData.userEntity), actual)
+        assertEquals(DummyData.userEntity, actual)
 
         verify(userDao).getUserDetail(username)
     }
@@ -118,10 +115,10 @@ class LocalDataSourceImplTest {
     fun `getUserDetail should return empty when data is not found`() = runBlockingTest {
         `when`(userDao.getUserDetail(username)).thenReturn(entityEmpty)
 
-        val actual = localDataSourceImpl.getUserDetail(username).first()
+        val actual = localDataSourceImpl.getUserDetail(username)
 
         assertNotNull(actual)
-        assertEquals(FromDb.Empty<UserEntity>("User not found in database"), actual)
+        assertTrue(actual.toList().isEmpty())
 
         verify(userDao).getUserDetail(username)
     }

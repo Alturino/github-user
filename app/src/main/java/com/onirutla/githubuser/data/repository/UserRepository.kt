@@ -1,22 +1,15 @@
 package com.onirutla.githubuser.data.repository
 
 import com.onirutla.githubuser.data.Resource
-import com.onirutla.githubuser.data.UserDTO
 import com.onirutla.githubuser.data.source.UserDataSource
-import com.onirutla.githubuser.data.source.local.FromDb
 import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
-import com.onirutla.githubuser.data.source.local.entity.toDto
 import com.onirutla.githubuser.data.source.remote.NetworkState
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
-import com.onirutla.githubuser.data.source.remote.response.toDto
 import com.onirutla.githubuser.data.source.remote.response.toEntity
-import com.onirutla.githubuser.data.toEntity
 import com.onirutla.githubuser.util.IoDispatcher
-import com.onirutla.githubuser.util.mapList
 import com.onirutla.githubuser.util.mapNullInputList
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
@@ -29,59 +22,15 @@ class UserRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : UserDataSource {
 
-    override fun getUsersSearch(username: String) = flow<Resource<List<UserDTO>>> {
+    override fun getUsersSearch(username: String) = flow<Resource<List<UserEntity>>> {
         emit(Resource.Loading())
 
-        localDataSource.getUserSearch(username).collect { fromDb ->
-            when (fromDb) {
-                is FromDb.Success -> {
-                    val dtos = mapNullInputList(fromDb.data) { it.toDto() }
-                    emit(Resource.Success(dtos))
-                }
-                is FromDb.Empty -> {
-                    when (val networkState = remoteDataSource.getUserSearch(username)) {
-                        is NetworkState.Success -> {
-                            val fromNetwork = networkState.body
-
-                            val cache = mapNullInputList(fromNetwork) { it.toEntity() }
-
-                            localDataSource.insertUsers(cache)
-
-                            val dto = mapNullInputList(fromNetwork) { it.toDto() }
-
-                            emit(Resource.Success(dto))
-                        }
-                        is NetworkState.Error -> {
-                            emit(Resource.Error(networkState.message))
-                        }
-                    }
-                }
-            }
-        }
 
     }.flowOn(ioDispatcher)
 
-    override fun getUserDetail(username: String) = flow<Resource<UserDTO>> {
+    override fun getUserDetail(username: String) = flow<Resource<UserEntity>> {
         emit(Resource.Loading())
 
-        localDataSource.getUserDetail(username).collect { fromDb ->
-            when (fromDb) {
-                is FromDb.Empty -> {
-                    when (val networkState = remoteDataSource.getUserDetail(username)) {
-                        is NetworkState.Error -> {
-                            emit(Resource.Error(message = networkState.message))
-                        }
-                        is NetworkState.Success -> {
-                            val fromNetwork = networkState.body.toEntity()
-
-                            localDataSource.insertUserDetail(fromNetwork)
-                            emit(Resource.Success(fromNetwork.toDto()))
-                        }
-                    }
-                }
-                is FromDb.Success -> emit(Resource.Success(fromDb.data.toDto()))
-            }
-        }
 
     }.flowOn(ioDispatcher)
 
@@ -93,9 +42,9 @@ class UserRepository @Inject constructor(
             is NetworkState.Success -> {
                 val fromNetwork = networkState.body
 
-                val dto = mapNullInputList(fromNetwork) { it.toDto() }
+                val entity = mapNullInputList(fromNetwork) { it.toEntity() }
 
-                emit(Resource.Success(dto))
+                emit(Resource.Success(entity))
             }
             is NetworkState.Error -> emit(Resource.Error(message = networkState.message))
         }
@@ -109,9 +58,9 @@ class UserRepository @Inject constructor(
             is NetworkState.Success -> {
                 val fromNetwork = networkState.body
 
-                val dto = mapNullInputList(fromNetwork) { it.toDto() }
+                val entity = mapNullInputList(fromNetwork) { it.toEntity() }
 
-                emit(Resource.Success(dto))
+                emit(Resource.Success(entity))
             }
             is NetworkState.Error -> {
                 emit(Resource.Error(message = networkState.message))
@@ -120,26 +69,16 @@ class UserRepository @Inject constructor(
     }.flowOn(ioDispatcher)
 
 
-    override fun getUsersFavorite() = flow<Resource<List<UserDTO>>> {
+    override fun getUsersFavorite() = flow<Resource<List<UserEntity>>> {
         emit(Resource.Loading())
 
-        localDataSource.getFavorite().collect { entities ->
-            when (entities) {
-                is FromDb.Empty -> emit(Resource.Error(message = entities.message))
-                is FromDb.Success -> {
-                    val favorite = mapList(entities.data) { it.toDto() }
-
-                    emit(Resource.Success(favorite))
-                }
-            }
-        }
 
     }.flowOn(ioDispatcher)
 
-    override suspend fun setUserFavorite(userDto: UserDTO): UserEntity {
+    override suspend fun setUserFavorite(userDto: UserEntity): UserEntity {
         return when (userDto.isFavorite) {
-            true -> localDataSource.unFavorite(userDto.toEntity())
-            false -> localDataSource.favorite(userDto.toEntity())
+            true -> localDataSource.unFavorite(userDto)
+            false -> localDataSource.favorite(userDto)
         }
     }
 

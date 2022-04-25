@@ -1,13 +1,12 @@
 package com.onirutla.githubuser.data.repository
 
-import com.onirutla.githubuser.data.UserDTO
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.remote.response.SearchResponse
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
 
 object DummyData {
-    val userDtos: List<UserDTO> = listOf(
-        UserDTO(
+    val userDtos: List<UserEntity> = listOf(
+        UserEntity(
             1,
             "a",
             "a",
@@ -20,7 +19,7 @@ object DummyData {
             "a",
             false
         ),
-        UserDTO(
+        UserEntity(
             2,
             "a",
             "a",
@@ -33,7 +32,7 @@ object DummyData {
             "a",
             false
         ),
-        UserDTO(
+        UserEntity(
             3,
             "a",
             "a",
@@ -155,8 +154,8 @@ object DummyData {
         isFavorite = false
     )
 
-    val favoriteDtos: List<UserDTO> = listOf(
-        UserDTO(
+    val favoriteDtos: List<UserEntity> = listOf(
+        UserEntity(
             1,
             "a",
             "a",
@@ -169,7 +168,7 @@ object DummyData {
             "a",
             true
         ),
-        UserDTO(
+        UserEntity(
             2,
             "aa",
             "aa",
@@ -182,7 +181,7 @@ object DummyData {
             "aa",
             false
         ),
-        UserDTO(
+        UserEntity(
             3,
             "aaa",
             "aaa",
@@ -195,7 +194,7 @@ object DummyData {
             "aaa",
             false
         ),
-        UserDTO(
+        UserEntity(
             4,
             "a",
             "a",
@@ -265,7 +264,7 @@ object DummyData {
         )
     )
 
-    val dto: UserDTO = UserDTO(
+    val dto: UserEntity = UserEntity(
         1,
         "a",
         "a",

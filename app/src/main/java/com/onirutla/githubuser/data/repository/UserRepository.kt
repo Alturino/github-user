@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.data.source
+package com.onirutla.githubuser.data.repository
 
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.source.local.entity.UserEntity

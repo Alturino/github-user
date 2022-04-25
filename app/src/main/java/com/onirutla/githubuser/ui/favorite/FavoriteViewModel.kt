@@ -3,7 +3,7 @@ package com.onirutla.githubuser.ui.favorite
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.onirutla.githubuser.data.Resource
-import com.onirutla.githubuser.data.source.UserRepository
+import com.onirutla.githubuser.data.repository.UserRepository
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed

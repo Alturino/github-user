@@ -16,7 +16,10 @@ interface GithubApiService {
     suspend fun getDetailBy(@Path(value = "username") username: String): Response<UserResponse>
 
     @GET(value = "users/{username}/followers")
-    suspend fun getFollowerBy(@Path(value = "username") username: String): Response<List<UserResponse>>
+    suspend fun getFollowerBy(
+        @Path(value = "username") username: String,
+        @Query(value = "page") page: Int = 1
+    ): Response<List<UserResponse>>
 
     @GET(value = "users/{username}/following")
     suspend fun getFollowingBy(@Path(value = "username") username: String): Response<List<UserResponse>>

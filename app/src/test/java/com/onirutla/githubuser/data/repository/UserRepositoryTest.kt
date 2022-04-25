@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
-import com.onirutla.githubuser.data.source.remote.NetworkState
+import com.onirutla.githubuser.data.source.remote.Response
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
 import kotlinx.coroutines.CoroutineDispatcher
@@ -52,10 +52,10 @@ class UserRepositoryTest {
 
     private val favorites = flow { emit(DummyData.favorites) }
 
-    private val fromNetworkSuccessResponses = NetworkState.Success(DummyData.userResponses)
-    private val fromNetworkSuccessResponse = NetworkState.Success(DummyData.userResponse)
-    private val fromNetworkErrorResponses = NetworkState.Error<List<UserResponse>>()
-    private val fromNetworkErrorResponse = NetworkState.Error<UserResponse>()
+    private val fromNetworkSuccessResponses = Response.Success(DummyData.userResponses)
+    private val fromNetworkSuccessResponse = Response.Success(DummyData.userResponse)
+    private val fromNetworkErrorResponses = Response.Error<List<UserResponse>>()
+    private val fromNetworkErrorResponse = Response.Error<UserResponse>()
 
     @Before
     fun setUp() {

@@ -8,34 +8,34 @@ import androidx.room.PrimaryKey
 data class UserEntity(
     @PrimaryKey(autoGenerate = false)
     @ColumnInfo
-    val id: Int,
+    val id: Int = 0,
 
     @ColumnInfo
-    val username: String,
+    val username: String = "",
 
     @ColumnInfo
-    val name: String,
+    val name: String = "",
 
     @ColumnInfo
-    val type: String,
+    val type: String = "",
 
     @ColumnInfo
-    val followers: Int,
+    val followers: Int = 0,
 
     @ColumnInfo
-    val following: Int,
+    val following: Int = 0,
 
     @ColumnInfo(name = "public_repos")
-    val publicRepos: Int,
+    val publicRepos: Int = 0,
 
     @ColumnInfo(name = "follower_url")
-    val followersUrl: String,
+    val followersUrl: String = "",
 
     @ColumnInfo(name = "following_url")
-    val followingUrl: String,
+    val followingUrl: String = "",
 
     @ColumnInfo(name = "avatar_url")
-    val avatarUrl: String,
+    val avatarUrl: String = "",
 
     @ColumnInfo(name = "is_favorite")
     val isFavorite: Boolean = false

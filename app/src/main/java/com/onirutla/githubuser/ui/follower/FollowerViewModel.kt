@@ -3,7 +3,7 @@ package com.onirutla.githubuser.ui.follower
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.onirutla.githubuser.data.Resource
-import com.onirutla.githubuser.data.source.UserDataSource
+import com.onirutla.githubuser.data.source.UserRepository
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.util.MainDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,14 +16,14 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @HiltViewModel
 class FollowerViewModel @Inject constructor(
-    private val userDataSource: UserDataSource,
+    private val userRepository: UserRepository,
     @MainDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private val _username = MutableSharedFlow<String>()
 
     val user: StateFlow<Resource<List<UserEntity>>> = _username.flatMapLatest {
-        userDataSource.getUsersFollower(it)
+        userRepository.getFollowerBy(it)
     }.stateIn(
         viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

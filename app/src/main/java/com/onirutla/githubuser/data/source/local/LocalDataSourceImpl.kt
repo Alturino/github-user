@@ -16,7 +16,7 @@ class LocalDataSourceImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : LocalDataSource {
 
-    override fun getUserSearch(username: String): Flow<List<UserEntity>> =
+    override fun searchBy(username: String): Flow<List<UserEntity>> =
         userDao.getUserSearch(username)
             .mapNotNull { it }
             .flowOn(ioDispatcher)
@@ -27,7 +27,7 @@ class LocalDataSourceImpl @Inject constructor(
             .flowOn(ioDispatcher)
 
 
-    override fun getUserDetail(username: String): Flow<UserEntity> =
+    override fun getDetailBy(username: String): Flow<UserEntity> =
         userDao.getUserDetail(username)
             .mapNotNull { it }
             .flowOn(ioDispatcher)

@@ -54,7 +54,7 @@ class LocalDataSourceTest {
     fun `getUserSearch should return success when data is found`() = runBlockingTest {
         `when`(userDao.getUserSearch(username)).thenReturn(entitiesSuccess)
 
-        val actual = localDataSource.getUserSearch(username).first()
+        val actual = localDataSource.searchBy(username).first()
 
         assertNotNull(actual)
         assertEquals(DummyData.userEntities, actual)
@@ -68,7 +68,7 @@ class LocalDataSourceTest {
         runBlockingTest {
             `when`(userDao.getUserSearch(username)).thenReturn(entitiesEmpty)
 
-            val actual = localDataSource.getUserSearch(username).first()
+            val actual = localDataSource.searchBy(username).first()
 
             assertNotNull(actual)
 
@@ -104,7 +104,7 @@ class LocalDataSourceTest {
     fun `getUserDetail should return success when data is found`() = runBlockingTest {
         `when`(userDao.getUserDetail(username)).thenReturn(entitySuccess)
 
-        val actual = localDataSource.getUserDetail(username).first()
+        val actual = localDataSource.getDetailBy(username).first()
 
         assertNotNull(actual)
         assertEquals(DummyData.userEntity, actual)
@@ -116,7 +116,7 @@ class LocalDataSourceTest {
     fun `getUserDetail should return empty when data is not found`() = runBlockingTest {
         `when`(userDao.getUserDetail(username)).thenReturn(entityEmpty)
 
-        val actual = localDataSource.getUserDetail(username)
+        val actual = localDataSource.getDetailBy(username)
 
         assertNotNull(actual)
         assertTrue(actual.toList().isEmpty())

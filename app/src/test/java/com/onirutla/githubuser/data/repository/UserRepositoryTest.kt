@@ -2,12 +2,11 @@ package com.onirutla.githubuser.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.onirutla.githubuser.data.Resource
+import com.onirutla.githubuser.data.source.UserRepository
 import com.onirutla.githubuser.data.source.local.LocalDataSource
-import com.onirutla.githubuser.data.source.local.LocalDataSourceImpl
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.remote.NetworkState
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
-import com.onirutla.githubuser.data.source.remote.RemoteDataSourceImpl
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,11 +15,18 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.verifyNoInteractions
 
 @ExperimentalCoroutinesApi
 class UserRepositoryTest {
@@ -43,7 +49,7 @@ class UserRepositoryTest {
     private val fromDbSuccessUserEntities = flow { emit(DummyData.userEntities) }
     private val fromDbSuccessUserEntity = flow { emit(DummyData.userEntity) }
     private val fromDbEmptyUserEntities = flow<List<UserEntity>> { emit(emptyList()) }
-    private val fromDbEmptyUserEntity = flow<UserEntity> { emit(notNull()) }
+    private val fromDbEmptyUserEntity = flow { emit(UserEntity()) }
 
     private val favorites = flow { emit(DummyData.favorites) }
 
@@ -54,10 +60,10 @@ class UserRepositoryTest {
 
     @Before
     fun setUp() {
-        localDataSource = mock(LocalDataSourceImpl::class.java)
-        remoteDataSource = mock(RemoteDataSourceImpl::class.java)
+        localDataSource = mock(LocalDataSource::class.java)
+        remoteDataSource = mock(RemoteDataSource::class.java)
         testDispatcher = TestCoroutineDispatcher()
-        userRepository = UserRepository(remoteDataSource, localDataSource, testDispatcher)
+        userRepository = UserRepositoryImpl(remoteDataSource, localDataSource, testDispatcher)
     }
 
     @Test
@@ -70,26 +76,26 @@ class UserRepositoryTest {
     @Test
     fun `getUsersSearch first item should resource loading`() = runBlockingTest {
         // Arrange
-        `when`(localDataSource.getUserSearch(username)).thenReturn(fromDbSuccessUserEntities)
+        `when`(localDataSource.searchBy(username)).thenReturn(fromDbSuccessUserEntities)
 
         // Act
-        val actual = userRepository.getUsersSearch(username).toList()
+        val actual = userRepository.searchBy(username).toList()
 
         // Assert
         assertNotNull(actual)
         assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
 
-        verify(localDataSource).getUserSearch(username)
+        verify(localDataSource).searchBy(username)
     }
 
     @Test
     fun `getUserSearch should return success when data is found in database`() = runBlockingTest {
         // Arrange
-        `when`(localDataSource.getUserSearch(username)).thenReturn(fromDbSuccessUserEntities)
-        `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetworkSuccessResponses)
+        `when`(localDataSource.searchBy(username)).thenReturn(fromDbSuccessUserEntities)
+        `when`(remoteDataSource.searchBy(username)).thenReturn(fromNetworkSuccessResponses)
 
         // Act
-        val actual = userRepository.getUsersSearch(username).toList()
+        val actual = userRepository.searchBy(username).toList()
 
         // Assert
         assertNotNull(actual)
@@ -98,8 +104,8 @@ class UserRepositoryTest {
         assertEquals(Resource.Success(DummyData.userDtos), actual.last())
 
         // Verify
-        verify(localDataSource).getUserSearch(username)
-        verify(remoteDataSource, times(0)).getUserSearch(username)
+        verify(localDataSource).searchBy(username)
+        verify(remoteDataSource, times(0)).searchBy(username)
         verifyNoInteractions(remoteDataSource)
     }
 
@@ -107,11 +113,11 @@ class UserRepositoryTest {
     fun `getUserSearch should success when data is not found in database but found in network`() =
         runBlockingTest {
             // Arrange
-            `when`(localDataSource.getUserSearch(username)).thenReturn(fromDbEmptyUserEntities)
-            `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetworkSuccessResponses)
+            `when`(localDataSource.searchBy(username)).thenReturn(fromDbEmptyUserEntities)
+            `when`(remoteDataSource.searchBy(username)).thenReturn(fromNetworkSuccessResponses)
 
             // Act
-            val actual = userRepository.getUsersSearch(username).toList()
+            val actual = userRepository.searchBy(username).toList()
 
             // Assert
             assertNotNull(actual)
@@ -120,19 +126,19 @@ class UserRepositoryTest {
             assertEquals(Resource.Success(DummyData.userDtos), actual.last())
 
             // Verify
-            verify(localDataSource).getUserSearch(username)
-            verify(remoteDataSource).getUserSearch(username)
+            verify(localDataSource).searchBy(username)
+            verify(remoteDataSource).searchBy(username)
         }
 
     @Test
     fun `getUserSearch should return loading and success when data is not found in database but found in network then cache it`() =
         runBlockingTest {
             // Arrange
-            `when`(localDataSource.getUserSearch(username)).thenReturn(fromDbEmptyUserEntities)
-            `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetworkSuccessResponses)
+            `when`(localDataSource.searchBy(username)).thenReturn(fromDbEmptyUserEntities)
+            `when`(remoteDataSource.searchBy(username)).thenReturn(fromNetworkSuccessResponses)
 
             // Act
-            val actual = userRepository.getUsersSearch(username).toList()
+            val actual = userRepository.searchBy(username).toList()
 
             // Assert
             assertNotNull(actual)
@@ -141,20 +147,20 @@ class UserRepositoryTest {
             assertEquals(Resource.Success(DummyData.userDtos), actual.last())
 
             // Verify
-            verify(localDataSource).getUserSearch(username)
+            verify(localDataSource).searchBy(username)
             verify(localDataSource).insertUsers(DummyData.userEntities)
-            verify(remoteDataSource).getUserSearch(username)
+            verify(remoteDataSource).searchBy(username)
         }
 
     @Test
     fun `getUserSearch should return error when data is not found in database and network`() =
         runBlockingTest {
             // Arrange
-            `when`(localDataSource.getUserSearch(username)).thenReturn(fromDbEmptyUserEntities)
-            `when`(remoteDataSource.getUserSearch(username)).thenReturn(fromNetworkErrorResponses)
+            `when`(localDataSource.searchBy(username)).thenReturn(fromDbEmptyUserEntities)
+            `when`(remoteDataSource.searchBy(username)).thenReturn(fromNetworkErrorResponses)
 
             // Act
-            val actual = userRepository.getUsersSearch(username).toList()
+            val actual = userRepository.searchBy(username).toList()
 
             // Assert
             assertNotNull(actual)
@@ -163,18 +169,18 @@ class UserRepositoryTest {
             assertEquals(Resource.Error<List<UserEntity>>(), actual.last())
 
             // Verify
-            verify(localDataSource).getUserSearch(username)
-            verify(remoteDataSource).getUserSearch(username)
+            verify(localDataSource).searchBy(username)
+            verify(remoteDataSource).searchBy(username)
         }
 
     @Test
     fun `getUserDetail first item should resource loading`() = runBlockingTest {
         // Arrange
-        `when`(localDataSource.getUserDetail(username)).thenReturn(fromDbSuccessUserEntity)
-        `when`(remoteDataSource.getUserDetail(username)).thenReturn(fromNetworkSuccessResponse)
+        `when`(localDataSource.getDetailBy(username)).thenReturn(fromDbSuccessUserEntity)
+        `when`(remoteDataSource.getDetailBy(username)).thenReturn(fromNetworkSuccessResponse)
 
         // Act
-        val actual = userRepository.getUserDetail(username).first()
+        val actual = userRepository.getDetailBy(username).first()
 
         // Assert
         assertNotNull(actual)
@@ -184,104 +190,104 @@ class UserRepositoryTest {
     @Test
     fun `getUserDetail should return loading and success when data is found in database`() =
         runBlockingTest {
-            `when`(localDataSource.getUserDetail(username)).thenReturn(fromDbSuccessUserEntity)
-            `when`(remoteDataSource.getUserDetail(username)).thenReturn(fromNetworkSuccessResponse)
+            `when`(localDataSource.getDetailBy(username)).thenReturn(fromDbSuccessUserEntity)
+            `when`(remoteDataSource.getDetailBy(username)).thenReturn(fromNetworkSuccessResponse)
 
-            val actual = userRepository.getUserDetail(username).toList()
+            val actual = userRepository.getDetailBy(username).toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<UserEntity>(), actual.first())
             assertEquals(Resource.Success(DummyData.dto), actual.last())
 
-            verify(localDataSource).getUserDetail(username)
-            verify(remoteDataSource, times(0)).getUserDetail(username)
+            verify(localDataSource).getDetailBy(username)
+            verify(remoteDataSource, times(0)).getDetailBy(username)
         }
 
     @Test
     fun `getUserDetail should return loading and success when data is not found in database but found in network`() =
         runBlockingTest {
-            `when`(localDataSource.getUserDetail(username)).thenReturn(fromDbEmptyUserEntity)
-            `when`(remoteDataSource.getUserDetail(username)).thenReturn(fromNetworkSuccessResponse)
+            `when`(localDataSource.getDetailBy(username)).thenReturn(fromDbEmptyUserEntity)
+            `when`(remoteDataSource.getDetailBy(username)).thenReturn(fromNetworkSuccessResponse)
 
-            val actual = userRepository.getUserDetail(username).toList()
+            val actual = userRepository.getDetailBy(username).toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<UserEntity>(), actual.first())
             assertEquals(Resource.Success(DummyData.dto), actual.last())
 
-            verify(localDataSource).getUserDetail(username)
-            verify(remoteDataSource).getUserDetail(username)
+            verify(localDataSource).getDetailBy(username)
+            verify(remoteDataSource).getDetailBy(username)
         }
 
     @Test
     fun `getUserDetail should return loading and error when data is not found in database and network`() =
         runBlockingTest {
-            `when`(localDataSource.getUserDetail(username)).thenReturn(fromDbEmptyUserEntity)
-            `when`(remoteDataSource.getUserDetail(username)).thenReturn(fromNetworkErrorResponse)
+            `when`(localDataSource.getDetailBy(username)).thenReturn(fromDbEmptyUserEntity)
+            `when`(remoteDataSource.getDetailBy(username)).thenReturn(fromNetworkErrorResponse)
 
-            val actual = userRepository.getUserDetail(username).toList()
+            val actual = userRepository.getDetailBy(username).toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<UserEntity>(), actual.first())
             assertEquals(Resource.Error<UserEntity>(null), actual.last())
 
-            verify(localDataSource).getUserDetail(username)
-            verify(remoteDataSource).getUserDetail(username)
+            verify(localDataSource).getDetailBy(username)
+            verify(remoteDataSource).getDetailBy(username)
 
         }
 
     @Test
     fun `getUserFollower should return success when data is found in network`() = runBlockingTest {
-        `when`(remoteDataSource.getUserFollower(username)).thenReturn(fromNetworkSuccessResponses)
+        `when`(remoteDataSource.getFollowerBy(username)).thenReturn(fromNetworkSuccessResponses)
 
-        val actual = userRepository.getUsersFollower(username).toList()
+        val actual = userRepository.getFollowerBy(username).toList()
 
         assertNotNull(actual)
         assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
         assertEquals(Resource.Success(DummyData.userDtos), actual.last())
 
-        verify(remoteDataSource).getUserFollower(username)
+        verify(remoteDataSource).getFollowerBy(username)
     }
 
     @Test
     fun `getUserFollower should return error when data is not found in network`() =
         runBlockingTest {
-            `when`(remoteDataSource.getUserFollower(username)).thenReturn(fromNetworkErrorResponses)
+            `when`(remoteDataSource.getFollowerBy(username)).thenReturn(fromNetworkErrorResponses)
 
-            val actual = userRepository.getUsersFollower(username).toList()
+            val actual = userRepository.getFollowerBy(username).toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
             assertEquals(Resource.Error<List<UserEntity>>(null), actual.last())
 
-            verify(remoteDataSource).getUserFollower(username)
+            verify(remoteDataSource).getFollowerBy(username)
         }
 
     @Test
     fun `getUserFollowing should return success when data is found in network`() = runBlockingTest {
-        `when`(remoteDataSource.getUserFollowing(username)).thenReturn(fromNetworkSuccessResponses)
+        `when`(remoteDataSource.getFollowingBy(username)).thenReturn(fromNetworkSuccessResponses)
 
-        val actual = userRepository.getUsersFollowing(username).toList()
+        val actual = userRepository.getFollowingBy(username).toList()
 
         assertNotNull(actual)
         assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
         assertEquals(Resource.Success(DummyData.userDtos), actual.last())
 
-        verify(remoteDataSource).getUserFollowing(username)
+        verify(remoteDataSource).getFollowingBy(username)
     }
 
     @Test
     fun `getUserFollowing should return error when data is not found in network`() =
         runBlockingTest {
-            `when`(remoteDataSource.getUserFollowing(username)).thenReturn(fromNetworkErrorResponses)
+            `when`(remoteDataSource.getFollowingBy(username)).thenReturn(fromNetworkErrorResponses)
 
-            val actual = userRepository.getUsersFollowing(username).toList()
+            val actual = userRepository.getFollowingBy(username).toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
             assertEquals(Resource.Error<List<UserEntity>>(null), actual.last())
 
-            verify(remoteDataSource).getUserFollowing(username)
+            verify(remoteDataSource).getFollowingBy(username)
         }
 
     @Test
@@ -289,7 +295,7 @@ class UserRepositoryTest {
         runBlockingTest {
             `when`(localDataSource.getFavorite()).thenReturn(favorites)
 
-            val actual = userRepository.getUsersFavorite().toList()
+            val actual = userRepository.getFavorite().toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
@@ -303,11 +309,14 @@ class UserRepositoryTest {
         runBlockingTest {
             `when`(localDataSource.getFavorite()).thenReturn(fromDbEmptyUserEntities)
 
-            val actual = userRepository.getUsersFavorite().toList()
+            val actual = userRepository.getFavorite().toList()
 
             assertNotNull(actual)
             assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
-            assertEquals(Resource.Error<List<UserEntity>>(), actual.last())
+            assertEquals(
+                Resource.Error<List<UserEntity>>("There is no favorite user"),
+                actual.last()
+            )
 
             verify(localDataSource).getFavorite()
         }

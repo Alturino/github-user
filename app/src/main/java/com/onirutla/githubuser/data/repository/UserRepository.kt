@@ -1,5 +1,6 @@
 package com.onirutla.githubuser.data.repository
 
+import androidx.paging.PagingData
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import kotlinx.coroutines.flow.Flow
@@ -12,6 +13,7 @@ interface UserRepository {
     fun getFollowerBy(username: String): Flow<Resource<List<UserEntity>>>
 
     fun getFollowingBy(username: String): Flow<Resource<List<UserEntity>>>
+    fun getFollowingPaging(username: String): Flow<PagingData<UserEntity>>
 
     fun getFavorite(): Flow<Resource<List<UserEntity>>>
 

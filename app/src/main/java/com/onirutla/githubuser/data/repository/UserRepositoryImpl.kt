@@ -1,11 +1,12 @@
 package com.onirutla.githubuser.data.repository
 
 import android.util.Log
+import androidx.paging.PagingData
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
-import com.onirutla.githubuser.data.source.remote.NetworkState
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
+import com.onirutla.githubuser.data.source.remote.Response
 import com.onirutla.githubuser.data.source.remote.response.toEntity
 import com.onirutla.githubuser.util.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,8 +31,8 @@ class UserRepositoryImpl @Inject constructor(
         localDataSource.searchBy(username).mapNotNull { local ->
             if (local.isNullOrEmpty()) {
                 when (val response = remoteDataSource.searchBy(username)) {
-                    is NetworkState.Error -> Resource.Error(response.message)
-                    is NetworkState.Success -> {
+                    is Response.Error -> Resource.Error(response.message)
+                    is Response.Success -> {
                         val entity = response.body.map { it.toEntity() }
                         localDataSource.insertUsers(entity)
                         Resource.Success(entity)
@@ -50,8 +51,8 @@ class UserRepositoryImpl @Inject constructor(
         return localDataSource.getDetailBy(username).map {
             if (it.name.isEmpty()) {
                 when (val response = remoteDataSource.getDetailBy(username)) {
-                    is NetworkState.Error -> Resource.Error(response.message)
-                    is NetworkState.Success -> {
+                    is Response.Error -> Resource.Error(response.message)
+                    is Response.Success -> {
                         val entity = response.body.toEntity()
                         localDataSource.insertUserDetail(entity)
                         Resource.Success(entity)
@@ -66,11 +67,11 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun getFollowerBy(username: String): Flow<Resource<List<UserEntity>>> = flow {
         when (val networkState = remoteDataSource.getFollowerBy(username)) {
-            is NetworkState.Success -> {
+            is Response.Success -> {
                 val entity = networkState.body.map { it.toEntity() }
                 emit(Resource.Success(entity))
             }
-            is NetworkState.Error -> emit(Resource.Error(message = networkState.message))
+            is Response.Error -> emit(Resource.Error(message = networkState.message))
         }
     }.onStart {
         emit(Resource.Loading())
@@ -78,13 +79,16 @@ class UserRepositoryImpl @Inject constructor(
         emit(Resource.Error(it.localizedMessage))
     }.flowOn(ioDispatcher)
 
+    override fun getFollowingPaging(username: String): Flow<PagingData<UserEntity>> =
+        remoteDataSource.getFollowerPaging(username)
+
     override fun getFollowingBy(username: String): Flow<Resource<List<UserEntity>>> = flow {
         when (val networkState = remoteDataSource.getFollowingBy(username)) {
-            is NetworkState.Success -> {
+            is Response.Success -> {
                 val entity = networkState.body.map { it.toEntity() }
                 emit(Resource.Success(entity))
             }
-            is NetworkState.Error -> emit(Resource.Error(message = networkState.message))
+            is Response.Error -> emit(Resource.Error(message = networkState.message))
         }
     }.onStart {
         emit(Resource.Loading())

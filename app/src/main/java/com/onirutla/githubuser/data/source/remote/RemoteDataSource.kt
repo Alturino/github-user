@@ -14,4 +14,5 @@ interface RemoteDataSource {
     fun getFollowerPaging(username: String): Flow<PagingData<UserEntity>>
 
     suspend fun getFollowingBy(username: String): Response<List<UserResponse>>
+    fun getFollowingPaging(username: String): Flow<PagingData<UserEntity>>
 }

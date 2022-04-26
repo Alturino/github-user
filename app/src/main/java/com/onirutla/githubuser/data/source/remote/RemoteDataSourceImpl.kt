@@ -77,4 +77,13 @@ class RemoteDataSourceImpl @Inject constructor(
     } catch (t: Throwable) {
         Response.Error(message = t.message)
     }
+
+    override fun getFollowingPaging(username: String): Flow<PagingData<UserEntity>> =
+        Pager(config = PagingConfig(pageSize = GITHUB_PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = {
+                UserPagingSource { position ->
+                    apiService.getFollowingBy(username, position)
+                }
+            }
+        ).flow
 }

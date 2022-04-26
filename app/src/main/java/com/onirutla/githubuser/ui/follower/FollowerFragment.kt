@@ -49,21 +49,20 @@ class FollowerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         activityViewModel.username.observe(viewLifecycleOwner) { username ->
-
             viewModel.getUser(username)
+        }
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.user.collect {
-                        followerAdapter.submitData(it)
-                    }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.user.collect {
+                    followerAdapter.submitData(it)
                 }
             }
+        }
 
-            binding.rvUser.apply {
-                adapter = followerAdapter
-                setHasFixedSize(true)
-            }
+        binding.rvUser.apply {
+            adapter = followerAdapter
+            setHasFixedSize(true)
         }
     }
 

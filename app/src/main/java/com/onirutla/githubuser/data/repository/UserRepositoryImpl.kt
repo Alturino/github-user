@@ -12,7 +12,6 @@ import com.onirutla.githubuser.util.IoDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -65,39 +64,11 @@ class UserRepositoryImpl @Inject constructor(
         }.flowOn(ioDispatcher)
     }
 
-    override fun getFollowerBy(username: String): Flow<Resource<List<UserEntity>>> = flow {
-        when (val networkState = remoteDataSource.getFollowerBy(username)) {
-            is Response.Success -> {
-                val entity = networkState.body.map { it.toEntity() }
-                emit(Resource.Success(entity))
-            }
-            is Response.Error -> emit(Resource.Error(message = networkState.message))
-        }
-    }.onStart {
-        emit(Resource.Loading())
-    }.catch {
-        emit(Resource.Error(it.localizedMessage))
-    }.flowOn(ioDispatcher)
-
     override fun getFollowerPaging(username: String): Flow<PagingData<UserEntity>> =
-        remoteDataSource.getFollowerPaging(username)
-
-    override fun getFollowingBy(username: String): Flow<Resource<List<UserEntity>>> = flow {
-        when (val networkState = remoteDataSource.getFollowingBy(username)) {
-            is Response.Success -> {
-                val entity = networkState.body.map { it.toEntity() }
-                emit(Resource.Success(entity))
-            }
-            is Response.Error -> emit(Resource.Error(message = networkState.message))
-        }
-    }.onStart {
-        emit(Resource.Loading())
-    }.catch {
-        emit(Resource.Error(it.localizedMessage))
-    }.flowOn(ioDispatcher)
+        remoteDataSource.getFollowerPaging(username).flowOn(ioDispatcher)
 
     override fun getFollowingPaging(username: String): Flow<PagingData<UserEntity>> =
-        remoteDataSource.getFollowingPaging(username)
+        remoteDataSource.getFollowingPaging(username).flowOn(ioDispatcher)
 
     override fun getFavorite(): Flow<Resource<List<UserEntity>>> =
         localDataSource.getFavorite().mapNotNull {

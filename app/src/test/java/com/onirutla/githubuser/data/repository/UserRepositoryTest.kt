@@ -236,60 +236,6 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun `getUserFollower should return success when data is found in network`() = runBlockingTest {
-        `when`(remoteDataSource.getFollowerBy(username)).thenReturn(fromNetworkSuccessResponses)
-
-        val actual = userRepository.getFollowerBy(username).toList()
-
-        assertNotNull(actual)
-        assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
-        assertEquals(Resource.Success(DummyData.userDtos), actual.last())
-
-        verify(remoteDataSource).getFollowerBy(username)
-    }
-
-    @Test
-    fun `getUserFollower should return error when data is not found in network`() =
-        runBlockingTest {
-            `when`(remoteDataSource.getFollowerBy(username)).thenReturn(fromNetworkErrorResponses)
-
-            val actual = userRepository.getFollowerBy(username).toList()
-
-            assertNotNull(actual)
-            assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
-            assertEquals(Resource.Error<List<UserEntity>>(null), actual.last())
-
-            verify(remoteDataSource).getFollowerBy(username)
-        }
-
-    @Test
-    fun `getUserFollowing should return success when data is found in network`() = runBlockingTest {
-        `when`(remoteDataSource.getFollowingBy(username)).thenReturn(fromNetworkSuccessResponses)
-
-        val actual = userRepository.getFollowingBy(username).toList()
-
-        assertNotNull(actual)
-        assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
-        assertEquals(Resource.Success(DummyData.userDtos), actual.last())
-
-        verify(remoteDataSource).getFollowingBy(username)
-    }
-
-    @Test
-    fun `getUserFollowing should return error when data is not found in network`() =
-        runBlockingTest {
-            `when`(remoteDataSource.getFollowingBy(username)).thenReturn(fromNetworkErrorResponses)
-
-            val actual = userRepository.getFollowingBy(username).toList()
-
-            assertNotNull(actual)
-            assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
-            assertEquals(Resource.Error<List<UserEntity>>(null), actual.last())
-
-            verify(remoteDataSource).getFollowingBy(username)
-        }
-
-    @Test
     fun `getUsersFavorite should return success when data is found in database`() =
         runBlockingTest {
             `when`(localDataSource.getFavorite()).thenReturn(favorites)

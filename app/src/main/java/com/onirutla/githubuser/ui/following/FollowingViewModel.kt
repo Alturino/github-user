@@ -2,7 +2,8 @@ package com.onirutla.githubuser.ui.following
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.onirutla.githubuser.data.Resource
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.onirutla.githubuser.data.repository.UserRepository
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.util.MainDispatcher
@@ -26,13 +27,14 @@ class FollowingViewModel @Inject constructor(
 
     private val _username = MutableSharedFlow<String>()
 
-    val user: StateFlow<Resource<List<UserEntity>>> = _username.flatMapLatest {
-        userRepository.getFollowingBy(it)
-    }.stateIn(
-        viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = Resource.Loading()
-    )
+    val user: StateFlow<PagingData<UserEntity>> = _username.flatMapLatest {
+        userRepository.getFollowingPaging(it)
+    }.cachedIn(viewModelScope)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PagingData.empty()
+        )
 
     fun getUser(username: String) {
         viewModelScope.launch(dispatcher) {

@@ -79,7 +79,7 @@ class UserRepositoryImpl @Inject constructor(
         emit(Resource.Error(it.localizedMessage))
     }.flowOn(ioDispatcher)
 
-    override fun getFollowingPaging(username: String): Flow<PagingData<UserEntity>> =
+    override fun getFollowerPaging(username: String): Flow<PagingData<UserEntity>> =
         remoteDataSource.getFollowerPaging(username)
 
     override fun getFollowingBy(username: String): Flow<Resource<List<UserEntity>>> = flow {
@@ -96,6 +96,8 @@ class UserRepositoryImpl @Inject constructor(
         emit(Resource.Error(it.localizedMessage))
     }.flowOn(ioDispatcher)
 
+    override fun getFollowingPaging(username: String): Flow<PagingData<UserEntity>> =
+        remoteDataSource.getFollowingPaging(username)
 
     override fun getFavorite(): Flow<Resource<List<UserEntity>>> =
         localDataSource.getFavorite().mapNotNull {

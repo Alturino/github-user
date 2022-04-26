@@ -3,7 +3,7 @@ package com.onirutla.githubuser.data.source.remote
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.onirutla.githubuser.data.source.FollowPagingSource
+import com.onirutla.githubuser.data.source.UserPagingSource
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.remote.network.GithubApiService
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
@@ -59,7 +59,7 @@ class RemoteDataSourceImpl @Inject constructor(
     override fun getFollowerPaging(username: String): Flow<PagingData<UserEntity>> =
         Pager(config = PagingConfig(pageSize = GITHUB_PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = {
-                FollowPagingSource { position ->
+                UserPagingSource { position ->
                     apiService.getFollowerBy(username, position)
                 }
             }

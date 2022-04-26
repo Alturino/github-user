@@ -21,13 +21,13 @@ class UserPagingSource(
         }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UserEntity> = try {
-        val position = params.key ?: GITHUB_PAGE_SIZE
+        val position = params.key ?: 1
         val response = apiService(position).body()
         val users = response?.map { it.toEntity() }
         val nextKey = if (users.isNullOrEmpty()) null else position + 1
         LoadResult.Page(
             data = users.orEmpty(),
-            prevKey = if (position == GITHUB_PAGE_SIZE) null else position - 1,
+            prevKey = if (position == 1) null else position - 1,
             nextKey = nextKey
         )
     } catch (exception: IOException) {

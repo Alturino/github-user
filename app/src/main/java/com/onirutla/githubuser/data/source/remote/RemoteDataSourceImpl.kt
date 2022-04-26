@@ -41,9 +41,7 @@ class RemoteDataSourceImpl @Inject constructor(
         Response.Error(message = t.message)
     }
 
-    override suspend fun getFollowerBy(
-        username: String,
-    ): Response<List<UserResponse>> = try {
+    override suspend fun getFollowerBy(username: String): Response<List<UserResponse>> = try {
         if (username.isEmpty())
             throw IllegalArgumentException("username shouldn't be empty")
         val response = apiService.getFollowerBy(username)

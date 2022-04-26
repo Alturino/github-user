@@ -108,6 +108,10 @@ class SearchFragment : Fragment() {
             }
         }
 
+        binding.searchCloseBtn.setOnClickListener {
+            binding.searchBar.text?.clear()
+        }
+
         setupUI()
     }
 

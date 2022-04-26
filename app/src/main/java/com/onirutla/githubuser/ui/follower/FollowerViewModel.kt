@@ -28,7 +28,7 @@ class FollowerViewModel @Inject constructor(
     private val _username = MutableSharedFlow<String>()
 
     val user: StateFlow<PagingData<UserEntity>> = _username.flatMapLatest {
-        userRepository.getFollowingPaging(it)
+        userRepository.getFollowerPaging(it)
     }.cachedIn(viewModelScope)
         .stateIn(
             scope = viewModelScope,

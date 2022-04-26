@@ -10,9 +10,10 @@ import okio.IOException
 import retrofit2.HttpException
 import retrofit2.Response
 
-class FollowPagingSource(
+class UserPagingSource(
     private inline val apiService: suspend (position: Int) -> Response<List<UserResponse>>,
 ) : PagingSource<Int, UserEntity>() {
+
     override fun getRefreshKey(state: PagingState<Int, UserEntity>): Int? =
         state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)

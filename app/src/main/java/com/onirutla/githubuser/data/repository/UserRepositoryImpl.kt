@@ -1,6 +1,5 @@
 package com.onirutla.githubuser.data.repository
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -35,26 +34,6 @@ class UserRepositoryImpl @Inject constructor(
     private val apiService: GithubApiService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : UserRepository {
-
-    override fun searchBy(username: String): Flow<Resource<List<UserEntity>>> =
-        localDataSource.searchBy(username).mapNotNull { local ->
-            if (local.isNullOrEmpty()) {
-                when (val response = remoteDataSource.searchBy(username)) {
-                    is Response.Error -> Resource.Error(response.message)
-                    is Response.Success -> {
-                        val entity = response.body.map { it.toEntity() }
-                        localDataSource.insertUsers(entity)
-                        Resource.Success(entity)
-                    }
-                }
-            } else
-                Resource.Success(local)
-        }.onStart {
-            emit(Resource.Loading())
-        }.catch {
-            Log.d("repo search", "$it")
-            emit(Resource.Error(it.localizedMessage))
-        }.flowOn(ioDispatcher)
 
     override fun searchByPaging(username: String): Flow<PagingData<UserEntity>> {
         return Pager(

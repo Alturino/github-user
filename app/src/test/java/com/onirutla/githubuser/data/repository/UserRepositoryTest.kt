@@ -1,11 +1,13 @@
 package com.onirutla.githubuser.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.paging.ExperimentalPagingApi
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.source.local.LocalDataSource
+import com.onirutla.githubuser.data.source.local.db.GithubUserDatabase
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
-import com.onirutla.githubuser.data.source.remote.Response
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
+import com.onirutla.githubuser.data.source.remote.Response
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,21 +23,32 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
-import org.mockito.Mockito.verifyNoInteractions
+import org.mockito.junit.MockitoJUnitRunner
 
+@ExperimentalPagingApi
 @ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
 class UserRepositoryTest {
 
     @get:Rule
     var instantTaskExecutor = InstantTaskExecutorRule()
 
     // Dependency
+    @Mock
     private lateinit var localDataSource: LocalDataSource
+
+    @Mock
     private lateinit var remoteDataSource: RemoteDataSource
+
+    @Mock
+    private lateinit var githubUserDatabase: GithubUserDatabase
+
+    @Mock
     private lateinit var testDispatcher: CoroutineDispatcher
 
     // Class Under Test
@@ -59,10 +72,13 @@ class UserRepositoryTest {
 
     @Before
     fun setUp() {
-        localDataSource = mock(LocalDataSource::class.java)
-        remoteDataSource = mock(RemoteDataSource::class.java)
         testDispatcher = TestCoroutineDispatcher()
-        userRepository = UserRepositoryImpl(remoteDataSource, localDataSource, testDispatcher)
+        userRepository = UserRepositoryImpl(
+            remoteDataSource,
+            localDataSource,
+            githubUserDatabase,
+            testDispatcher
+        )
     }
 
     @Test
@@ -76,7 +92,6 @@ class UserRepositoryTest {
     fun `getUserDetail first item should resource loading`() = runBlockingTest {
         // Arrange
         `when`(localDataSource.getDetailBy(username)).thenReturn(fromDbSuccessUserEntity)
-        `when`(remoteDataSource.getDetailBy(username)).thenReturn(fromNetworkSuccessResponse)
 
         // Act
         val actual = userRepository.getDetailBy(username).first()
@@ -90,7 +105,6 @@ class UserRepositoryTest {
     fun `getUserDetail should return loading and success when data is found in database`() =
         runBlockingTest {
             `when`(localDataSource.getDetailBy(username)).thenReturn(fromDbSuccessUserEntity)
-            `when`(remoteDataSource.getDetailBy(username)).thenReturn(fromNetworkSuccessResponse)
 
             val actual = userRepository.getDetailBy(username).toList()
 
@@ -99,7 +113,7 @@ class UserRepositoryTest {
             assertEquals(Resource.Success(DummyData.dto), actual.last())
 
             verify(localDataSource).getDetailBy(username)
-            verify(remoteDataSource, times(0)).getDetailBy(username)
+            verify(remoteDataSource).getDetailBy(username)
         }
 
     @Test

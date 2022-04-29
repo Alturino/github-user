@@ -1,7 +1,7 @@
 package com.onirutla.githubuser.data.source
 
 import androidx.paging.PagingSource
-import com.onirutla.githubuser.data.repository.DummyData
+import com.onirutla.githubuser.DummyData
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
 import com.onirutla.githubuser.data.source.remote.response.toEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi

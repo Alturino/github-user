@@ -6,7 +6,7 @@ import com.onirutla.githubuser.data.source.remote.response.UserResponse
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteDataSource {
-    suspend fun searchBy(username: String): Response<List<UserResponse>>
+    suspend fun searchBy(username: String, position: Int): Response<List<UserResponse>>
 
     suspend fun getDetailBy(username: String): Response<UserResponse>
 

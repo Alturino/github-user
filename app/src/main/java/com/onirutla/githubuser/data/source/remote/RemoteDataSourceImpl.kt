@@ -17,10 +17,10 @@ class RemoteDataSourceImpl @Inject constructor(
     private val apiService: GithubApiService
 ) : RemoteDataSource {
 
-    override suspend fun searchBy(username: String): Response<List<UserResponse>> = try {
+    override suspend fun searchBy(username: String, position: Int): Response<List<UserResponse>> = try {
         if (username.isEmpty())
             throw IllegalArgumentException("username shouldn't be empty")
-        val response = apiService.searchBy(username)
+        val response = apiService.searchBy(username, position)
         if (response.isSuccessful)
             Response.Success(body = response.body()?.items!!, message = response.message())
         else

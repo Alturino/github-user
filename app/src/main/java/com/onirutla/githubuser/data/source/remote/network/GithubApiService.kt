@@ -10,7 +10,10 @@ import retrofit2.http.Query
 interface GithubApiService {
 
     @GET(value = "search/users")
-    suspend fun searchBy(@Query(value = "q") username: String): Response<SearchResponse>
+    suspend fun searchBy(
+        @Query(value = "q") username: String,
+        @Query(value = "page") page: Int = 1
+    ): Response<SearchResponse>
 
     @GET(value = "users/{username}")
     suspend fun getDetailBy(@Path(value = "username") username: String): Response<UserResponse>

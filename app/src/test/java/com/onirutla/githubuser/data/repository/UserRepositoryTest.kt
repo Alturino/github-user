@@ -2,6 +2,7 @@ package com.onirutla.githubuser.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.ExperimentalPagingApi
+import com.onirutla.githubuser.DummyData
 import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.db.GithubUserDatabase

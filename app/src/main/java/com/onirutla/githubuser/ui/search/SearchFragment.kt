@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,9 +19,8 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialSharedAxis
 import com.onirutla.githubuser.R
-import com.onirutla.githubuser.data.Resource
 import com.onirutla.githubuser.databinding.FragmentSearchBinding
-import com.onirutla.githubuser.ui.adapter.UserAdapter
+import com.onirutla.githubuser.ui.adapter.UserPagingAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -38,7 +36,7 @@ class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModels()
 
     private val searchAdapter by lazy {
-        UserAdapter { view, user ->
+        UserPagingAdapter { view, user ->
             val userDetailTransitionName = getString(R.string.list_transition_detail)
             val extras = FragmentNavigatorExtras(view to userDetailTransitionName)
 
@@ -87,23 +85,7 @@ class SearchFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.users.collectLatest {
-                    when (it) {
-                        is Resource.Success -> {
-                            binding.apply {
-                                progressBar.visibility = View.GONE
-                                binding.rvUser.visibility = View.VISIBLE
-                            }
-                            searchAdapter.submitList(it.data)
-                        }
-                        is Resource.Loading -> {
-                            binding.apply {
-                                progressBar.visibility = View.VISIBLE
-                                rvUser.visibility = View.GONE
-                            }
-                        }
-                        is Resource.Error -> Toast.makeText(context, it.message, Toast.LENGTH_SHORT)
-                            .show()
-                    }
+                    searchAdapter.submitData(it)
                 }
             }
         }

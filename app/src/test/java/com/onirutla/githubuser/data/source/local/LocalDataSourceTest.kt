@@ -1,6 +1,6 @@
 package com.onirutla.githubuser.data.source.local
 
-import com.onirutla.githubuser.data.repository.DummyData
+import com.onirutla.githubuser.DummyData
 import com.onirutla.githubuser.data.source.local.dao.UserDao
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import kotlinx.coroutines.CoroutineDispatcher
@@ -11,10 +11,15 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 
 @ExperimentalCoroutinesApi
 class LocalDataSourceTest {

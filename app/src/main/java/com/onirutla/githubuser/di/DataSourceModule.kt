@@ -1,5 +1,6 @@
 package com.onirutla.githubuser.di
 
+import androidx.paging.ExperimentalPagingApi
 import com.onirutla.githubuser.data.repository.UserRepositoryImpl
 import com.onirutla.githubuser.data.repository.UserRepository
 import com.onirutla.githubuser.data.source.local.LocalDataSource
@@ -12,6 +13,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
 @Module
+@ExperimentalPagingApi
 @InstallIn(SingletonComponent::class)
 abstract class DataSourceModule {
 

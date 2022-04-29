@@ -7,34 +7,34 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class UserResponse(
     @Json(name = "avatar_url")
-    var avatarUrl: String?,
+    var avatarUrl: String? = "",
 
     @Json(name = "followers")
-    var followers: Int?,
+    var followers: Int? = 0,
 
     @Json(name = "followers_url")
-    var followersUrl: String?,
+    var followersUrl: String? = "",
 
     @Json(name = "following")
-    var following: Int?,
+    var following: Int? = 0,
 
     @Json(name = "following_url")
-    var followingUrl: String?,
+    var followingUrl: String? = "",
 
     @Json(name = "id")
-    var id: Int?,
+    var id: Int? = 0,
 
     @Json(name = "login")
-    var username: String?,
+    var username: String? = "",
 
     @Json(name = "name")
-    var name: String?,
+    var name: String? = "",
 
     @Json(name = "public_repos")
-    var publicRepos: Int?,
+    var publicRepos: Int? = 0,
 
     @Json(name = "type")
-    var type: String?,
+    var type: String? = "",
 )
 
 fun UserResponse.toEntity() = UserEntity(

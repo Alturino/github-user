@@ -1,5 +1,6 @@
 package com.onirutla.githubuser.data.source.local.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
@@ -29,4 +30,9 @@ interface UserDao {
     @Query(value = "SELECT * FROM USER WHERE username like :username || '%'")
     fun getUserSearch(username: String): Flow<List<UserEntity>>
 
+    @Query(value = "SELECT * FROM USER WHERE username like :username || '%'")
+    fun searchUserPagingBy(username: String): PagingSource<Int, UserEntity>
+
+    @Query(value = "DELETE FROM user")
+    suspend fun clearUsers()
 }

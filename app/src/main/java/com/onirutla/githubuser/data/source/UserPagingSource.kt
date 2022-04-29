@@ -5,7 +5,6 @@ import androidx.paging.PagingState
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
 import com.onirutla.githubuser.data.source.remote.response.toEntity
-import com.onirutla.githubuser.util.Constant.GITHUB_PAGE_SIZE
 import okio.IOException
 import retrofit2.HttpException
 import retrofit2.Response

@@ -71,7 +71,7 @@ class UserRepositoryImpl @Inject constructor(
         remoteDataSource.getFollowingPaging(username).flowOn(ioDispatcher)
 
     override fun getFavorite(): Flow<Resource<List<UserEntity>>> =
-        localDataSource.getFavorite().mapNotNull {
+        localDataSource.getFavorite().map {
             if (it.isEmpty())
                 Resource.Error("There is no favorite user")
             else

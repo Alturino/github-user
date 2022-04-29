@@ -8,7 +8,8 @@ import androidx.room.withTransaction
 import com.onirutla.githubuser.data.source.local.db.GithubUserDatabase
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.local.entity.UserRemoteKey
-import com.onirutla.githubuser.data.source.remote.network.GithubApiService
+import com.onirutla.githubuser.data.source.remote.Response
+import com.onirutla.githubuser.data.source.remote.response.UserResponse
 import com.onirutla.githubuser.data.source.remote.response.toEntity
 import okio.IOException
 import retrofit2.HttpException
@@ -16,8 +17,7 @@ import retrofit2.HttpException
 @ExperimentalPagingApi
 class UserRemoteMediator(
     private val db: GithubUserDatabase,
-    private val apiService: GithubApiService,
-    private val query: String,
+    private inline val apiService: suspend (position: Int) -> Response<List<UserResponse>>,
 ) : RemoteMediator<Int, UserEntity>() {
 
     private val userDao = db.userDao
@@ -48,8 +48,12 @@ class UserRemoteMediator(
                 }
             }
 
-            val response = apiService.searchBy(query, currentPage).body()?.items
-            val entity = response?.map { it.toEntity() }
+            val users = when (val response = apiService(currentPage)) {
+                is Response.Error -> throw IOException()
+                is Response.Success -> response.body
+            }
+
+            val entity = users.map { it.toEntity() }
             val endOfPaginationReached = entity.isNullOrEmpty()
 
             val prevPage = if (currentPage == 1) null else currentPage.minus(1)
@@ -61,7 +65,7 @@ class UserRemoteMediator(
                     remoteKeyDao.clearRemoteKeys()
                 }
 
-                val keys = entity?.map { userEntity ->
+                val keys = entity.map { userEntity ->
                     UserRemoteKey(
                         userEntity.id,
                         prevPage,
@@ -69,8 +73,8 @@ class UserRemoteMediator(
                     )
                 }
 
-                remoteKeyDao.addAllRemoteKeys(keys ?: emptyList())
-                userDao.insertUsers(entity ?: emptyList())
+                remoteKeyDao.addAllRemoteKeys(keys)
+                userDao.insertUsers(entity)
             }
 
             MediatorResult.Success(endOfPaginationReached)

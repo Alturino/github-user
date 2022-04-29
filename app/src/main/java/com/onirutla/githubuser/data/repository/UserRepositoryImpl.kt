@@ -11,7 +11,6 @@ import com.onirutla.githubuser.data.source.local.db.GithubUserDatabase
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
 import com.onirutla.githubuser.data.source.remote.Response
-import com.onirutla.githubuser.data.source.remote.network.GithubApiService
 import com.onirutla.githubuser.data.source.remote.response.toEntity
 import com.onirutla.githubuser.util.Constant.GITHUB_PAGE_SIZE
 import com.onirutla.githubuser.util.IoDispatcher
@@ -31,14 +30,18 @@ class UserRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource,
     private val database: GithubUserDatabase,
-    private val apiService: GithubApiService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : UserRepository {
 
     override fun searchByPaging(username: String): Flow<PagingData<UserEntity>> {
         return Pager(
             config = PagingConfig(pageSize = GITHUB_PAGE_SIZE, enablePlaceholders = false),
-            remoteMediator = UserRemoteMediator(database, apiService, username),
+            remoteMediator = UserRemoteMediator(database) { position ->
+                remoteDataSource.searchBy(
+                    username,
+                    position
+                )
+            },
             pagingSourceFactory = { database.userDao.searchUserPagingBy(username) }
         ).flow
     }

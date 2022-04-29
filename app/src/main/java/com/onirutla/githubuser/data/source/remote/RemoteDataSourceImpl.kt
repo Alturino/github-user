@@ -41,19 +41,6 @@ class RemoteDataSourceImpl @Inject constructor(
         Response.Error(message = t.message)
     }
 
-    override suspend fun getFollowerBy(username: String): Response<List<UserResponse>> = try {
-        if (username.isEmpty())
-            throw IllegalArgumentException("username shouldn't be empty")
-        val response = apiService.getFollowerBy(username)
-        if (response.isSuccessful)
-            Response.Success(body = response.body()!!, message = response.message())
-        else
-            Response.Error(message = response.message())
-
-    } catch (t: Throwable) {
-        Response.Error(message = t.message)
-    }
-
     override fun getFollowerPaging(username: String): Flow<PagingData<UserEntity>> =
         Pager(config = PagingConfig(pageSize = GITHUB_PAGE_SIZE, enablePlaceholders = false),
             pagingSourceFactory = {
@@ -62,19 +49,6 @@ class RemoteDataSourceImpl @Inject constructor(
                 }
             }
         ).flow
-
-
-    override suspend fun getFollowingBy(username: String): Response<List<UserResponse>> = try {
-        if (username.isEmpty())
-            throw IllegalArgumentException("username shouldn't be empty")
-        val response = apiService.getFollowingBy(username)
-        if (response.isSuccessful)
-            Response.Success(body = response.body()!!, message = response.message())
-        else
-            Response.Error(message = response.message())
-    } catch (t: Throwable) {
-        Response.Error(message = t.message)
-    }
 
     override fun getFollowingPaging(username: String): Flow<PagingData<UserEntity>> =
         Pager(config = PagingConfig(pageSize = GITHUB_PAGE_SIZE, enablePlaceholders = false),

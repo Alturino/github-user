@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     fun searchBy(username: String): Flow<Resource<List<UserEntity>>>
+    fun searchByPaging(username: String): Flow<PagingData<UserEntity>>
 
     fun getDetailBy(username: String): Flow<Resource<UserEntity>>
 

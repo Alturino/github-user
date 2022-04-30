@@ -20,6 +20,8 @@ class RemoteDataSourceImpl @Inject constructor(
     override suspend fun searchBy(username: String, position: Int): Response<List<UserResponse>> = try {
         if (username.isEmpty())
             throw IllegalArgumentException("username shouldn't be empty")
+        if(position == 0)
+            throw IllegalArgumentException("position shouldn't be zero")
         val response = apiService.searchBy(username, position)
         if (response.isSuccessful)
             Response.Success(body = response.body()?.items!!, message = response.message())

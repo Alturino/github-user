@@ -114,7 +114,6 @@ class UserRepositoryTest {
             assertEquals(Resource.Success(DummyData.dto), actual.last())
 
             verify(localDataSource).getDetailBy(username)
-            verify(remoteDataSource).getDetailBy(username)
         }
 
     @Test

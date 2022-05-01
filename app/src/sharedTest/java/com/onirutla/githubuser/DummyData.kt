@@ -5,47 +5,6 @@ import com.onirutla.githubuser.data.source.remote.response.SearchResponse
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
 
 object DummyData {
-    val userDtos: List<UserEntity> = listOf(
-        UserEntity(
-            1,
-            "a",
-            "a",
-            "user",
-            1,
-            1,
-            1,
-            "a",
-            "a",
-            "a",
-            false
-        ),
-        UserEntity(
-            2,
-            "a",
-            "a",
-            "user",
-            1,
-            1,
-            1,
-            "a",
-            "a",
-            "a",
-            false
-        ),
-        UserEntity(
-            3,
-            "a",
-            "a",
-            "user",
-            1,
-            1,
-            1,
-            "a",
-            "a",
-            "a",
-            false
-        )
-    )
 
     val userResponses: List<UserResponse> = listOf(
         UserResponse(
@@ -154,61 +113,6 @@ object DummyData {
         isFavorite = false
     )
 
-    val favoriteDtos: List<UserEntity> = listOf(
-        UserEntity(
-            1,
-            "a",
-            "a",
-            "user",
-            1,
-            1,
-            1,
-            "a",
-            "a",
-            "a",
-            true
-        ),
-        UserEntity(
-            2,
-            "aa",
-            "aa",
-            "user",
-            1,
-            1,
-            1,
-            "aa",
-            "aa",
-            "aa",
-            false
-        ),
-        UserEntity(
-            3,
-            "aaa",
-            "aaa",
-            "user",
-            1,
-            1,
-            1,
-            "aaa",
-            "aaa",
-            "aaa",
-            false
-        ),
-        UserEntity(
-            4,
-            "a",
-            "a",
-            "user",
-            1,
-            1,
-            1,
-            "a",
-            "a",
-            "a",
-            true
-        )
-    )
-
     val favorites: List<UserEntity> = listOf(
         UserEntity(
             1,
@@ -262,20 +166,6 @@ object DummyData {
             "a",
             true
         )
-    )
-
-    val dto: UserEntity = UserEntity(
-        1,
-        "a",
-        "a",
-        "user",
-        1,
-        1,
-        1,
-        "a",
-        "a",
-        "a",
-        false
     )
 
     val favorite = UserEntity(

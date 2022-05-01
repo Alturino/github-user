@@ -36,7 +36,7 @@ class DetailViewModel @Inject constructor(
 
     fun setFavorite(userEntity: UserEntity) {
         viewModelScope.launch {
-            userRepository.setUserFavorite(userEntity)
+            userRepository.setFavorite(userEntity)
         }
     }
 

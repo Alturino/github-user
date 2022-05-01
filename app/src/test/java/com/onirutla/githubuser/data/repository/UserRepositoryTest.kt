@@ -201,7 +201,7 @@ class UserRepositoryTest {
             `when`(localDataSource.unFavorite(favorite)).thenReturn(DummyData.unFavorite)
 
             // Act
-            val actual = userRepository.setUserFavorite(favorite)
+            val actual = userRepository.setFavorite(favorite)
 
             // Assert
             assertNotNull(actual)
@@ -220,7 +220,7 @@ class UserRepositoryTest {
             `when`(localDataSource.favorite(unFavorite)).thenReturn(DummyData.favorite)
 
             // Act
-            val actual = userRepository.setUserFavorite(unFavorite)
+            val actual = userRepository.setFavorite(unFavorite)
 
             // Assert
             assertNotNull(actual)

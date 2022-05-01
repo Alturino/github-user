@@ -82,7 +82,7 @@ class UserRepositoryImpl @Inject constructor(
             emit(Resource.Error(it.localizedMessage))
         }.flowOn(ioDispatcher)
 
-    override suspend fun setUserFavorite(userDto: UserEntity): UserEntity {
+    override suspend fun setFavorite(userDto: UserEntity): UserEntity {
         return when (userDto.isFavorite) {
             true -> localDataSource.unFavorite(userDto)
             false -> localDataSource.favorite(userDto)

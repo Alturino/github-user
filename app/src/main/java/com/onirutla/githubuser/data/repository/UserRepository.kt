@@ -16,5 +16,5 @@ interface UserRepository {
 
     fun getFavorite(): Flow<Resource<List<UserEntity>>>
 
-    suspend fun setUserFavorite(userDto: UserEntity): UserEntity
+    suspend fun setFavorite(userDto: UserEntity): UserEntity
 }

@@ -56,7 +56,7 @@ class LocalDataSourceTest {
     }
 
     @Test
-    fun `getUserSearch should return success when data is found`() = runBlockingTest {
+    fun `searchBy should return success when data is found`() = runBlockingTest {
         `when`(userDao.getUserSearch(username)).thenReturn(entitiesSuccess)
 
         val actual = localDataSource.searchBy(username).first()
@@ -69,7 +69,7 @@ class LocalDataSourceTest {
     }
 
     @Test
-    fun `getUserSearch should return empty when data is null or empty`() =
+    fun `searchBy should return empty when data is null or empty`() =
         runBlockingTest {
             `when`(userDao.getUserSearch(username)).thenReturn(entitiesEmpty)
 
@@ -106,7 +106,7 @@ class LocalDataSourceTest {
     }
 
     @Test
-    fun `getUserDetail should return success when data is found`() = runBlockingTest {
+    fun `getDetailBy should return success when data is found`() = runBlockingTest {
         `when`(userDao.getUserDetail(username)).thenReturn(entitySuccess)
 
         val actual = localDataSource.getDetailBy(username).first()
@@ -118,7 +118,7 @@ class LocalDataSourceTest {
     }
 
     @Test
-    fun `getUserDetail should return empty when data is not found`() = runBlockingTest {
+    fun `getDetailBy should return empty when data is not found`() = runBlockingTest {
         `when`(userDao.getUserDetail(username)).thenReturn(entityEmpty)
 
         val actual = localDataSource.getDetailBy(username)

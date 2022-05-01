@@ -194,7 +194,7 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun `setUserFavorite should change userEntity isFavorite true to userEntity isFavorite false`() =
+    fun `setFavorite should change userEntity isFavorite true to userEntity isFavorite false`() =
         runBlockingTest {
             // Arrange
             val favorite = DummyData.favorite
@@ -213,7 +213,7 @@ class UserRepositoryTest {
         }
 
     @Test
-    fun `setUserFavorite should change userEntity isFavorite false to userEntity isFavorite true`() =
+    fun `setFavorite should change userEntity isFavorite false to userEntity isFavorite true`() =
         runBlockingTest {
             // Arrange
             val unFavorite = DummyData.unFavorite

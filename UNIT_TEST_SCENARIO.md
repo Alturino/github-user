@@ -14,6 +14,8 @@
 
 - getFavorite should return success when data is found in database
 - getFavorite should return empty when data is not found in database
+  
+### `setFavorite()`
 - setFavorite should change userEntity isFavorite true to userEntity isFavorite false
 - setFavorite should change userEntity isFavorite false to userEntity isFavorite true
 

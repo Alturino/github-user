@@ -106,7 +106,7 @@ jobs:
           echo KEY_ALIAS="$KEY_ALIAS" > ./local.properties
           echo KEY_PASSWORD="$KEY_PASSWORD" > ./local.properties
           echo STORE_PASSWORD="$STORE_PASSWORD" > ./local.properties
-          ./gradlew app:bundleRelease --stacktrace
+          ./gradlew app:assembleRelease --stacktrace
 
       - name: Cache Build
         uses: actions/cache@v2

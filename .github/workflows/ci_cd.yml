@@ -95,18 +95,8 @@ jobs:
           mkdir "${TMP_KEYSTORE_FILE_PATH}"
           echo $ENCODED_STRING | base64 -di > "${TMP_KEYSTORE_FILE_PATH}"/github_user_keystore.jks
 
-      - name: Gradle build
-        env:
-          API_KEY: ${{secrets.API_KEY}}
-          KEY_ALIAS: ${{secrets.KEY_ALIAS}}
-          KEY_PASSWORD: ${{secrets.KEY_PASSWORD}}
-          STORE_PASSWORD: ${{secrets.STORE_PASSWORD}}
-        run:
-          echo API_KEY="$API_KEY" > ./local.properties
-          echo KEY_ALIAS="$KEY_ALIAS" > ./local.properties
-          echo KEY_PASSWORD="$KEY_PASSWORD" > ./local.properties
-          echo STORE_PASSWORD="$STORE_PASSWORD" > ./local.properties
-          ./gradlew app:assembleRelease --stacktrace
+      - name: Build APK
+        run: ./gradlew build
 
       - name: Cache Build
         uses: actions/cache@v2

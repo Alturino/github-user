@@ -86,14 +86,12 @@ jobs:
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-
-      - name: Decode Keystore
+        
+      - name: setup local.properties
         env:
-          ENCODED_STRING: ${{ secrets.KEYSTORE }}
-        run: |
-          TMP_KEYSTORE_FILE_PATH="${RUNNER_TEMP}"/keystore
-          mkdir "${TMP_KEYSTORE_FILE_PATH}"
-          echo $ENCODED_STRING | base64 -di > "${TMP_KEYSTORE_FILE_PATH}"/github_user_keystore.jks
+          API_KEY: ${{secrets.API_KEY}}
+        run:
+          echo API_KEY="$API_KEY" > ./local.properties
 
       - name: Build APK
         run: ./gradlew build

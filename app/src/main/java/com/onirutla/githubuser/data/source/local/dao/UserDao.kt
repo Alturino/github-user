@@ -13,10 +13,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserDao {
 
     @Insert(onConflict = REPLACE)
-    suspend fun insertUser(userEntity: UserEntity)
-
-    @Insert(onConflict = REPLACE)
-    suspend fun insertUsers(users: List<UserEntity>)
+    suspend fun insertUsers(vararg user: UserEntity)
 
     @Update
     suspend fun updateFavorite(userEntity: UserEntity)

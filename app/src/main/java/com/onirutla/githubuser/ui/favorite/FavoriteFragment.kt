@@ -7,18 +7,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.google.android.material.transition.MaterialFadeThrough
 import com.onirutla.githubuser.R
-import com.onirutla.githubuser.data.Resource
+import com.onirutla.githubuser.data.doWhen
+import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.databinding.FragmentFavoriteBinding
 import com.onirutla.githubuser.ui.adapter.UserAdapter
+import com.onirutla.githubuser.util.hide
+import com.onirutla.githubuser.util.show
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FavoriteFragment : Fragment() {
@@ -62,39 +60,41 @@ class FavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.favorites.collectLatest {
-                    when (it) {
-                        is Resource.Error -> {
-                            binding.apply {
-                                progressBar.visibility = View.GONE
-                                favoritePlaceholder.visibility = View.VISIBLE
-                            }
-                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+        binding.rvFavorite.apply {
+            setHasFixedSize(true)
+            adapter = favoriteAdapter
+        }
 
-                        }
-                        is Resource.Loading -> {
-                            binding.apply {
-                                rvFavorite.visibility = View.GONE
-                                progressBar.visibility = View.VISIBLE
-                            }
-                        }
-                        is Resource.Success -> {
-                            binding.apply {
-                                rvFavorite.visibility = View.VISIBLE
-                                progressBar.visibility = View.GONE
-                            }
-                            favoriteAdapter.submitList(it.data)
-                        }
-                    }
+        viewModel.favorites.observe(viewLifecycleOwner) { uiState ->
+            uiState.doWhen(
+                error = { showError(message) },
+                loading = { showLoading() },
+                success = { showData(data) }
+            )
+        }
 
-                    binding.rvFavorite.apply {
-                        setHasFixedSize(true)
-                        adapter = favoriteAdapter
-                    }
-                }
-            }
+    }
+
+    private fun showData(users: List<UserEntity>) {
+        binding.apply {
+            rvFavorite.show()
+            progressBar.hide()
+        }
+        favoriteAdapter.submitList(users)
+    }
+
+    private fun showError(message: String?) {
+        binding.apply {
+            progressBar.hide()
+            favoritePlaceholder.show()
+        }
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showLoading() {
+        binding.apply {
+            rvFavorite.hide()
+            progressBar.show()
         }
     }
 

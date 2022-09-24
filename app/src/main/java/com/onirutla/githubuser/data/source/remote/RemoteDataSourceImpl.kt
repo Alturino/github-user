@@ -8,6 +8,7 @@ import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.remote.network.GithubApiService
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
 import com.onirutla.githubuser.util.Constant.GITHUB_PAGE_SIZE
+import com.onirutla.githubuser.util.getResult
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,30 +18,24 @@ class RemoteDataSourceImpl @Inject constructor(
     private val apiService: GithubApiService
 ) : RemoteDataSource {
 
-    override suspend fun searchBy(username: String, position: Int): Response<List<UserResponse>> = try {
+    override suspend fun searchBy(
+        username: String,
+        position: Int
+    ): NetworkResponse<List<UserResponse>> {
         if (username.isEmpty())
-            throw IllegalArgumentException("username shouldn't be empty")
-        if(position == 0)
-            throw IllegalArgumentException("position shouldn't be zero")
-        val response = apiService.searchBy(username, position)
-        if (response.isSuccessful)
-            Response.Success(body = response.body()?.items!!, message = response.message())
-        else
-            Response.Error(message = response.message())
-    } catch (t: Throwable) {
-        Response.Error(message = t.message)
+            return NetworkResponse.Error(message = "username shouldn't be empty")
+        if (position == 0)
+            return NetworkResponse.Error(message = "position shouldn't be zero")
+
+        return apiService.searchBy(username, position).getResult {
+            body()?.items!!
+        }
     }
 
-    override suspend fun getDetailBy(username: String): Response<UserResponse> = try {
-        if (username.isEmpty())
-            throw IllegalArgumentException("username shouldn't be empty")
-        val response = apiService.getDetailBy(username)
-        if (response.isSuccessful)
-            Response.Success(body = response.body()!!, message = response.message())
-        else
-            Response.Error(message = response.message())
-    } catch (t: Throwable) {
-        Response.Error(message = t.message)
+    override suspend fun getDetailBy(username: String): NetworkResponse<UserResponse> {
+        if (username.isEmpty() or username.isBlank())
+            return NetworkResponse.Error(message = "username should not be empty")
+        return apiService.getDetailBy(username).getResult()
     }
 
     override fun getFollowerPaging(username: String): Flow<PagingData<UserEntity>> =

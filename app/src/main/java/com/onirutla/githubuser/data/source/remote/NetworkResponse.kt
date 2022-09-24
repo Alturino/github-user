@@ -17,9 +17,16 @@ inline fun <reified T> NetworkResponse<T>.doWhenError(function: NetworkResponse.
         function.invoke(this)
 }
 
-inline fun <reified T, R> NetworkResponse<T>.getUiState(function: NetworkResponse.Success<T>.() -> UIState<R>): UIState<R> {
+inline fun <reified T, R> NetworkResponse<T>.mapToUiState(function: NetworkResponse.Success<T>.() -> UIState<R>): UIState<R> {
     return when (this) {
         is NetworkResponse.Error -> UIState.Error(this.message)
         is NetworkResponse.Success -> function.invoke(this)
+    }
+}
+
+inline fun <reified T> NetworkResponse<T>.getData(function: NetworkResponse.Success<T>.() -> T): T {
+    return when (this) {
+        is NetworkResponse.Error -> throw Exception(this.message)
+        is NetworkResponse.Success -> function(this)
     }
 }

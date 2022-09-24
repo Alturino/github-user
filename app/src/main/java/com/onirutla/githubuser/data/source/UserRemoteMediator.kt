@@ -8,16 +8,17 @@ import androidx.room.withTransaction
 import com.onirutla.githubuser.data.source.local.db.GithubUserDatabase
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.local.entity.UserRemoteKey
-import com.onirutla.githubuser.data.source.remote.Response
+import com.onirutla.githubuser.data.source.remote.NetworkResponse
+import com.onirutla.githubuser.data.source.remote.getData
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
-import com.onirutla.githubuser.data.source.remote.response.toEntity
+import com.onirutla.githubuser.util.toEntity
 import okio.IOException
 import retrofit2.HttpException
 
 @ExperimentalPagingApi
 class UserRemoteMediator(
     private val db: GithubUserDatabase,
-    private inline val apiService: suspend (position: Int) -> Response<List<UserResponse>>,
+    private inline val apiService: suspend (position: Int) -> NetworkResponse<List<UserResponse>>,
 ) : RemoteMediator<Int, UserEntity>() {
 
     private val userDao = db.userDao
@@ -48,13 +49,10 @@ class UserRemoteMediator(
                 }
             }
 
-            val users = when (val response = apiService(currentPage)) {
-                is Response.Error -> throw IOException()
-                is Response.Success -> response.body
-            }
+            val users = apiService(currentPage).getData { body }
 
             val entity = users.map { it.toEntity() }
-            val endOfPaginationReached = entity.isNullOrEmpty()
+            val endOfPaginationReached = entity.isEmpty()
 
             val prevPage = if (currentPage == 1) null else currentPage.minus(1)
             val nextPage = if (endOfPaginationReached) null else currentPage.plus(1)
@@ -73,8 +71,8 @@ class UserRemoteMediator(
                     )
                 }
 
-                remoteKeyDao.addAllRemoteKeys(keys)
-                userDao.insertUsers(entity)
+                keys.let { remoteKeyDao.addAllRemoteKeys(it) }
+                entity.let { userDao.insertUsers(*it.toTypedArray()) }
             }
 
             MediatorResult.Success(endOfPaginationReached)

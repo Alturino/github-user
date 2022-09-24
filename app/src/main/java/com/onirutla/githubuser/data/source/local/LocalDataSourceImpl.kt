@@ -3,10 +3,10 @@ package com.onirutla.githubuser.data.source.local
 import com.onirutla.githubuser.data.source.local.dao.UserDao
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.util.IoDispatcher
+import com.onirutla.githubuser.util.ensureFlowNotNull
+import com.onirutla.githubuser.util.ensureFlowOfListNotNull
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.mapNotNull
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,23 +18,18 @@ class LocalDataSourceImpl @Inject constructor(
 
     override fun searchBy(username: String): Flow<List<UserEntity>> =
         userDao.getUserSearch(username)
-            .mapNotNull { it }
-            .flowOn(ioDispatcher)
+            .ensureFlowOfListNotNull(ioDispatcher)
 
     override fun getFavorite(): Flow<List<UserEntity>> =
         userDao.getFavorites()
-            .mapNotNull { it }
-            .flowOn(ioDispatcher)
+            .ensureFlowOfListNotNull(ioDispatcher)
 
 
     override fun getDetailBy(username: String): Flow<UserEntity> =
         userDao.getUserDetail(username)
-            .mapNotNull { it }
-            .flowOn(ioDispatcher)
+            .ensureFlowNotNull(ioDispatcher)
 
-    override suspend fun insertUsers(users: List<UserEntity>) = userDao.insertUsers(users)
-
-    override suspend fun insertUserDetail(userEntity: UserEntity) = userDao.insertUser(userEntity)
+    override suspend fun insertUsers(vararg users: UserEntity) = userDao.insertUsers(*users)
 
     override suspend fun favorite(userEntity: UserEntity): UserEntity {
         val favorite = userEntity.copy(isFavorite = true)

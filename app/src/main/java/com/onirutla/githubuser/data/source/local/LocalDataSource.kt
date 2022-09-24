@@ -11,9 +11,7 @@ interface LocalDataSource {
 
     fun getDetailBy(username: String): Flow<UserEntity>
 
-    suspend fun insertUsers(users: List<UserEntity>)
-
-    suspend fun insertUserDetail(userEntity: UserEntity)
+    suspend fun insertUsers(vararg users: UserEntity)
 
     suspend fun favorite(userEntity: UserEntity): UserEntity
 

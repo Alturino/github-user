@@ -13,12 +13,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialContainerTransform
 import com.onirutla.githubuser.R
+import com.onirutla.githubuser.data.doWhen
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.databinding.FragmentDetailBinding
 import com.onirutla.githubuser.ui.SharedViewModel
-import com.onirutla.githubuser.util.doWhenError
-import com.onirutla.githubuser.util.doWhenLoading
-import com.onirutla.githubuser.util.doWhenSuccess
 import com.onirutla.githubuser.util.hide
 import com.onirutla.githubuser.util.show
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,9 +62,11 @@ class DetailFragment : Fragment() {
         sharedViewModel.setUsername(username)
 
         viewModel.user.observe(viewLifecycleOwner) { uiState ->
-            uiState.doWhenSuccess { showData(data) }
-            uiState.doWhenError { showError(message) }
-            uiState.doWhenLoading { showLoading() }
+            uiState.doWhen(
+                error = { showError(message) },
+                loading = { showLoading() },
+                success = { showData(data) }
+            )
         }
 
         setupUI()

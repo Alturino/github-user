@@ -3,9 +3,9 @@ package com.onirutla.githubuser.data.source
 import androidx.paging.PagingSource
 import com.onirutla.githubuser.DummyData
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
-import com.onirutla.githubuser.data.source.remote.response.toEntity
+import com.onirutla.githubuser.util.toEntities
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -32,11 +32,11 @@ class UserPagingSourceTest {
     }
 
     @Test
-    fun loadReturnsPageWhenOnSuccessfulLoadOfItemKeyedData() = runBlockingTest {
+    fun loadReturnsPageWhenOnSuccessfulLoadOfItemKeyedData() = runTest {
         `when`(apiService(1)).thenReturn(Response.success(DummyData.userResponses))
         assertEquals(
             PagingSource.LoadResult.Page(
-                data = DummyData.userResponses.map { it.toEntity() },
+                data = DummyData.userResponses.toEntities(),
                 prevKey = null,
                 nextKey = 2
             ),

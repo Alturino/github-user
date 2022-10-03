@@ -4,22 +4,21 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.onirutla.githubuser.data.Resource
+import com.onirutla.githubuser.data.UIState
 import com.onirutla.githubuser.data.source.UserRemoteMediator
 import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.db.GithubUserDatabase
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
-import com.onirutla.githubuser.data.source.remote.Response
-import com.onirutla.githubuser.data.source.remote.response.toEntity
+import com.onirutla.githubuser.data.source.remote.mapToUiState
 import com.onirutla.githubuser.util.Constant.GITHUB_PAGE_SIZE
 import com.onirutla.githubuser.util.IoDispatcher
+import com.onirutla.githubuser.util.toEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onStart
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -46,21 +45,19 @@ class UserRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override fun getDetailBy(username: String): Flow<Resource<UserEntity>> {
+    override fun getDetailBy(username: String): Flow<UIState<UserEntity>> {
         return localDataSource.getDetailBy(username).map {
             if (it.name.isEmpty()) {
-                when (val response = remoteDataSource.getDetailBy(username)) {
-                    is Response.Error -> Resource.Error(response.message)
-                    is Response.Success -> {
-                        val entity = response.body.toEntity()
-                        localDataSource.insertUserDetail(entity)
-                        Resource.Success(entity)
-                    }
+                val uiState = remoteDataSource.getDetailBy(username).mapToUiState {
+                    val entity = this.body.toEntity()
+                    localDataSource.insertUsers(entity)
+                    UIState.Success(entity)
                 }
+                uiState
             } else
-                Resource.Success(it)
+                UIState.Success(it)
         }.onStart {
-            emit(Resource.Loading())
+            emit(UIState.Loading())
         }.flowOn(ioDispatcher)
     }
 
@@ -70,16 +67,16 @@ class UserRepositoryImpl @Inject constructor(
     override fun getFollowingPaging(username: String): Flow<PagingData<UserEntity>> =
         remoteDataSource.getFollowingPaging(username).flowOn(ioDispatcher)
 
-    override fun getFavorite(): Flow<Resource<List<UserEntity>>> =
+    override fun getFavorite(): Flow<UIState<List<UserEntity>>> =
         localDataSource.getFavorite().map {
             if (it.isEmpty())
-                Resource.Error("There is no favorite user")
+                UIState.Error("There is no favorite user")
             else
-                Resource.Success(it)
+                UIState.Success(it)
         }.onStart {
-            emit(Resource.Loading())
+            emit(UIState.Loading())
         }.catch {
-            emit(Resource.Error(it.localizedMessage))
+            emit(UIState.Error(it.localizedMessage))
         }.flowOn(ioDispatcher)
 
     override suspend fun setFavorite(userDto: UserEntity): UserEntity {

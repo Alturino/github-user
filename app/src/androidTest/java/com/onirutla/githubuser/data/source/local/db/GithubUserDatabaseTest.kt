@@ -4,15 +4,15 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import com.onirutla.githubuser.DummyData
 import com.onirutla.githubuser.data.source.local.dao.UserDao
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import okio.IOException
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -26,15 +26,17 @@ import org.junit.runner.RunWith
 class GithubUserDatabaseTest {
 
     private lateinit var githubUserDatabase: GithubUserDatabase
+    private lateinit var testScheduler: TestCoroutineScheduler
     private lateinit var testDispatcher: CoroutineDispatcher
-    private lateinit var testScope: TestCoroutineScope
+    private lateinit var testScope: TestScope
 
     private lateinit var userDao: UserDao
 
     @Before
     fun setUp() {
-        testDispatcher = TestCoroutineDispatcher()
-        testScope = TestCoroutineScope(testDispatcher)
+        testScheduler = TestCoroutineScheduler()
+        testDispatcher = StandardTestDispatcher(testScheduler)
+        testScope = TestScope(testDispatcher)
         githubUserDatabase =
             Room.inMemoryDatabaseBuilder(
                 ApplicationProvider.getApplicationContext(),
@@ -53,9 +55,9 @@ class GithubUserDatabaseTest {
 
     @Test
     @Throws(Exception::class)
-    fun writeUserAndReadInList() = testScope.runBlockingTest {
+    fun writeUserAndReadInList() = testScope.runTest {
         val expected = DummyData.userEntities
-        userDao.insertUsers(expected)
+        userDao.insertUsers(*expected.toTypedArray())
         val actual = userDao.getUserSearch("").first()
         assertEquals(expected, actual)
     }

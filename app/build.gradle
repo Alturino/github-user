@@ -35,11 +35,6 @@ android {
         }
     }
 
-    sourceSets {
-        androidTest.java.srcDirs += "src/sharedTest/java"
-        test.java.srcDirs += "src/sharedTest/java"
-    }
-
     testOptions {
         unitTests.returnDefaultValues = true
     }

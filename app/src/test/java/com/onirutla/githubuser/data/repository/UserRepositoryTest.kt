@@ -3,20 +3,22 @@ package com.onirutla.githubuser.data.repository
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.ExperimentalPagingApi
 import com.onirutla.githubuser.DummyData
-import com.onirutla.githubuser.data.Resource
+import com.onirutla.githubuser.data.UIState
 import com.onirutla.githubuser.data.source.local.LocalDataSource
 import com.onirutla.githubuser.data.source.local.db.GithubUserDatabase
 import com.onirutla.githubuser.data.source.local.entity.UserEntity
+import com.onirutla.githubuser.data.source.remote.NetworkResponse
 import com.onirutla.githubuser.data.source.remote.RemoteDataSource
-import com.onirutla.githubuser.data.source.remote.Response
 import com.onirutla.githubuser.data.source.remote.response.UserResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestCoroutineScheduler
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -42,12 +44,16 @@ class UserRepositoryTest {
     // Dependency
     @Mock
     private lateinit var localDataSource: LocalDataSource
+
     @Mock
     private lateinit var remoteDataSource: RemoteDataSource
+
     @Mock
     private lateinit var githubUserDatabase: GithubUserDatabase
-    @Mock
+
     private lateinit var testDispatcher: CoroutineDispatcher
+    private lateinit var testScheduler: TestCoroutineScheduler
+    private lateinit var testScope: TestScope
 
     // Class Under Test
     private lateinit var userRepository: UserRepository
@@ -62,12 +68,14 @@ class UserRepositoryTest {
 
     private val favoritesFlow = flowOf(DummyData.favorites)
 
-    private val fromNetworkSuccessResponse = Response.Success(DummyData.userResponse)
-    private val fromNetworkErrorResponse = Response.Error<UserResponse>()
+    private val fromNetworkSuccessResponse = NetworkResponse.Success(DummyData.userResponse)
+    private val fromNetworkErrorResponse = NetworkResponse.Error<UserResponse>()
 
     @Before
     fun setUp() {
-        testDispatcher = TestCoroutineDispatcher()
+        testScheduler = TestCoroutineScheduler()
+        testDispatcher = StandardTestDispatcher(testScheduler)
+        testScope = TestScope(testDispatcher)
         userRepository = UserRepositoryImpl(
             remoteDataSource,
             localDataSource,
@@ -84,7 +92,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    fun `getDetailBy first item should resource loading`() = runBlockingTest {
+    fun `getDetailBy first item should resource loading`() = testScope.runTest {
         // Arrange
         `when`(localDataSource.getDetailBy(username)).thenReturn(fromDbSuccessUserEntity)
 
@@ -93,12 +101,12 @@ class UserRepositoryTest {
 
         // Assert
         assertNotNull(actual)
-        assertEquals(Resource.Loading<UserEntity>(), actual)
+        assertEquals(UIState.Loading<UserEntity>(), actual)
     }
 
     @Test
     fun `getDetailBy should return loading and success when data is found in database`() =
-        runBlockingTest {
+        testScope.runTest {
             // Arrange
             `when`(localDataSource.getDetailBy(username)).thenReturn(fromDbSuccessUserEntity)
 
@@ -107,8 +115,8 @@ class UserRepositoryTest {
 
             // Assert
             assertNotNull(actual)
-            assertEquals(Resource.Loading<UserEntity>(), actual.first())
-            assertEquals(Resource.Success(DummyData.userEntity), actual.last())
+            assertEquals(UIState.Loading<UserEntity>(), actual.first())
+            assertEquals(UIState.Success(DummyData.userEntity), actual.last())
 
             // Verify
             verify(localDataSource).getDetailBy(username)
@@ -116,7 +124,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getDetailBy should return loading and success when data is not found in database but found in network`() =
-        runBlockingTest {
+        testScope.runTest {
             // Arrange
             `when`(localDataSource.getDetailBy(username)).thenReturn(fromDbEmptyUserEntity)
             `when`(remoteDataSource.getDetailBy(username)).thenReturn(fromNetworkSuccessResponse)
@@ -126,8 +134,8 @@ class UserRepositoryTest {
 
             // Assert
             assertNotNull(actual)
-            assertEquals(Resource.Loading<UserEntity>(), actual.first())
-            assertEquals(Resource.Success(DummyData.userEntity), actual.last())
+            assertEquals(UIState.Loading<UserEntity>(), actual.first())
+            assertEquals(UIState.Success(DummyData.userEntity), actual.last())
 
             // Verify
             verify(localDataSource).getDetailBy(username)
@@ -136,7 +144,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getDetailBy should return loading and error when data is not found in database and network`() =
-        runBlockingTest {
+        testScope.runTest {
             // Arrange
             `when`(localDataSource.getDetailBy(username)).thenReturn(fromDbEmptyUserEntity)
             `when`(remoteDataSource.getDetailBy(username)).thenReturn(fromNetworkErrorResponse)
@@ -146,8 +154,8 @@ class UserRepositoryTest {
 
             // Assert
             assertNotNull(actual)
-            assertEquals(Resource.Loading<UserEntity>(), actual.first())
-            assertEquals(Resource.Error<UserEntity>(null), actual.last())
+            assertEquals(UIState.Loading<UserEntity>(), actual.first())
+            assertEquals(UIState.Error<UserEntity>(null), actual.last())
 
             // Verify
             verify(localDataSource).getDetailBy(username)
@@ -156,7 +164,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getFavorite should return success when data is found in database`() =
-        runBlockingTest {
+        testScope.runTest {
             // Arrange
             `when`(localDataSource.getFavorite()).thenReturn(favoritesFlow)
 
@@ -165,8 +173,8 @@ class UserRepositoryTest {
 
             // Assert
             assertNotNull(actual)
-            assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
-            assertEquals(Resource.Success(DummyData.favorites), actual.last())
+            assertEquals(UIState.Loading<List<UserEntity>>(), actual.first())
+            assertEquals(UIState.Success(DummyData.favorites), actual.last())
 
             // Verify
             verify(localDataSource).getFavorite()
@@ -174,7 +182,7 @@ class UserRepositoryTest {
 
     @Test
     fun `getFavorite should return empty when data is not found in database`() =
-        runBlockingTest {
+        testScope.runTest {
             // Arrange
             `when`(localDataSource.getFavorite()).thenReturn(fromDbEmptyUserEntities)
 
@@ -183,9 +191,9 @@ class UserRepositoryTest {
 
             // Assert
             assertNotNull(actual)
-            assertEquals(Resource.Loading<List<UserEntity>>(), actual.first())
+            assertEquals(UIState.Loading<List<UserEntity>>(), actual.first())
             assertEquals(
-                Resource.Error<List<UserEntity>>("There is no favorite user"),
+                UIState.Error<List<UserEntity>>("There is no favorite user"),
                 actual.last()
             )
 
@@ -195,7 +203,7 @@ class UserRepositoryTest {
 
     @Test
     fun `setFavorite should change userEntity isFavorite true to userEntity isFavorite false`() =
-        runBlockingTest {
+        testScope.runTest {
             // Arrange
             val favorite = DummyData.favorite
             `when`(localDataSource.unFavorite(favorite)).thenReturn(DummyData.unFavorite)
@@ -214,7 +222,7 @@ class UserRepositoryTest {
 
     @Test
     fun `setFavorite should change userEntity isFavorite false to userEntity isFavorite true`() =
-        runBlockingTest {
+        runTest {
             // Arrange
             val unFavorite = DummyData.unFavorite
             `when`(localDataSource.favorite(unFavorite)).thenReturn(DummyData.favorite)

@@ -11,13 +11,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
+import com.onirutla.githubuser.core.adapter.UserPagingAdapter
 import com.onirutla.githubuser.databinding.FragmentFollowerBinding
 import com.onirutla.githubuser.ui.SharedViewModel
-import com.onirutla.githubuser.ui.adapter.UserPagingAdapter
 import com.onirutla.githubuser.ui.detail.DetailFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi

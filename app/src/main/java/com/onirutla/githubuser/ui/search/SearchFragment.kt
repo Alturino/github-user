@@ -20,7 +20,7 @@ import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialSharedAxis
 import com.onirutla.githubuser.R
 import com.onirutla.githubuser.databinding.FragmentSearchBinding
-import com.onirutla.githubuser.ui.adapter.UserPagingAdapter
+import com.onirutla.githubuser.core.adapter.UserPagingAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest

@@ -8,8 +8,6 @@
     <string name="username">Username</string>
     <string name="about">About</string>
     <string name="search">Search</string>
-    <string name="list_transition_name">list_transition_%1$s</string>
-    <string name="list_transition_detail">list_transition_detail</string>
     <string name="header_follower">Follower</string>
     <string name="header_following">Following</string>
     <string name="header_repositories">Repositories</string>

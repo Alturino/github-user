@@ -10,12 +10,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.google.android.material.transition.MaterialFadeThrough
 import com.onirutla.githubuser.R
-import com.onirutla.githubuser.data.doWhen
-import com.onirutla.githubuser.data.source.local.entity.UserEntity
+import com.onirutla.githubuser.core.adapter.UserAdapter
+import com.onirutla.githubuser.core.data.doWhen
+import com.onirutla.githubuser.core.domain.data.User
+import com.onirutla.githubuser.core.util.hide
+import com.onirutla.githubuser.core.util.show
 import com.onirutla.githubuser.databinding.FragmentFavoriteBinding
-import com.onirutla.githubuser.ui.adapter.UserAdapter
-import com.onirutla.githubuser.util.hide
-import com.onirutla.githubuser.util.show
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -75,7 +75,7 @@ class FavoriteFragment : Fragment() {
 
     }
 
-    private fun showData(users: List<UserEntity>) {
+    private fun showData(users: List<User>) {
         binding.apply {
             rvFavorite.show()
             progressBar.hide()

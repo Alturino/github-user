@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.onirutla.githubuser.data.repository.UserRepository
-import com.onirutla.githubuser.data.source.local.entity.UserEntity
-import com.onirutla.githubuser.util.MainDispatcher
+import com.onirutla.githubuser.core.domain.data.User
+import com.onirutla.githubuser.core.domain.repository.UserRepository
+import com.onirutla.githubuser.core.util.MainDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,7 +27,7 @@ class SearchViewModel @Inject constructor(
 
     private val _username = MutableSharedFlow<String>()
 
-    val users: StateFlow<PagingData<UserEntity>> = _username.flatMapLatest {
+    val users: StateFlow<PagingData<User>> = _username.flatMapLatest {
         userRepository.searchByPaging(it)
     }.cachedIn(viewModelScope)
         .stateIn(

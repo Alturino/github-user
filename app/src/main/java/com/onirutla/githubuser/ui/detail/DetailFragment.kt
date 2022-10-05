@@ -13,12 +13,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialContainerTransform
 import com.onirutla.githubuser.R
-import com.onirutla.githubuser.data.doWhen
-import com.onirutla.githubuser.data.source.local.entity.UserEntity
+import com.onirutla.githubuser.core.data.doWhen
+import com.onirutla.githubuser.core.domain.data.User
+import com.onirutla.githubuser.core.util.hide
+import com.onirutla.githubuser.core.util.show
 import com.onirutla.githubuser.databinding.FragmentDetailBinding
 import com.onirutla.githubuser.ui.SharedViewModel
-import com.onirutla.githubuser.util.hide
-import com.onirutla.githubuser.util.show
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -72,7 +72,7 @@ class DetailFragment : Fragment() {
         setupUI()
     }
 
-    private fun showData(user: UserEntity) {
+    private fun showData(user: User) {
         hideLoading()
         binding.user = user
         var status = user.isFavorite

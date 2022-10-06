@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DatabaseModule {
+internal object DatabaseModule {
     @Singleton
     @Provides
     fun providesDatabase(@ApplicationContext context: Context): GithubUserDatabase =

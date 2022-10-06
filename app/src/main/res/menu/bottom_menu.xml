@@ -22,7 +22,7 @@
         android:title="" />
 
     <item
-        android:id="@+id/favoriteFragment"
+        android:id="@+id/navigation_favorite"
         android:enabled="true"
         android:icon="@drawable/ic_favorite_24"
         android:orderInCategory="4"

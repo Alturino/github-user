@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.ui.favorite
+package com.onirutla.githubuser.favorite
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,13 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.google.android.material.transition.MaterialFadeThrough
-import com.onirutla.githubuser.R
 import com.onirutla.githubuser.core.adapter.UserAdapter
 import com.onirutla.githubuser.core.data.doWhen
 import com.onirutla.githubuser.core.domain.data.User
 import com.onirutla.githubuser.core.util.hide
 import com.onirutla.githubuser.core.util.show
-import com.onirutla.githubuser.databinding.FragmentFavoriteBinding
+import com.onirutla.githubuser.favorite.databinding.FragmentFavoriteBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

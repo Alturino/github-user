@@ -78,4 +78,6 @@ android {
 
 dependencies {
     implementation project(":core")
+    implementation project(":favorite")
+    implementation project(":follower")
 }

@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.ui.follower
+package com.onirutla.githubuser.follower
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import com.onirutla.githubuser.core.adapter.UserPagingAdapter
-import com.onirutla.githubuser.databinding.FragmentFollowerBinding
+import com.onirutla.githubuser.follower.databinding.FragmentFollowerBinding
 import com.onirutla.githubuser.ui.SharedViewModel
 import com.onirutla.githubuser.ui.detail.DetailFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint

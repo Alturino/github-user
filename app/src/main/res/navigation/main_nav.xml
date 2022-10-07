@@ -17,35 +17,4 @@
         android:name="com.onirutla.githubuser.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
-    <!--    <fragment-->
-    <!--        android:id="@+id/searchFragment"-->
-    <!--        android:name="com.onirutla.githubuser.search.SearchFragment"-->
-    <!--        android:label="fragment_search"-->
-    <!--        tools:layout="@layout/fragment_search">-->
-    <!--        <action-->
-    <!--            android:id="@+id/action_searchFragment_to_detailFragment"-->
-    <!--            app:destination="@id/detailFragment" />-->
-    <!--    </fragment>-->
-    <!--    <fragment-->
-    <!--        android:id="@+id/settingFragment"-->
-    <!--        android:name="com.onirutla.githubuser.settings.SettingFragment"-->
-    <!--        android:label="fragment_setting"-->
-    <!--        tools:layout="@layout/fragment_setting" />-->
-    <!--    <action-->
-    <!--        android:id="@+id/action_global_searchFragment"-->
-    <!--        app:destination="@id/searchFragment"-->
-    <!--        app:popUpToInclusive="true"-->
-    <!--        app:popUpToSaveState="true"-->
-    <!--        app:launchSingleTop="true" />-->
-    <!--    <fragment-->
-    <!--        android:id="@+id/detailFragment"-->
-    <!--        android:name="com.onirutla.githubuser.detail.DetailFragment"-->
-    <!--        android:label="DetailFragment">-->
-    <!--        <argument-->
-    <!--            android:name="username"-->
-    <!--            app:argType="string" />-->
-    <!--        <action-->
-    <!--            android:id="@+id/action_detailFragment_self"-->
-    <!--            app:destination="@id/detailFragment" />-->
-    <!--    </fragment>-->
 </navigation>

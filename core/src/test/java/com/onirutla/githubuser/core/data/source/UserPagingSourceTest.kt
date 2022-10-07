@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingSource.LoadResult.Page
 import com.onirutla.githubuser.core.DummyData
 import com.onirutla.githubuser.core.data.source.remote.response.UserResponse
-import com.onirutla.githubuser.core.util.responsesToEntities
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -37,7 +36,7 @@ class UserPagingSourceTest {
         `when`(apiService(1)).thenReturn(Response.success(DummyData.userResponses))
         assertEquals(
             Page(
-                data = DummyData.userResponses.responsesToEntities(),
+                data = DummyData.userResponses,
                 prevKey = null,
                 nextKey = 2
             ),

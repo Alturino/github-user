@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.ui.search
+package com.onirutla.githubuser.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

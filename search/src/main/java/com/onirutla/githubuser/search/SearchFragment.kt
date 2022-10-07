@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.ui.search
+package com.onirutla.githubuser.search
 
 import android.app.Activity
 import android.content.Context
@@ -18,9 +18,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialSharedAxis
-import com.onirutla.githubuser.R
-import com.onirutla.githubuser.databinding.FragmentSearchBinding
 import com.onirutla.githubuser.core.adapter.UserPagingAdapter
+import com.onirutla.githubuser.search.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -48,11 +47,11 @@ class SearchFragment : Fragment() {
                 duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
             }
 
-            view.findNavController()
-                .navigate(
-                    SearchFragmentDirections.actionSearchFragmentToDetailFragment(user.username),
-                    extras
-                )
+//            view.findNavController()
+//                .navigate(
+//                    SearchFragmentDirections.actionSearchFragmentToDetailFragment(user.username),
+//                    extras
+//                )
         }
     }
 

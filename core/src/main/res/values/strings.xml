@@ -2,4 +2,5 @@
 <resources>
     <string name="list_transition_name">list_transition_%1$s</string>
     <string name="list_transition_detail">list_transition_detail</string>
+    <string name="username">Username</string>
 </resources>

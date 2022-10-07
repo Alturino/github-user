@@ -81,4 +81,5 @@ dependencies {
     implementation project(":favorite")
     implementation project(":follower")
     implementation project(":following")
+    implementation project(":search")
 }

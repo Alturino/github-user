@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Github User</string>
-    <string name="setting">Setting</string>
     <string name="home">Home</string>
     <string name="dev">Developer</string>
     <string name="about">About</string>

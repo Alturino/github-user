@@ -84,4 +84,5 @@ dependencies {
     implementation project(":search")
     implementation project(":detail")
     implementation project(":home")
+    implementation project(":settings")
 }

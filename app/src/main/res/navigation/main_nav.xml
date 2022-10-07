@@ -24,7 +24,7 @@
 <!--    </fragment>-->
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.onirutla.githubuser.ui.setting.SettingFragment"
+        android:name="com.onirutla.githubuser.settings.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
     <action

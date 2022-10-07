@@ -8,9 +8,11 @@ import com.onirutla.githubuser.core.data.source.local.db.GithubUserDatabase
 import com.onirutla.githubuser.core.data.source.local.entity.UserEntity
 import com.onirutla.githubuser.core.data.source.remote.NetworkResponse
 import com.onirutla.githubuser.core.data.source.remote.response.UserResponse
+import com.onirutla.githubuser.core.domain.data.User
 import com.onirutla.githubuser.core.domain.repository.UserRepository
 import com.onirutla.githubuser.core.domain.source.local.LocalDataSource
 import com.onirutla.githubuser.core.domain.source.remote.RemoteDataSource
+import com.onirutla.githubuser.core.util.entitiesToDomains
 import com.onirutla.githubuser.core.util.toUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -117,8 +119,8 @@ class UserRepositoryTest {
 
             // Assert
             assertNotNull(actual)
-            assertEquals(UIState.Loading<UserEntity>(), actual.first())
-            assertEquals(UIState.Success(DummyData.userEntity), actual.last())
+            assertEquals(UIState.Loading<User>(), actual.first())
+            assertEquals(UIState.Success(DummyData.userEntity.toUser()), actual.last())
 
             // Verify
             verify(localDataSource).getDetailBy(username)
@@ -137,7 +139,7 @@ class UserRepositoryTest {
             // Assert
             assertNotNull(actual)
             assertEquals(UIState.Loading<UserEntity>(), actual.first())
-            assertEquals(UIState.Success(DummyData.userEntity), actual.last())
+            assertEquals(UIState.Success(DummyData.userEntity.toUser()), actual.last())
 
             // Verify
             verify(localDataSource).getDetailBy(username)
@@ -175,8 +177,8 @@ class UserRepositoryTest {
 
             // Assert
             assertNotNull(actual)
-            assertEquals(UIState.Loading<List<UserEntity>>(), actual.first())
-            assertEquals(UIState.Success(DummyData.favorites), actual.last())
+            assertEquals(UIState.Loading<List<User>>(), actual.first())
+            assertEquals(UIState.Success(DummyData.favorites.entitiesToDomains()), actual.last())
 
             // Verify
             verify(localDataSource).getFavorite()

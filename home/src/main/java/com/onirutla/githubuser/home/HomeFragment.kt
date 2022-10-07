@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.ui.home
+package com.onirutla.githubuser.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,8 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.transition.MaterialFadeThrough
-import com.onirutla.githubuser.R
-import com.onirutla.githubuser.databinding.FragmentHomeBinding
+import com.onirutla.githubuser.home.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 

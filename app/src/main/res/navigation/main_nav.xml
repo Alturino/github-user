@@ -10,7 +10,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.onirutla.githubuser.ui.home.HomeFragment"
+        android:name="com.onirutla.githubuser.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
 <!--    <fragment-->
@@ -30,6 +30,8 @@
     <action
         android:id="@+id/action_global_searchFragment"
         app:destination="@id/searchFragment"
+        app:popUpToInclusive="true"
+        app:popUpToSaveState="true"
         app:launchSingleTop="true" />
 <!--    <fragment-->
 <!--        android:id="@+id/detailFragment"-->

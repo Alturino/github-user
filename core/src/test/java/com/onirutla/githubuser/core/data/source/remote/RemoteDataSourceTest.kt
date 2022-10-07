@@ -1,8 +1,9 @@
-package com.onirutla.githubuser.data.source.remote
+package com.onirutla.githubuser.core.data.source.remote
 
-import com.onirutla.githubuser.DummyData
-import com.onirutla.githubuser.data.source.remote.network.GithubApiService
-import com.onirutla.githubuser.data.source.remote.response.UserResponse
+import com.onirutla.githubuser.core.DummyData
+import com.onirutla.githubuser.core.data.source.remote.network.GithubApiService
+import com.onirutla.githubuser.core.data.source.remote.response.UserResponse
+import com.onirutla.githubuser.core.domain.source.remote.RemoteDataSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals

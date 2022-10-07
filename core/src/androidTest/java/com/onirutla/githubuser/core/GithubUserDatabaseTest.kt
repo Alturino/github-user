@@ -1,10 +1,11 @@
-package com.onirutla.githubuser.data.source.local.db
+package com.onirutla.githubuser.core
 
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import com.onirutla.githubuser.data.source.local.dao.UserDao
+import com.onirutla.githubuser.core.data.source.local.dao.UserDao
+import com.onirutla.githubuser.core.data.source.local.db.GithubUserDatabase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asExecutor

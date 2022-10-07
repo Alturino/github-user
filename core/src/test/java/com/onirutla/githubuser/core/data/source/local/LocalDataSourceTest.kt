@@ -1,8 +1,9 @@
-package com.onirutla.githubuser.data.source.local
+package com.onirutla.githubuser.core.data.source.local
 
-import com.onirutla.githubuser.DummyData
-import com.onirutla.githubuser.data.source.local.dao.UserDao
-import com.onirutla.githubuser.data.source.local.entity.UserEntity
+import com.onirutla.githubuser.core.DummyData
+import com.onirutla.githubuser.core.data.source.local.dao.UserDao
+import com.onirutla.githubuser.core.data.source.local.entity.UserEntity
+import com.onirutla.githubuser.core.domain.source.local.LocalDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first

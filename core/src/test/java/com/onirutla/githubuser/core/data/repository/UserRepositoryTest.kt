@@ -1,15 +1,17 @@
-package com.onirutla.githubuser.data.repository
+package com.onirutla.githubuser.core.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.ExperimentalPagingApi
-import com.onirutla.githubuser.DummyData
-import com.onirutla.githubuser.data.UIState
-import com.onirutla.githubuser.data.source.local.LocalDataSource
-import com.onirutla.githubuser.data.source.local.db.GithubUserDatabase
-import com.onirutla.githubuser.data.source.local.entity.UserEntity
-import com.onirutla.githubuser.data.source.remote.NetworkResponse
-import com.onirutla.githubuser.data.source.remote.RemoteDataSource
-import com.onirutla.githubuser.data.source.remote.response.UserResponse
+import com.onirutla.githubuser.core.DummyData
+import com.onirutla.githubuser.core.data.UIState
+import com.onirutla.githubuser.core.data.source.local.db.GithubUserDatabase
+import com.onirutla.githubuser.core.data.source.local.entity.UserEntity
+import com.onirutla.githubuser.core.data.source.remote.NetworkResponse
+import com.onirutla.githubuser.core.data.source.remote.response.UserResponse
+import com.onirutla.githubuser.core.domain.repository.UserRepository
+import com.onirutla.githubuser.core.domain.source.local.LocalDataSource
+import com.onirutla.githubuser.core.domain.source.remote.RemoteDataSource
+import com.onirutla.githubuser.core.util.toUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -209,7 +211,7 @@ class UserRepositoryTest {
             `when`(localDataSource.unFavorite(favorite)).thenReturn(DummyData.unFavorite)
 
             // Act
-            val actual = userRepository.setFavorite(favorite)
+            val actual = userRepository.setFavorite(favorite.toUser())
 
             // Assert
             assertNotNull(actual)
@@ -228,7 +230,7 @@ class UserRepositoryTest {
             `when`(localDataSource.favorite(unFavorite)).thenReturn(DummyData.favorite)
 
             // Act
-            val actual = userRepository.setFavorite(unFavorite)
+            val actual = userRepository.setFavorite(unFavorite.toUser())
 
             // Assert
             assertNotNull(actual)

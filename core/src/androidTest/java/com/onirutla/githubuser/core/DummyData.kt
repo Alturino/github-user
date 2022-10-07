@@ -1,12 +1,12 @@
-package com.onirutla.githubuser.data.source.local.db
+package com.onirutla.githubuser.core
 
-import com.onirutla.githubuser.data.source.local.entity.UserEntity
-import com.onirutla.githubuser.data.source.remote.response.SearchResponse
-import com.onirutla.githubuser.data.source.remote.response.UserResponse
+import com.onirutla.githubuser.core.data.source.local.entity.UserEntity
+import com.onirutla.githubuser.core.data.source.remote.response.SearchResponse
+import com.onirutla.githubuser.core.data.source.remote.response.UserResponse
 
 object DummyData {
 
-    val userResponses: List<UserResponse> = listOf(
+    internal val userResponses: List<UserResponse> = listOf(
         UserResponse(
             id = 1,
             username = "a",
@@ -45,7 +45,7 @@ object DummyData {
         )
     )
 
-    val userResponse = UserResponse(
+    internal val userResponse = UserResponse(
         id = 1,
         username = "a",
         name = "a",
@@ -58,9 +58,9 @@ object DummyData {
         avatarUrl = "a",
     )
 
-    val searchResponse = SearchResponse(items = userResponses)
+    internal val searchResponse = SearchResponse(items = userResponses)
 
-    val userEntities: List<UserEntity> = listOf(
+    internal val userEntities: List<UserEntity> = listOf(
         UserEntity(
             id = 1,
             username = "a",
@@ -99,7 +99,7 @@ object DummyData {
         )
     )
 
-    val userEntity = UserEntity(
+    internal val userEntity = UserEntity(
         id = 1,
         username = "a",
         name = "a",
@@ -113,7 +113,7 @@ object DummyData {
         isFavorite = false
     )
 
-    val favorites: List<UserEntity> = listOf(
+    internal val favorites: List<UserEntity> = listOf(
         UserEntity(
             1,
             "a",
@@ -168,7 +168,7 @@ object DummyData {
         )
     )
 
-    val favorite = UserEntity(
+    internal val favorite = UserEntity(
         1,
         "a",
         "a",
@@ -182,7 +182,7 @@ object DummyData {
         true
     )
 
-    val unFavorite = UserEntity(
+    internal val unFavorite = UserEntity(
         1,
         "a",
         "a",

@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.ui.detail
+package com.onirutla.githubuser.detail
 
 import android.graphics.Color
 import android.os.Bundle
@@ -9,14 +9,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialContainerTransform
-import com.onirutla.githubuser.R
 import com.onirutla.githubuser.core.data.doWhen
 import com.onirutla.githubuser.core.domain.data.User
 import com.onirutla.githubuser.core.util.hide
 import com.onirutla.githubuser.core.util.show
-import com.onirutla.githubuser.databinding.FragmentDetailBinding
+import com.onirutla.githubuser.detail.databinding.FragmentDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,7 +23,7 @@ class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val args: DetailFragmentArgs by navArgs()
+//    private val args: DetailFragmentArgs by navArgs()
 
     private val viewModel: DetailViewModel by viewModels()
 //    private val sharedViewModel: SharedViewModel by activityViewModels()
@@ -37,7 +35,7 @@ class DetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedElementEnterTransition = MaterialContainerTransform().apply {
-            drawingViewId = R.id.nav_host_fragment
+//            drawingViewId = R.id.nav_host_fragment
             duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
             scrimColor = Color.TRANSPARENT
         }
@@ -54,9 +52,9 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val username = args.username
+//        val username = args.username
 
-        viewModel.getUser(username)
+//        viewModel.getUser(username)
 //        sharedViewModel.setUsername(username)
 
         viewModel.user.observe(viewLifecycleOwner) { uiState ->

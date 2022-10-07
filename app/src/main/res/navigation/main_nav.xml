@@ -31,15 +31,15 @@
         android:id="@+id/action_global_searchFragment"
         app:destination="@id/searchFragment"
         app:launchSingleTop="true" />
-    <fragment
-        android:id="@+id/detailFragment"
-        android:name="com.onirutla.githubuser.ui.detail.DetailFragment"
-        android:label="DetailFragment">
-        <argument
-            android:name="username"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_detailFragment_self"
-            app:destination="@id/detailFragment" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/detailFragment"-->
+<!--        android:name="com.onirutla.githubuser.detail.DetailFragment"-->
+<!--        android:label="DetailFragment">-->
+<!--        <argument-->
+<!--            android:name="username"-->
+<!--            app:argType="string" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_detailFragment_self"-->
+<!--            app:destination="@id/detailFragment" />-->
+<!--    </fragment>-->
 </navigation>

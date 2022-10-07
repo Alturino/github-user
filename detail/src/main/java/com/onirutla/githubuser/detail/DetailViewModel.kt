@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.ui.detail
+package com.onirutla.githubuser.detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

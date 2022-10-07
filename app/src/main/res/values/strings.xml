@@ -6,9 +6,6 @@
     <string name="dev">Developer</string>
     <string name="about">About</string>
     <string name="search">Search</string>
-    <string name="header_follower">Follower</string>
-    <string name="header_following">Following</string>
-    <string name="header_repositories">Repositories</string>
     <string name="developer_name">Ricky Alturino</string>
     <string name="developer_email">onirutla@gmail.com</string>
 </resources>

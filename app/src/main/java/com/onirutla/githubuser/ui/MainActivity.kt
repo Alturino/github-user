@@ -4,16 +4,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.transition.MaterialSharedAxis
 import com.onirutla.githubuser.R
-import com.onirutla.githubuser.core.util.DeepLinkDestination
 import com.onirutla.githubuser.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,12 +20,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private lateinit var navController: NavController
-
-    private val currentFragment: Fragment?
-        get() = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-            ?.childFragmentManager
-            ?.fragments
-            ?.first()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,28 +38,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.apply {
             bottomNav.setupWithNavController(navController = navController)
-            fab.setOnClickListener {
-                navigateToSearch()
-            }
         }
 
         setupDestinationListener(navController)
-    }
-
-    private fun navigateToSearch() {
-        currentFragment?.apply {
-            exitTransition = MaterialSharedAxis(MaterialSharedAxis.Z, true).apply {
-                duration =
-                    resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
-            }
-
-            reenterTransition = MaterialSharedAxis(MaterialSharedAxis.Z, false).apply {
-                duration =
-                    resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
-            }
-        }
-
-        navController.navigate(deepLink = DeepLinkDestination.Search.route.toUri())
     }
 
     private fun setupDestinationListener(navController: NavController) {
@@ -91,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         binding.run {
             bottomAppbar.visibility = View.VISIBLE
             bottomAppbar.performShow()
-            fab.show()
         }
     }
 
@@ -99,7 +70,6 @@ class MainActivity : AppCompatActivity() {
         binding.run {
             bottomAppbar.visibility = View.GONE
             bottomAppbar.performHide()
-            fab.hide()
         }
     }
 

@@ -5,11 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import androidx.navigation.navOptions
 import com.google.android.material.transition.MaterialFadeThrough
+import com.onirutla.githubuser.core.adapter.UserAdapter
 import com.onirutla.githubuser.core.data.doWhen
 import com.onirutla.githubuser.core.domain.data.User
+import com.onirutla.githubuser.core.util.DeepLinkDestination
 import com.onirutla.githubuser.core.util.hide
 import com.onirutla.githubuser.core.util.show
 import com.onirutla.githubuser.favorite.databinding.FragmentFavoriteBinding
@@ -23,12 +28,14 @@ class FavoriteFragment : Fragment() {
 
     private val viewModel: FavoriteViewModel by viewModels()
 
-//    private val favoriteAdapter by lazy {
-//        UserAdapter { view, user ->
-//            view.findNavController()
-//                .navigate(FavoriteFragmentDirections.actionFavoriteFragmentToDetailFragment(user.username))
-//        }
-//    }
+    private val favoriteAdapter by lazy {
+        UserAdapter { view, user ->
+            view.findNavController().navigate(
+                deepLink = "${DeepLinkDestination.Detail.route}/${user.username}".toUri(),
+                navOptions = navOptions { restoreState = true },
+            )
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,10 +64,10 @@ class FavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        binding.rvFavorite.apply {
-//            setHasFixedSize(true)
-//            adapter = favoriteAdapter
-//        }
+        binding.rvFavorite.apply {
+            setHasFixedSize(true)
+            adapter = favoriteAdapter
+        }
 
         viewModel.favorites.observe(viewLifecycleOwner) { uiState ->
             uiState.doWhen(
@@ -76,8 +83,9 @@ class FavoriteFragment : Fragment() {
         binding.apply {
             rvFavorite.show()
             progressBar.hide()
+            favoritePlaceholder.hide()
         }
-//        favoriteAdapter.submitList(users)
+        favoriteAdapter.submitList(users)
     }
 
     private fun showError(message: String?) {
@@ -92,6 +100,7 @@ class FavoriteFragment : Fragment() {
         binding.apply {
             rvFavorite.hide()
             progressBar.show()
+            favoritePlaceholder.hide()
         }
     }
 

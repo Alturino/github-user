@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
@@ -18,7 +17,6 @@ import com.onirutla.githubuser.core.domain.data.User
 import com.onirutla.githubuser.core.util.hide
 import com.onirutla.githubuser.core.util.show
 import com.onirutla.githubuser.databinding.FragmentDetailBinding
-import com.onirutla.githubuser.ui.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,11 +28,11 @@ class DetailFragment : Fragment() {
     private val args: DetailFragmentArgs by navArgs()
 
     private val viewModel: DetailViewModel by viewModels()
-    private val sharedViewModel: SharedViewModel by activityViewModels()
+//    private val sharedViewModel: SharedViewModel by activityViewModels()
 
-    private val pagerAdapter: ViewPagerAdapter by lazy {
-        ViewPagerAdapter(childFragmentManager)
-    }
+//    private val pagerAdapter: ViewPagerAdapter by lazy {
+//        ViewPagerAdapter(childFragmentManager)
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +57,7 @@ class DetailFragment : Fragment() {
         val username = args.username
 
         viewModel.getUser(username)
-        sharedViewModel.setUsername(username)
+//        sharedViewModel.setUsername(username)
 
         viewModel.user.observe(viewLifecycleOwner) { uiState ->
             uiState.doWhen(
@@ -126,8 +124,8 @@ class DetailFragment : Fragment() {
                 it.findNavController().navigateUp()
             }
 
-            viewPager.adapter = pagerAdapter
-            tabLayout.setupWithViewPager(viewPager)
+//            viewPager.adapter = pagerAdapter
+//            tabLayout.setupWithViewPager(viewPager)
         }
     }
 

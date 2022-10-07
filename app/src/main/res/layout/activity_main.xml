@@ -43,14 +43,4 @@
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        style="@style/Widget.MaterialComponents.FloatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/setting"
-        android:src="@drawable/ic_search_24"
-        app:layout_anchor="@id/bottom_appbar"
-        app:layout_behavior="com.google.android.material.floatingactionbutton.FloatingActionButton$Behavior" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

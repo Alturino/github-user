@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="user"
+            type="com.onirutla.githubuser.core.domain.data.User" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="@string/list_transition_detail"
+        tools:context=".detail.DetailFragment">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            style="@style/Widget.MaterialComponents.AppBarLayout.PrimarySurface"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurface"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$Behavior">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentScrim="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+                app:titleEnabled="false"
+                app:toolbarId="@id/toolbar">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:layout_collapseParallaxMultiplier="0.7">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/detail_image"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginEnd="16dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:loadImage="@{user.avatarUrl}"
+                        app:shapeAppearanceOverlay="@style/CircularImageView"
+                        tools:src="@drawable/ic_person_24" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/detail_name"
+                        style="@style/TextAppearance.MaterialComponents.Headline5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@{user.name}"
+                        android:textAppearance="?attr/textAppearanceHeadline5"
+                        app:layout_constraintEnd_toEndOf="@+id/detail_image"
+                        app:layout_constraintStart_toStartOf="@+id/detail_image"
+                        app:layout_constraintTop_toBottomOf="@+id/detail_image"
+                        tools:text="Ricky Alturino" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/detail_username"
+                        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@{user.username}"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        app:layout_constraintEnd_toEndOf="@+id/detail_name"
+                        app:layout_constraintStart_toStartOf="@+id/detail_name"
+                        app:layout_constraintTop_toBottomOf="@+id/detail_name"
+                        tools:text="onirutlA" />
+
+                    <FrameLayout
+                        android:id="@+id/container_follower"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/container_following"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/detail_username">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/header_follower"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/header_follower"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="@string/header_follower" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/number_follower"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@{String.valueOf(user.followers)}"
+                                app:layout_constraintEnd_toEndOf="@+id/header_follower"
+                                app:layout_constraintStart_toStartOf="@+id/header_follower"
+                                app:layout_constraintTop_toBottomOf="@+id/header_follower"
+                                tools:text="100" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/container_following"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/container_repositories"
+                        app:layout_constraintStart_toEndOf="@+id/container_follower"
+                        app:layout_constraintTop_toBottomOf="@+id/detail_username">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/header_following"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/header_following"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="@string/header_following" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/number_following"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@{String.valueOf(user.following)}"
+                                app:layout_constraintEnd_toEndOf="@+id/header_following"
+                                app:layout_constraintStart_toStartOf="@+id/header_following"
+                                app:layout_constraintTop_toBottomOf="@+id/header_following"
+                                tools:text="100" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/container_repositories"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/container_following"
+                        app:layout_constraintTop_toBottomOf="@+id/detail_username">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/header_repositories"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/header_repositories"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="@string/header_repositories" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:id="@+id/number_repositories"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="@{String.valueOf(user.publicRepos)}"
+                                app:layout_constraintEnd_toEndOf="@+id/header_repositories"
+                                app:layout_constraintStart_toStartOf="@+id/header_repositories"
+                                app:layout_constraintTop_toBottomOf="@+id/header_repositories"
+                                tools:text="100" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </FrameLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:contentInsetStartWithNavigation="@dimen/zero_dp"
+                    app:layout_collapseMode="pin"
+                    app:navigationIcon="@drawable/ic_arrow_back_24">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{user.username}"
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:textColor="?attr/colorOnPrimary"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.4"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.551"
+                            tools:text="onirutlA" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.appbar.MaterialToolbar>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabIndicatorColor="?attr/colorAccent"
+                app:tabSelectedTextColor="?attr/colorOnPrimary"
+                app:tabTextColor="?attr/colorOnSurface"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/large_component"
+            android:contentDescription="@string/favorite" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.core.net.toUri
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,9 +17,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.navOptions
 import com.google.android.material.transition.MaterialElevationScale
 import com.google.android.material.transition.MaterialSharedAxis
 import com.onirutla.githubuser.core.adapter.UserPagingAdapter
+import com.onirutla.githubuser.core.util.DeepLinkDestination
 import com.onirutla.githubuser.search.databinding.FragmentSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -47,11 +50,11 @@ class SearchFragment : Fragment() {
                 duration = resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
             }
 
-//            view.findNavController()
-//                .navigate(
-//                    SearchFragmentDirections.actionSearchFragmentToDetailFragment(user.username),
-//                    extras
-//                )
+            view.findNavController().navigate(
+                deepLink = "${DeepLinkDestination.Detail.route}/${user.username}".toUri(),
+                navOptions = navOptions { restoreState = true },
+                navigatorExtras = extras
+            )
         }
     }
 

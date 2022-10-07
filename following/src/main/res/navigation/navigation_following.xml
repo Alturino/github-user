@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_following"
+    app:startDestination="@id/followingFragment">
+
+    <fragment
+        android:id="@+id/followingFragment"
+        android:name="com.onirutla.githubuser.following.FollowingFragment"
+        android:label="fragment_following"
+        tools:layout="@layout/fragment_following" />
+    <deepLink
+        android:id="@+id/deep_link_following_to_detail"
+        app:uri="https://www.onirutla.githubuser.com/detail/{id}"/>
+</navigation>

@@ -1,4 +1,4 @@
-package com.onirutla.githubuser.ui.following
+package com.onirutla.githubuser.following
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

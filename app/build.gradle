@@ -80,4 +80,5 @@ dependencies {
     implementation project(":core")
     implementation project(":favorite")
     implementation project(":follower")
+    implementation project(":following")
 }

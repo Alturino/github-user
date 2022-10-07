@@ -15,6 +15,7 @@
             app:argType="string" />
         <deepLink
             android:id="@+id/deep_link_following"
-            app:uri="https://www.onirutla.githubuser.com/{username}/following" />
+            app:uri="https://www.onirutla.githubuser.com/following/{username}" />
     </fragment>
+
 </navigation>

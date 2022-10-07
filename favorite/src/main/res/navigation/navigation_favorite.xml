@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_favorite"
     app:startDestination="@id/favoriteFragment">
 
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.onirutla.githubuser.favorite.FavoriteFragment"
+        tools:layout="@layout/fragment_favorite"
         android:label="fragment_favorite">
-
+        <deepLink
+            android:id="@+id/deep_link_favorite"
+            app:uri="https://www.onirutla.githubuser.com/favorite" />
     </fragment>
-    <deepLink
-        android:id="@+id/deep_link_favorite_to_detail"
-        app:uri="https://www.onirutla.githubuser.com/detail/{id}" />
 </navigation>

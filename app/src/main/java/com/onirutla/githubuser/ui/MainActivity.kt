@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -11,8 +12,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.transition.MaterialSharedAxis
-import com.onirutla.githubuser.MainNavDirections
 import com.onirutla.githubuser.R
+import com.onirutla.githubuser.core.util.DeepLinkDestination
 import com.onirutla.githubuser.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -66,7 +67,8 @@ class MainActivity : AppCompatActivity() {
                     resources.getInteger(R.integer.material_motion_duration_long_1).toLong()
             }
         }
-        navController.navigate(MainNavDirections.actionGlobalSearchFragment())
+
+        navController.navigate(deepLink = DeepLinkDestination.Search.route.toUri())
     }
 
     private fun setupDestinationListener(navController: NavController) {

@@ -36,7 +36,7 @@ class FollowingViewModel @Inject constructor(
             initialValue = PagingData.empty()
         )
 
-    fun getUser(username: String) {
+    fun getFollowings(username: String) {
         viewModelScope.launch(dispatcher) {
             _username.emit(username)
         }

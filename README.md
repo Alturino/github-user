@@ -19,7 +19,6 @@
 <h2 align="center">Bottom Navigation</h2>
 <p align= "center">
   <img src="/assets/previews/home_screen.png" width="300">
-  <img src="/assets/previews/about_screen.png" width="300">
   <img src="/assets/previews/search_screen_initial.png" width="300",>
   <img src="/assets/previews/favorite_screen_empty.png" width="300">
   <img src="/assets/previews/setting_screen.png" width="300">

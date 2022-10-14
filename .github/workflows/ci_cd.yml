@@ -106,8 +106,54 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Release app
+      - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: Build Artifacts
           path: app/build/outputs/apk/debug/app-debug.apk
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Get build info
+        id: build_info
+        run: echo "::set-output name=version-name::$(bash ./gradlew -q printVersionName)"
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Build Artifacts
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: release-${{ steps.build_info.outputs.version-name }}
+          release_name: Release v${{ steps.build_info.outputs.version-name }}
+
+      - name: Upload APK to release
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: apk/app-debug.apk
+          asset_name: app-debug.apk
+          asset_content_type: application/zip
